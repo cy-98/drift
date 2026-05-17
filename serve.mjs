@@ -31,4 +31,4 @@ http
       res.end(data)
     })
   })
-  .listen(port, () => console.log(`Star Drift → http://localhost:${port}/`))
+  .listen(port, () => console.log(`Drift → http://localhost:${port}/`))
