@@ -1,0 +1,9 @@
+services:
+  web:
+    image: node:22-bookworm
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "5180:5180"
+    command: node serve.mjs

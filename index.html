@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#030810" />
+    <meta name="description" content="Star Drift — 第一人称星际漫游，程序化星野与远方湖面" />
+    <title>星漂 Star Drift</title>
+    <style>
+      * { box-sizing: border-box; margin: 0; }
+      html, body { height: 100%; overflow: hidden; background: #030810; font-family: 'Segoe UI', 'PingFang SC', system-ui, sans-serif; }
+      #canvas { display: block; width: 100%; height: 100%; }
+      #ui {
+        position: fixed; inset: 0; pointer-events: none; color: #e8f0ff;
+        display: flex; flex-direction: column; justify-content: space-between;
+        padding: 14px 18px; text-shadow: 0 1px 6px #000;
+      }
+      .top { font-size: 13px; color: #9ab0c8; }
+      .top strong { color: #6eb8e8; letter-spacing: 0.12em; font-size: 11px; }
+      .center {
+        align-self: center; text-align: center; padding: 14px 20px;
+        background: rgba(6, 16, 32, 0.55); border: 1px solid rgba(110, 184, 232, 0.25);
+        border-radius: 12px; font-size: 13px; color: #c8d8ec; pointer-events: auto;
+        max-width: 22rem; transition: opacity 0.6s;
+      }
+      .center.hidden { opacity: 0; pointer-events: none; }
+      .bottom { font-size: 12px; color: #6a8098; text-align: center; }
+      kbd {
+        display: inline-block; padding: 0.1em 0.45em; margin: 0 0.1em;
+        border-radius: 4px; background: rgba(110, 184, 232, 0.15);
+        border: 1px solid rgba(110, 184, 232, 0.3); font-size: 11px;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <div id="ui">
+      <div class="top">
+        <strong>STAR DRIFT</strong> · 星际漫游<br />
+        速度 <span id="speed">1.0</span> · 高度 <span id="alt">0</span>
+      </div>
+      <div id="prompt" class="center">
+        点击画面进入漫游<br />
+        <span style="font-size: 12px; opacity: 0.85">
+          <kbd>WASD</kbd> 平移 · <kbd>QE</kbd> 升降 · 鼠标环顾 · <kbd>Shift</kbd> 加速 · <kbd>Ctrl</kbd> 减速
+        </span>
+      </div>
+      <p class="bottom">程序化星野 · WebGL</p>
+    </div>
+    <script type="module" src="/src/game.js"></script>
+  </body>
+</html>
