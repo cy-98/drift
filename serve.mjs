@@ -12,11 +12,28 @@ const types = {
   '.css': 'text/css',
 }
 
+function resolveFile(urlPath) {
+  if (urlPath === '/' || urlPath === '') return path.join(root, 'index.html')
+  if (urlPath === '/spec' || urlPath === '/spec/') return path.join(root, '.SPEC', 'index.html')
+  if (urlPath.startsWith('/.SPEC/')) return path.join(root, urlPath.slice(1))
+  if (urlPath.startsWith('/spec/')) {
+    const sub = urlPath.slice('/spec/'.length) || 'index.html'
+    return path.join(root, '.SPEC', sub)
+  }
+  return path.join(root, urlPath.replace(/^\//, ''))
+}
+
 http
   .createServer((req, res) => {
-    const url = req.url === '/' ? '/index.html' : req.url.split('?')[0]
-    const file = path.join(root, url.replace(/^\//, ''))
-    if (!file.startsWith(root)) {
+    const urlPath = (req.url || '/').split('?')[0]
+    if (urlPath === '/spec') {
+      res.writeHead(301, { Location: '/spec/' })
+      res.end()
+      return
+    }
+    const file = path.resolve(resolveFile(urlPath))
+    const rootResolved = path.resolve(root)
+    if (!file.startsWith(rootResolved)) {
       res.writeHead(403)
       res.end()
       return
@@ -31,4 +48,7 @@ http
       res.end(data)
     })
   })
-  .listen(port, () => console.log(`Drift → http://localhost:${port}/`))
+  .listen(port, () => {
+    console.log(`Drift       → http://localhost:${port}/`)
+    console.log(`Drift Spec  → http://localhost:${port}/spec/`)
+  })

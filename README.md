@@ -11,6 +11,10 @@ node serve.mjs
 
 浏览器打开 **http://localhost:5180/**
 
+**长远规划 Spec：** http://localhost:5180/spec/（源码在 `.SPEC/`，Tailwind CDN + 公用 `.SPEC/css/specs.css`）
+
+更新 Spec：`node scripts/generate-spec.mjs`
+
 ## 操作
 
 1. **点击画面**锁定鼠标，环顾四周  

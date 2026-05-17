@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <base href="/spec/" />
+  <title>Phase 2 世界内容 · Drift Spec</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{lake:{DEFAULT:'#6eb8e8',dark:'#061428'}}}}}</script>
+  <link rel="stylesheet" href="css/specs.css" />
+</head>
+<body class="spec-body antialiased">
+<div class="flex min-h-screen flex-col lg:flex-row">
+<nav class="spec-nav shrink-0 border-b border-lake/20 bg-lake-dark/80 p-4 lg:w-56 lg:min-h-screen lg:border-b-0 lg:border-r">
+  <p class="mb-1 text-xs font-semibold uppercase tracking-widest text-lake">Drift Spec</p>
+  <p class="mb-4 text-xs text-slate-500">工作指导 · 长远路线图</p>
+  <ul class="flex flex-col gap-1 text-sm">
+    <li><a href="index.html" class="block rounded-lg px-3 py-2 text-slate-300">总览</a></li>
+    <li><a href="design.html" class="block rounded-lg px-3 py-2 text-slate-300">概念设计</a></li>
+    <li><a href="phase-0-foundation.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 0 基础</a></li>
+    <li><a href="phase-1-core.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 1 核心体验</a></li>
+    <li><a href="phase-2-world.html" class="block rounded-lg px-3 py-2 is-active text-slate-200">Phase 2 世界内容</a></li>
+    <li><a href="phase-3-atmosphere.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 3 氛围叙事</a></li>
+    <li><a href="phase-4-platform.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 4 平台大作</a></li>
+    <li><a href="phase-5-launch.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 5 发行增长</a></li>
+  </ul>
+  <p class="mt-8 text-xs text-slate-500"><a class="spec-link-back" href="/">← 运行游戏</a></p>
+</nav>
+<main class="spec-content flex-1 px-5 py-8 lg:px-10 max-w-3xl">
+
+  <h1 class="text-3xl font-bold text-white mb-2">Phase 2 世界内容</h1>
+  <p class="spec-intro">目标：从「空穏景」进化为「可探索的星系」——有方向、有目标、有回忆。</p>
+  <p class="text-slate-400 mb-4">0/18 · 0%</p><div class="progress-bar mb-6"><div class="progress-bar__fill" style="width:0%"></div></div>
+  <h2 class="text-lg text-amber-300 mb-3">计划清单</h2>
+  <ul class="spec-checklist">
+    <li class="check-todo spec-item"><span class="spec-item-title">星系分区</span><span class="spec-tags">world/streaming</span><p class="spec-detail"><strong>还差什么：</strong>无限演生星区域 + 坐标回收。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">行星与导航</span><span class="spec-tags">nav</span><p class="spec-detail"><strong>还差什么：</strong>远处可见目标点、距离显示。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">行星 POI</span><span class="spec-tags">planets</span><p class="spec-detail"><strong>还差什么：</strong>3–5 种程序化行星类型。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">宇航站遗迹</span><span class="spec-tags">stations</span><p class="spec-detail"><strong>还差什么：</strong>静止光点、短文本告示。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">星门 / 跳跃点</span><span class="spec-tags">wormhole</span><p class="spec-detail"><strong>还差什么：</strong>区域间快速转移。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">地形湖面扩展</span><span class="spec-tags">lake</span><p class="spec-detail"><strong>还差什么：</strong>多层湖面、季节变化。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">定制星座</span><span class="spec-tags">constellation</span><p class="spec-detail"><strong>还差什么：</strong>连线解锁或纯装饰。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">日暮循环</span><span class="spec-tags">time</span><p class="spec-detail"><strong>还差什么：</strong>极慢的光照变化（非必须真实时间）。</p></li>
+  </ul>
+</main>
+</div>
+</body>
+</html>

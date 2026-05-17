@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <base href="/spec/" />
+  <title>Phase 0 基础验证 · Drift Spec</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{lake:{DEFAULT:'#6eb8e8',dark:'#061428'}}}}}</script>
+  <link rel="stylesheet" href="css/specs.css" />
+</head>
+<body class="spec-body antialiased">
+<div class="flex min-h-screen flex-col lg:flex-row">
+<nav class="spec-nav shrink-0 border-b border-lake/20 bg-lake-dark/80 p-4 lg:w-56 lg:min-h-screen lg:border-b-0 lg:border-r">
+  <p class="mb-1 text-xs font-semibold uppercase tracking-widest text-lake">Drift Spec</p>
+  <p class="mb-4 text-xs text-slate-500">工作指导 · 长远路线图</p>
+  <ul class="flex flex-col gap-1 text-sm">
+    <li><a href="index.html" class="block rounded-lg px-3 py-2 text-slate-300">总览</a></li>
+    <li><a href="design.html" class="block rounded-lg px-3 py-2 text-slate-300">概念设计</a></li>
+    <li><a href="phase-0-foundation.html" class="block rounded-lg px-3 py-2 is-active text-slate-200">Phase 0 基础</a></li>
+    <li><a href="phase-1-core.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 1 核心体验</a></li>
+    <li><a href="phase-2-world.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 2 世界内容</a></li>
+    <li><a href="phase-3-atmosphere.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 3 氛围叙事</a></li>
+    <li><a href="phase-4-platform.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 4 平台大作</a></li>
+    <li><a href="phase-5-launch.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 5 发行增长</a></li>
+  </ul>
+  <p class="mt-8 text-xs text-slate-500"><a class="spec-link-back" href="/">← 运行游戏</a></p>
+</nav>
+<main class="spec-content flex-1 px-5 py-8 lg:px-10 max-w-3xl">
+
+  <h1 class="text-3xl font-bold text-white mb-2">Phase 0 基础验证</h1>
+  <p class="spec-intro">目标：证明「第一人星际漫游」在浏览器可稳定跑通，并建立性能与代码架构。</p>
+  <p class="text-slate-400 mb-4">5/12 · 42%</p><div class="progress-bar mb-6"><div class="progress-bar__fill" style="width:42%"></div></div>
+  <h2 class="text-lg text-teal-300 mb-3">已完成</h2>
+  <ul class="spec-checklist mb-6">
+    <li class="check-done spec-item"><span class="spec-item-title">WebGL 漫游原型</span><span class="spec-tags">src/game.js</span><p class="spec-detail"><strong>做了什么：</strong>三层星粒子、星云、远方湖面 shader。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">第一人摇杆 + WASD</span><span class="spec-tags">game.js</span><p class="spec-detail"><strong>做了什么：</strong>Pointer Lock 环顾、六向移动、默认慢速前漂。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">本地服务</span><span class="spec-tags">serve.mjs</span><p class="spec-detail"><strong>做了什么：</strong>node serve.mjs 即可跑，无构建。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">Docker 可选</span><span class="spec-tags">docker-compose.yml</span><p class="spec-detail"><strong>做了什么：</strong>容器内一键预览。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">Spec 文档目录</span><span class="spec-tags">.SPEC/</span><p class="spec-detail"><strong>做了什么：</strong>长远计划与阶段清单。</p></li>
+  </ul>
+  <h2 class="text-lg text-amber-300 mb-3">待办</h2>
+  <ul class="spec-checklist">
+    <li class="check-todo spec-item"><span class="spec-item-title">性能基线测试</span><span class="spec-tags">Lighthouse / FPS</span><p class="spec-detail"><strong>还差什么：</strong>中低端帧率、内存占用记录。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">移动端触控</span><span class="spec-tags">touch / gyro</span><p class="spec-detail"><strong>还差什么：</strong>虚拟摇杆或重力感应。</p></li>
+    <li class="check-wip spec-item"><span class="spec-item-title">星粒无缝循环</span><span class="spec-tags">game.js</span><p class="spec-detail"><strong>进行中：</strong>基础回收已有，需优化密度与闪烁。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">代码模块化</span><span class="spec-tags">src/</span><p class="spec-detail"><strong>还差什么：</strong>拆分 camera / world / input 模块。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">CI 自动部署</span><span class="spec-tags">GitHub Actions</span><p class="spec-detail"><strong>还差什么：</strong>Pages 托管试玩版。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">单元测试框架</span><span class="spec-tags">vitest</span><p class="spec-detail"><strong>还差什么：</strong>输入与坐标运算等。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">错误监控</span><span class="spec-tags">Sentry</span><p class="spec-detail"><strong>还差什么：</strong>WebGL 失败与性能预警。</p></li>
+  </ul>
+</main>
+</div>
+</body>
+</html>

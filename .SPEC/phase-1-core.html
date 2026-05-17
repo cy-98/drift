@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <base href="/spec/" />
+  <title>Phase 1 核心体验 · Drift Spec</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{lake:{DEFAULT:'#6eb8e8',dark:'#061428'}}}}}</script>
+  <link rel="stylesheet" href="css/specs.css" />
+</head>
+<body class="spec-body antialiased">
+<div class="flex min-h-screen flex-col lg:flex-row">
+<nav class="spec-nav shrink-0 border-b border-lake/20 bg-lake-dark/80 p-4 lg:w-56 lg:min-h-screen lg:border-b-0 lg:border-r">
+  <p class="mb-1 text-xs font-semibold uppercase tracking-widest text-lake">Drift Spec</p>
+  <p class="mb-4 text-xs text-slate-500">工作指导 · 长远路线图</p>
+  <ul class="flex flex-col gap-1 text-sm">
+    <li><a href="index.html" class="block rounded-lg px-3 py-2 text-slate-300">总览</a></li>
+    <li><a href="design.html" class="block rounded-lg px-3 py-2 text-slate-300">概念设计</a></li>
+    <li><a href="phase-0-foundation.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 0 基础</a></li>
+    <li><a href="phase-1-core.html" class="block rounded-lg px-3 py-2 is-active text-slate-200">Phase 1 核心体验</a></li>
+    <li><a href="phase-2-world.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 2 世界内容</a></li>
+    <li><a href="phase-3-atmosphere.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 3 氛围叙事</a></li>
+    <li><a href="phase-4-platform.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 4 平台大作</a></li>
+    <li><a href="phase-5-launch.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 5 发行增长</a></li>
+  </ul>
+  <p class="mt-8 text-xs text-slate-500"><a class="spec-link-back" href="/">← 运行游戏</a></p>
+</nav>
+<main class="spec-content flex-1 px-5 py-8 lg:px-10 max-w-3xl">
+
+  <h1 class="text-3xl font-bold text-white mb-2">Phase 1 核心体验</h1>
+  <p class="spec-intro">目标：让玩家感到「真的在太空漸游」——手感顺、画面美、不晕不卡。</p>
+  <p class="text-slate-400 mb-4">2/15 · 13%</p><div class="progress-bar mb-6"><div class="progress-bar__fill" style="width:13%"></div></div>
+  <h2 class="text-lg text-teal-300 mb-3">已完成</h2>
+  <ul class="spec-checklist mb-6">
+    <li class="check-done spec-item"><span class="spec-item-title">基础飞行速度曲线</span><span class="spec-tags">game.js</span><p class="spec-detail"><strong>做了什么：</strong>Shift 加速、Ctrl 减速、默认慢漂。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">统一深蓝色相</span><span class="spec-tags">renderer + UI</span><p class="spec-detail"><strong>做了什么：</strong>#030810 主色与湖光点缀。</p></li>
+  </ul>
+  <h2 class="text-lg text-amber-300 mb-3">待办</h2>
+  <ul class="spec-checklist">
+    <li class="check-todo spec-item"><span class="spec-item-title">Bloom / 晒光</span><span class="spec-tags">postprocessing</span><p class="spec-detail"><strong>还差什么：</strong>星点与湖面软光晕，避免过曝。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">镜头悬滑</span><span class="spec-tags">camera</span><p class="spec-detail"><strong>还差什么：</strong>加速时轻微 FOV 变化、悬滑插值。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">动态霜效</span><span class="spec-tags">fog + particles</span><p class="spec-detail"><strong>还差什么：</strong>远近星层浓度变化。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">磁场星带</span><span class="spec-tags">shader</span><p class="spec-detail"><strong>还差什么：</strong>极轻星尘流动增加科幻感。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">摇杆 UI</span><span class="spec-tags">mobile</span><p class="spec-detail"><strong>还差什么：</strong>左下虚拟摇杆 + 右侧视角拖拽。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">减动效模式</span><span class="spec-tags">a11y</span><p class="spec-detail"><strong>还差什么：</strong>减少粒子与动画。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">设置面板</span><span class="spec-tags">settings</span><p class="spec-detail"><strong>还差什么：</strong>灵敏度、速度上限、全屏。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">屏幕遮屏</span><span class="spec-tags">vignette</span><p class="spec-detail"><strong>还差什么：</strong>电影感暗角。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">碰撞体积小星</span><span class="spec-tags">optional</span><p class="spec-detail"><strong>还差什么：</strong>可选收集，不破坏治愈节奏。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">截图模式</span><span class="spec-tags">photo</span><p class="spec-detail"><strong>还差什么：</strong>隐藏 UI 、自由视角拍照。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">加载屏</span><span class="spec-tags">assets</span><p class="spec-detail"><strong>还差什么：</strong>首进与切换时的轻量过渡。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">LOD 星粒</span><span class="spec-tags">performance</span><p class="spec-detail"><strong>还差什么：</strong>远处降低点数与大小。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">手枴支持</span><span class="spec-tags">gamepad</span><p class="spec-detail"><strong>还差什么：</strong>Xbox / PS 摇杆映射。</p></li>
+  </ul>
+</main>
+</div>
+</body>
+</html>

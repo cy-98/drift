@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <base href="/spec/" />
+  <title>总览 · Drift Spec</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{lake:{DEFAULT:'#6eb8e8',dark:'#061428'}}}}}</script>
+  <link rel="stylesheet" href="css/specs.css" />
+</head>
+<body class="spec-body antialiased">
+<div class="flex min-h-screen flex-col lg:flex-row">
+<nav class="spec-nav shrink-0 border-b border-lake/20 bg-lake-dark/80 p-4 lg:w-56 lg:min-h-screen lg:border-b-0 lg:border-r">
+  <p class="mb-1 text-xs font-semibold uppercase tracking-widest text-lake">Drift Spec</p>
+  <p class="mb-4 text-xs text-slate-500">工作指导 · 长远路线图</p>
+  <ul class="flex flex-col gap-1 text-sm">
+    <li><a href="index.html" class="block rounded-lg px-3 py-2 is-active text-slate-200">总览</a></li>
+    <li><a href="design.html" class="block rounded-lg px-3 py-2 text-slate-300">概念设计</a></li>
+    <li><a href="phase-0-foundation.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 0 基础</a></li>
+    <li><a href="phase-1-core.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 1 核心体验</a></li>
+    <li><a href="phase-2-world.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 2 世界内容</a></li>
+    <li><a href="phase-3-atmosphere.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 3 氛围叙事</a></li>
+    <li><a href="phase-4-platform.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 4 平台大作</a></li>
+    <li><a href="phase-5-launch.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 5 发行增长</a></li>
+  </ul>
+  <p class="mt-8 text-xs text-slate-500"><a class="spec-link-back" href="/">← 运行游戏</a></p>
+</nav>
+<main class="spec-content flex-1 px-5 py-8 lg:px-10 max-w-3xl">
+
+  <h1 class="text-3xl font-bold text-white mb-2">Drift 项目总览</h1>
+  <p class="spec-intro">目标：做成一款<strong>精美、治愈、受欢迎</strong>的第一人称星际漫游作品。现阶段为 Web 原型（<code>src/game.js</code>）。</p>
+  <div class="spec-vision">核心感受：在星海里慢慢漂浮——宁静、茂远、偶有惊喜。</div>
+  <p class="text-slate-400 mb-2">全局 12/89（约 13%）</p>
+  <div class="progress-bar mb-6"><div class="progress-bar__fill" style="width:13%"></div></div>
+  <div class="spec-pillar">
+    <article><h4>视觉</h4><p>星野 + 后处理 + 统一色相</p></article>
+    <article><h4>手感</h4><p>漂浮式飞行，不晕头</p></article>
+    <article><h4>受众</h4><p>短视频可演示、零门槛试玩</p></article>
+  </div>
+  <p class="mt-6"><a class="spec-phase-card spec-phase-card--link" href="design.html"><h3>概念设计</h3><p>定位、视觉、手感、世界与叙事概念</p></a></p>
+  <h2 class="text-lg text-teal-300 mb-3 mt-8">阶段路线</h2>
+  <a class="spec-phase-card spec-phase-card--link" href="phase-0-foundation.html"><h3>Phase 0 — 5/12</h3><p>Web 原型与性能基线</p></a>
+  <a class="spec-phase-card spec-phase-card--link" href="phase-1-core.html"><h3>Phase 1 — 2/15</h3><p>核心体验与手感</p></a>
+  <a class="spec-phase-card spec-phase-card--link" href="phase-2-world.html"><h3>Phase 2 — 0/18</h3><p>世界与内容</p></a>
+  <a class="spec-phase-card spec-phase-card--link" href="phase-3-atmosphere.html"><h3>Phase 3 — 0/14</h3><p>氛围与叙事</p></a>
+  <a class="spec-phase-card spec-phase-card--link" href="phase-4-platform.html"><h3>Phase 4 — 0/16</h3><p>平台大作化</p></a>
+  <a class="spec-phase-card spec-phase-card--link" href="phase-5-launch.html"><h3>Phase 5 — 0/14</h3><p>发行与增长</p></a>
+</main>
+</div>
+</body>
+</html>

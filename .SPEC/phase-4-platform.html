@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <base href="/spec/" />
+  <title>Phase 4 平台大作 · Drift Spec</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{lake:{DEFAULT:'#6eb8e8',dark:'#061428'}}}}}</script>
+  <link rel="stylesheet" href="css/specs.css" />
+</head>
+<body class="spec-body antialiased">
+<div class="flex min-h-screen flex-col lg:flex-row">
+<nav class="spec-nav shrink-0 border-b border-lake/20 bg-lake-dark/80 p-4 lg:w-56 lg:min-h-screen lg:border-b-0 lg:border-r">
+  <p class="mb-1 text-xs font-semibold uppercase tracking-widest text-lake">Drift Spec</p>
+  <p class="mb-4 text-xs text-slate-500">工作指导 · 长远路线图</p>
+  <ul class="flex flex-col gap-1 text-sm">
+    <li><a href="index.html" class="block rounded-lg px-3 py-2 text-slate-300">总览</a></li>
+    <li><a href="design.html" class="block rounded-lg px-3 py-2 text-slate-300">概念设计</a></li>
+    <li><a href="phase-0-foundation.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 0 基础</a></li>
+    <li><a href="phase-1-core.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 1 核心体验</a></li>
+    <li><a href="phase-2-world.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 2 世界内容</a></li>
+    <li><a href="phase-3-atmosphere.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 3 氛围叙事</a></li>
+    <li><a href="phase-4-platform.html" class="block rounded-lg px-3 py-2 is-active text-slate-200">Phase 4 平台大作</a></li>
+    <li><a href="phase-5-launch.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 5 发行增长</a></li>
+  </ul>
+  <p class="mt-8 text-xs text-slate-500"><a class="spec-link-back" href="/">← 运行游戏</a></p>
+</nav>
+<main class="spec-content flex-1 px-5 py-8 lg:px-10 max-w-3xl">
+
+  <h1 class="text-3xl font-bold text-white mb-2">Phase 4 平台大作化</h1>
+  <p class="spec-intro">目标：从 Web 原型升级为可发布的多平台作品（Unity / 移动端优先）。</p>
+  <p class="text-slate-400 mb-4">0/16 · 0%</p><div class="progress-bar mb-6"><div class="progress-bar__fill" style="width:0%"></div></div>
+  <ul class="spec-checklist">
+    <li class="check-todo spec-item"><span class="spec-item-title">Unity 工程重构</span><span class="spec-tags">unity/</span><p class="spec-detail"><strong>还差什么：</strong>3D 第一人飞行与场景流式加载。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">Android / iOS</span><span class="spec-tags">mobile</span><p class="spec-detail"><strong>还差什么：</strong>触控与画质分档。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">云档存</span><span class="spec-tags">save</span><p class="spec-detail"><strong>还差什么：</strong>探索进度、设置同步。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">画质分级</span><span class="spec-tags">graphics</span><p class="spec-detail"><strong>还差什么：</strong>低 / 中 / 高 三档。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">Steam 技术预研</span><span class="spec-tags">steam</span><p class="spec-detail"><strong>还差什么：</strong>成就、云存档、手枴。</p></li>
+  </ul>
+</main>
+</div>
+</body>
+</html>

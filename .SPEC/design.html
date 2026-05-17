@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <base href="/spec/" />
+  <title>概念设计 · Drift Spec</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{lake:{DEFAULT:'#6eb8e8',dark:'#061428'}}}}}</script>
+  <link rel="stylesheet" href="css/specs.css" />
+</head>
+<body class="spec-body antialiased">
+<div class="flex min-h-screen flex-col lg:flex-row">
+<nav class="spec-nav shrink-0 border-b border-lake/20 bg-lake-dark/80 p-4 lg:w-56 lg:min-h-screen lg:border-b-0 lg:border-r">
+  <p class="mb-1 text-xs font-semibold uppercase tracking-widest text-lake">Drift Spec</p>
+  <p class="mb-4 text-xs text-slate-500">工作指导 · 长远路线图</p>
+  <ul class="flex flex-col gap-1 text-sm">
+    <li><a href="index.html" class="block rounded-lg px-3 py-2 text-slate-300">总览</a></li>
+    <li><a href="design.html" class="block rounded-lg px-3 py-2 is-active text-slate-200">概念设计</a></li>
+    <li><a href="phase-0-foundation.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 0 基础</a></li>
+    <li><a href="phase-1-core.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 1 核心体验</a></li>
+    <li><a href="phase-2-world.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 2 世界内容</a></li>
+    <li><a href="phase-3-atmosphere.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 3 氛围叙事</a></li>
+    <li><a href="phase-4-platform.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 4 平台大作</a></li>
+    <li><a href="phase-5-launch.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 5 发行增长</a></li>
+  </ul>
+  <p class="mt-8 text-xs text-slate-500"><a class="spec-link-back" href="/">← 运行游戏</a></p>
+</nav>
+<main class="spec-content flex-1 px-5 py-8 lg:px-10 max-w-3xl">
+
+  <h1 class="text-3xl font-bold text-white mb-2">概念设计</h1>
+  <p class="spec-intro">Drift 的创作北星：一款<strong>第一人称、无压力、治愈向</strong>的星际漫游。玩家不是英雄，而是宇宙中的旅人——慢慢漂浮，偶然遇见微光与远方的湖。</p>
+  <div class="spec-vision">一句话：在星海里慢慢漂浮，宁静、茂远、偶有惊喜。</div>
+
+  <h2 class="text-lg text-teal-300 mb-3 mt-8">核心定位</h2>
+  <div class="spec-design-grid">
+    <article class="spec-concept"><h4>类型</h4><span class="spec-tags">genre</span><p>第一人称、开放式漫游 / 治愈探索。无战斗、无任务追赶、无死亡惩罚。</p></article>
+    <article class="spec-concept"><h4>情绪</h4><span class="spec-tags">tone</span><p>宁静、孤独但不冷漠；幻想感与科幻感共存，偏「深夜看星」而非「战场」。</p></article>
+    <article class="spec-concept"><h4>受众</h4><span class="spec-tags">audience</span><p>喜欢放松、视觉向、短视频可分享的玩家；也适合作为睡前「白噪式」背景体验。</p></article>
+    <article class="spec-concept"><h4>对标</h4><span class="spec-tags">reference</span><p>《Journey》的情绪、《Outer Wilds》的好奇、《Elite Dangerous》的宇宙感（但极简手感）。</p></article>
+  </div>
+
+  <h2 class="text-lg text-teal-300 mb-3 mt-8">玩家幻想</h2>
+  <ul class="spec-checklist mb-6">
+    <li class="check-done spec-item"><span class="spec-item-title">我在太空中漂浮</span><span class="spec-tags">fantasy</span><p class="spec-detail">不需要解释为什么来这里，也不需要救世界。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">速度由我掌控</span><span class="spec-tags">agency</span><p class="spec-detail">Shift 加速、Ctrl 减速、默认慢速前漂，从不被副本驱赶。</p></li>
+    <li class="check-wip spec-item"><span class="spec-item-title">有东西值得望向</span><span class="spec-tags">curiosity</span><p class="spec-detail">远处行星、光点、湖面将成为导航目标（Phase 2）。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">留下属于我的记忆</span><span class="spec-tags">memory</span><p class="spec-detail">截图、星座解锁、短文本日志（后期）。</p></li>
+  </ul>
+
+  <h2 class="text-lg text-teal-300 mb-3 mt-8">核心循环</h2>
+  <div class="spec-loop">
+    <p><strong>进入</strong> → 点击画面锁定指针 → 立即漂浮</p>
+    <p><strong>漫游</strong> → 自由飞行、环顾星野、调整速度与高度</p>
+    <p><strong>发现</strong> → 远处星云、湖光、未来 POI 引导前往</p>
+    <p><strong>停留</strong> → 在喜欢的景色前静止或慢速盘旋（无强制目标）</p>
+    <p><strong>离开</strong> → 随时可关闭；无档案压力（后期可选云存档）</p>
+  </div>
+
+  <h2 class="text-lg text-teal-300 mb-3 mt-8">操作与手感</h2>
+  <table class="spec-table">
+    <thead><tr><th>输入</th><th>行为</th><th>设计意图</th></tr></thead>
+    <tbody>
+      <tr><td>鼠标移动</td><td>环顾视角</td><td>低敏感、不晕头，可设置里调整</td></tr>
+      <tr><td>W / S</td><td>前后</td><td>相机朝向平移</td></tr>
+      <tr><td>A / D</td><td>左右平移</td><td>空中「漂移」而非步行</td></tr>
+      <tr><td>Q / E</td><td>升降</td><td>三维自由度，方便对准星层与湖面</td></tr>
+      <tr><td>Shift</td><td>加速×2.2</td><td>短时突进，不破坏治愈节奏</td></tr>
+      <tr><td>Ctrl</td><td>减速×0.45</td><td>细看景色、拍照前往</td></tr>
+      <tr><td>（无操作）</td><td>慢速前漂</td><td>即使松手也在「前进」，不会停在原地</td></tr>
+    </tbody>
+  </table>
+  <p class="spec-detail mt-4">移动不做真实物理加速；速度即时响应键位，避免“水泥”感。未来加镜头悬滑与轻微 FOV 变化（Phase 1）。</p>
+
+  <h2 class="text-lg text-teal-300 mb-3 mt-8">视觉语言</h2>
+  <p class="spec-intro">现代原型已实现三层星粒子、远景星云、前方湖面 shader；色相统一为深蓝夜空。</p>
+  <div class="spec-palette" aria-label="色盘">
+    <span class="spec-swatch" style="background:#030810" title="#030810">背景</span>
+    <span class="spec-swatch" style="background:#061428" title="#061428">表面</span>
+    <span class="spec-swatch" style="background:#6eb8e8" title="#6eb8e8">湖光</span>
+    <span class="spec-swatch" style="background:#c8dcff" title="#c8dcff">星点</span>
+    <span class="spec-swatch" style="background:#ffe066" title="#ffe066">强调</span>
+  </div>
+  <div class="spec-design-grid">
+    <article class="spec-concept"><h4>星野层次</h4><span class="spec-tags">stars</span><p>近 / 中 / 远三层粒子：越近越密、越小越亮。无限向前演生，穿过相机后回收到前方。</p></article>
+    <article class="spec-concept"><h4>星云</h4><span class="spec-tags">nebula</span><p>大面片低透明蓝色，慢速漂移，增加空间深度不抢戏。</p></article>
+    <article class="spec-concept"><h4>远方湖</h4><span class="spec-tags">lake</span><p>Shader 波纹 + 边缘高光；位于前下方，像「宇宙里的一片静水」。</p></article>
+    <article class="spec-concept"><h4>雾</h4><span class="spec-tags">fog</span><p>Exp2 深蓝雾，远处星点淡化，隐藏边界。</p></article>
+    <article class="spec-concept"><h4>后处理（计划）</h4><span class="spec-tags">post</span><p>Bloom 软光、轻微暗角、色调压制，避免过曝。</p></article>
+  </div>
+
+  <h2 class="text-lg text-teal-300 mb-3 mt-8">音频方向</h2>
+  <div class="spec-design-grid">
+    <article class="spec-concept"><h4>环境音</h4><span class="spec-tags">ambience</span><p>极低音宇宙底噪、空气感白噪，循环无突击。</p></article>
+    <article class="spec-concept"><h4>音乐</h4><span class="spec-tags">OST</span><p>2–3 首治愈向主题＜钢琴 + 合成器铁床》，开场宁静、探索时渐强。</p></article>
+    <article class="spec-concept"><h4>交互音</h4><span class="spec-tags">sfx</span><p>极少；可选：进入 POI 时的柔和铃音、加速时的空气摩擦。</p></article>
+  </div>
+
+  <h2 class="text-lg text-teal-300 mb-3 mt-8">世界与叙事</h2>
+  <p class="spec-intro">不做庞大剧情；用环境和极短文本片段挖掘「曾经有过的文明」。</p>
+  <div class="spec-design-grid">
+    <article class="spec-concept"><h4>星系</h4><span class="spec-tags">sectors</span><p>无限演生星区，每个区域有微差密度与色温，不需手工塑造整张地图。</p></article>
+    <article class="spec-concept"><h4>行星 POI</h4><span class="spec-tags">planets</span><p>远处可见光点；接近后显示简短名称与轻量描述（如「蓝色冻结海」「环状沙岘」）。</p></article>
+    <article class="spec-concept"><h4>遗迹</h4><span class="spec-tags">relics</span><p>宇航站、浮动广碑、无人信标；触发一句译文。</p></article>
+    <article class="spec-concept"><h4>星门</h4><span class="spec-tags">wormhole</span><p>视觉奇观，用于区域跳跃，不解释物理原理。</p></article>
+    <article class="spec-concept"><h4>星座</h4><span class="spec-tags">constellation</span><p>纯装饰或连线解锁，可与玩家自定义标记结合。</p></article>
+  </div>
+  <div class="spec-vision mt-4">叙事原则：不回答「谁建的」，只留下「曾经有过人」的痛意。</div>
+
+  <h2 class="text-lg text-teal-300 mb-3 mt-8">UI 与交互</h2>
+  <ul class="spec-checklist">
+    <li class="check-done spec-item"><span class="spec-item-title">极简 HUD</span><span class="spec-tags">index.html</span><p class="spec-detail">顶部：速度 / 高度；底部：项目 Spec 链接。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">进入提示</span><span class="spec-tags">prompt</span><p class="spec-detail">首次点击进入 Pointer Lock，锁定后提示消失。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">设置面板</span><span class="spec-tags">settings</span><p class="spec-detail">灵敏度、速度上限、音量、减动效。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">截图模式</span><span class="spec-tags">photo</span><p class="spec-detail">隐藏 UI、自由视角、可选深场虚化。</p></li>
+  </ul>
+
+  <h2 class="text-lg text-amber-300 mb-3 mt-8">我们不做什么</h2>
+  <ul class="spec-checklist">
+    <li class="check-todo spec-item"><span class="spec-item-title">战斗与生存</span><span class="spec-tags">anti</span><p class="spec-detail">无敌人、无血量、无资源收集压力。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">任务追赶</span><span class="spec-tags">anti</span><p class="spec-detail">无主线任务列表、无倒计时、无每日签到。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">复杂经济</span><span class="spec-tags">anti</span><p class="spec-detail">无货币、无抽卡、无内购破坏氛围。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">强制教学</span><span class="spec-tags">anti</span><p class="spec-detail">教程仅一屏提示，之后全部靠探索。</p></li>
+  </ul>
+
+  <h2 class="text-lg text-teal-300 mb-3 mt-8">与阶段规划的关系</h2>
+  <p class="spec-detail">本页为「做什么游戏」的北星；<a class="text-lake hover:underline" href="index.html">总览</a> 与 Phase 0–5 为「怎么做出来」的工程清单。视觉落地见 Phase 1，世界扩展见 Phase 2，声音与文本见 Phase 3。</p>
+</main>
+</div>
+</body>
+</html>
