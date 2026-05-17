@@ -6,6 +6,11 @@
   "type": "module",
   "scripts": {
     "dev": "node serve.mjs",
-    "start": "node serve.mjs"
+    "start": "node serve.mjs",
+    "test": "vitest run",
+    "spec": "node scripts/generate-spec.mjs"
+  },
+  "devDependencies": {
+    "vitest": "^3.0.5"
   }
 }

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <base href="/spec/" />
+  <base href="./" />
   <title>概念设计 · Drift Spec</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config={theme:{extend:{colors:{lake:{DEFAULT:'#6eb8e8',dark:'#061428'}}}}}</script>
@@ -44,13 +44,13 @@
   <ul class="spec-checklist mb-6">
     <li class="check-done spec-item"><span class="spec-item-title">我在太空中漂浮</span><span class="spec-tags">fantasy</span><p class="spec-detail">不需要解释为什么来这里，也不需要救世界。</p></li>
     <li class="check-done spec-item"><span class="spec-item-title">速度由我掌控</span><span class="spec-tags">agency</span><p class="spec-detail">Shift 加速、Ctrl 减速、默认慢速前漂，从不被副本驱赶。</p></li>
-    <li class="check-wip spec-item"><span class="spec-item-title">有东西值得望向</span><span class="spec-tags">curiosity</span><p class="spec-detail">远处行星、光点、湖面将成为导航目标（Phase 2）。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">有东西值得望向</span><span class="spec-tags">pois.js</span><p class="spec-detail">远处行星 POI + 导航指示 + Tab 切换目标。</p></li>
     <li class="check-todo spec-item"><span class="spec-item-title">留下属于我的记忆</span><span class="spec-tags">memory</span><p class="spec-detail">截图、星座解锁、短文本日志（后期）。</p></li>
   </ul>
 
   <h2 class="text-lg text-teal-300 mb-3 mt-8">核心循环</h2>
   <div class="spec-loop">
-    <p><strong>进入</strong> → 点击画面锁定指针 → 立即漂浮</p>
+    <p><strong>进入</strong> → 「进入漫游」/ Enter → 锁定指针 → 立即漂浮（提示自动关闭）</p>
     <p><strong>漫游</strong> → 自由飞行、环顾星野、调整速度与高度</p>
     <p><strong>发现</strong> → 远处星云、湖光、未来 POI 引导前往</p>
     <p><strong>停留</strong> → 在喜欢的景色前静止或慢速盘旋（无强制目标）</p>
@@ -110,8 +110,9 @@
   <h2 class="text-lg text-teal-300 mb-3 mt-8">UI 与交互</h2>
   <ul class="spec-checklist">
     <li class="check-done spec-item"><span class="spec-item-title">极简 HUD</span><span class="spec-tags">index.html</span><p class="spec-detail">顶部：速度 / 高度；底部：项目 Spec 链接。</p></li>
-    <li class="check-done spec-item"><span class="spec-item-title">进入提示</span><span class="spec-tags">prompt</span><p class="spec-detail">首次点击进入 Pointer Lock，锁定后提示消失。</p></li>
-    <li class="check-todo spec-item"><span class="spec-item-title">设置面板</span><span class="spec-tags">settings</span><p class="spec-detail">灵敏度、速度上限、音量、减动效。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">进入提示</span><span class="spec-tags">prompt</span><p class="spec-detail">「进入漫游」按钮 + Enter；进入后弹窗完全关闭。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">截图模式</span><span class="spec-tags">photo</span><p class="spec-detail">P 键隐藏 UI，再按 P 退出。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">设置面板</span><span class="spec-tags">settings</span><p class="spec-detail">Esc 打开；灵敏度、速度、减动效、柔光。</p></li>
     <li class="check-todo spec-item"><span class="spec-item-title">截图模式</span><span class="spec-tags">photo</span><p class="spec-detail">隐藏 UI、自由视角、可选深场虚化。</p></li>
   </ul>
 

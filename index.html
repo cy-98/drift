@@ -9,11 +9,41 @@
     <style>
       * { box-sizing: border-box; margin: 0; }
       html, body { height: 100%; overflow: hidden; background: #030810; font-family: 'Segoe UI', 'PingFang SC', system-ui, sans-serif; }
-      #canvas { display: block; width: 100%; height: 100%; }
+      body::before {
+        content: '';
+        position: fixed; inset: 0; z-index: 0; pointer-events: none;
+        background-color: #030810;
+        background-image:
+          radial-gradient(1px 1px at 10% 15%, rgba(210, 225, 255, 0.85), transparent),
+          radial-gradient(1.5px 1.5px at 35% 8%, rgba(180, 210, 255, 0.7), transparent),
+          radial-gradient(1px 1px at 62% 22%, rgba(200, 220, 255, 0.75), transparent),
+          radial-gradient(1.2px 1.2px at 88% 12%, rgba(160, 200, 255, 0.6), transparent),
+          radial-gradient(1px 1px at 18% 48%, rgba(200, 220, 255, 0.65), transparent),
+          radial-gradient(1.4px 1.4px at 45% 55%, rgba(110, 184, 232, 0.55), transparent),
+          radial-gradient(1px 1px at 72% 42%, rgba(200, 220, 255, 0.7), transparent),
+          radial-gradient(1px 1px at 92% 58%, rgba(180, 210, 255, 0.5), transparent),
+          radial-gradient(1.2px 1.2px at 8% 78%, rgba(200, 220, 255, 0.6), transparent),
+          radial-gradient(1px 1px at 38% 88%, rgba(160, 200, 255, 0.55), transparent),
+          radial-gradient(1.5px 1.5px at 58% 72%, rgba(210, 225, 255, 0.8), transparent),
+          radial-gradient(1px 1px at 82% 82%, rgba(200, 220, 255, 0.65), transparent);
+        background-size: 100% 100%;
+        opacity: 0;
+        transition: opacity 0.6s ease;
+      }
+      body.is-loading::before { opacity: 1; }
+      #canvas { display: block; width: 100%; height: 100%; background: #030810; }
       #ui {
-        position: fixed; inset: 0; pointer-events: none; color: #e8f0ff;
+        position: fixed; inset: 0; z-index: 10; pointer-events: none; color: #e8f0ff;
         display: flex; flex-direction: column; justify-content: space-between;
         padding: 14px 18px; text-shadow: 0 1px 6px #000;
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0.55s ease, visibility 0.55s;
+      }
+      body.is-loading #ui {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
       }
       .top { font-size: 13px; color: #9ab0c8; }
       .top strong { color: #6eb8e8; letter-spacing: 0.12em; font-size: 11px; }
@@ -21,32 +51,269 @@
         align-self: center; text-align: center; padding: 14px 20px;
         background: rgba(6, 16, 32, 0.55); border: 1px solid rgba(110, 184, 232, 0.25);
         border-radius: 12px; font-size: 13px; color: #c8d8ec; pointer-events: auto;
-        max-width: 22rem; transition: opacity 0.6s;
+        max-width: 22rem; transition: opacity 0.6s; cursor: pointer;
       }
       .center.hidden { opacity: 0; pointer-events: none; }
+      #prompt.dismissed {
+        display: none !important;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+      #vignette {
+        position: fixed; inset: 0; z-index: 4; pointer-events: none;
+        background: radial-gradient(ellipse 85% 75% at 50% 45%, transparent 42%, rgba(3, 8, 16, 0.55) 100%);
+        opacity: 0;
+        transition: opacity 0.4s;
+      }
+      body.vignette-on #vignette { opacity: 1; }
+      body.photo-mode #ui,
+      body.photo-mode #compass,
+      body.photo-mode #lore,
+      body.photo-mode #settings,
+      body.photo-mode #touch-ui,
+      body.photo-mode #vignette { opacity: 0 !important; pointer-events: none !important; visibility: hidden; }
+      body.photo-mode::after {
+        content: '截图模式 · P 退出';
+        position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
+        font-size: 12px; color: #9ab0c8; letter-spacing: 0.15em; z-index: 12;
+        pointer-events: none;
+      }
+      #touch-ui {
+        position: fixed; inset: 0; z-index: 6; pointer-events: none; display: none;
+      }
+      body.touch-ui #touch-ui { display: block; }
+      .touch-stick {
+        position: absolute; width: 110px; height: 110px; left: 18px; bottom: 22px;
+        border-radius: 50%; border: 1px solid rgba(110, 184, 232, 0.35);
+        background: rgba(6, 16, 32, 0.45); pointer-events: auto; touch-action: none;
+      }
+      .touch-stick-knob {
+        position: absolute; width: 44px; height: 44px; left: 50%; top: 50%;
+        margin: -22px 0 0 -22px; border-radius: 50%;
+        background: rgba(110, 184, 232, 0.35);
+        border: 1px solid rgba(110, 184, 232, 0.55);
+      }
+      .touch-look {
+        position: absolute; right: 0; top: 0; width: 48%; height: 100%;
+        pointer-events: auto; touch-action: none;
+      }
+      #webgl-error {
+        position: fixed; inset: 0; z-index: 50; display: none; align-items: center; justify-content: center;
+        background: #030810; color: #c8d8ec; padding: 2rem; text-align: center;
+      }
+      #webgl-error.show { display: flex; }
+      .start-btn {
+        display: block; width: 100%; margin: 0 0 0.75rem; padding: 0.6rem 1.25rem;
+        font: inherit; font-size: 1.05rem; letter-spacing: 0.28em; color: #e8f0ff;
+        background: rgba(110, 184, 232, 0.2); border: 1px solid rgba(110, 184, 232, 0.5);
+        border-radius: 8px; cursor: pointer; transition: background 0.15s, border-color 0.15s;
+      }
+      .start-btn:hover { background: rgba(110, 184, 232, 0.32); border-color: rgba(110, 184, 232, 0.75); }
+      .prompt-hints { font-size: 12px; line-height: 1.55; opacity: 0.88; margin: 0; }
+      #fps { color: #6eb8e8; font-variant-numeric: tabular-nums; }
+      #prompt.wake-guide {
+        animation: wake-guide-in 0.7s ease forwards, wake-guide-glow 2.4s ease-in-out 0.7s infinite;
+      }
+      @keyframes wake-guide-in {
+        from { opacity: 0; transform: scale(0.96) translateY(10px); }
+        to { opacity: 1; transform: scale(1) translateY(0); }
+      }
+      @keyframes wake-guide-glow {
+        0%, 100% { border-color: rgba(110, 184, 232, 0.35); box-shadow: 0 0 0 rgba(110, 184, 232, 0); }
+        50% { border-color: rgba(110, 184, 232, 0.65); box-shadow: 0 0 24px rgba(110, 184, 232, 0.2); }
+      }
       .bottom { font-size: 12px; color: #6a8098; text-align: center; }
       kbd {
         display: inline-block; padding: 0.1em 0.45em; margin: 0 0.1em;
         border-radius: 4px; background: rgba(110, 184, 232, 0.15);
         border: 1px solid rgba(110, 184, 232, 0.3); font-size: 11px;
       }
+      #settings {
+        position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+        background: rgba(3, 8, 16, 0.72); pointer-events: none; opacity: 0;
+        transition: opacity 0.25s; z-index: 20;
+      }
+      #settings.open { pointer-events: auto; opacity: 1; }
+      #settings .panel {
+        width: min(22rem, 92vw); padding: 1.25rem 1.35rem;
+        background: rgba(6, 16, 32, 0.95); border: 1px solid rgba(110, 184, 232, 0.28);
+        border-radius: 12px; color: #c8d8ec; pointer-events: auto;
+      }
+      #settings h2 { font-size: 1rem; color: #6eb8e8; margin-bottom: 1rem; }
+      #settings label {
+        display: block; font-size: 0.82rem; color: #9ab0c8; margin: 0.75rem 0 0.35rem;
+      }
+      #settings input[type="range"] { width: 100%; accent-color: #6eb8e8; }
+      #settings select {
+        width: 100%; margin-top: 0.25rem; padding: 0.45rem 0.5rem;
+        border-radius: 8px; border: 1px solid rgba(110, 184, 232, 0.35);
+        background: rgba(3, 8, 16, 0.9); color: #e8f0ff; font: inherit; font-size: 0.85rem;
+      }
+      #settings .row { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; }
+      #settings .row input { accent-color: #6eb8e8; }
+      #settings button {
+        margin-top: 1rem; width: 100%; padding: 0.5rem;
+        border: 1px solid rgba(110, 184, 232, 0.35); border-radius: 8px;
+        background: rgba(110, 184, 232, 0.12); color: #e8f0ff; cursor: pointer;
+      }
+      #settings button:hover { background: rgba(110, 184, 232, 0.22); }
+      #settings .hint { font-size: 0.75rem; color: #6a8098; margin-top: 0.75rem; }
+      .hud-row { margin-top: 0.35rem; font-size: 12px; color: #9ab0c8; }
+      .hud-row span { color: #6eb8e8; }
+      #target.flash { color: #ffe066; }
+      #compass {
+        position: fixed; width: 14px; height: 14px; border-radius: 50%;
+        border: 2px solid rgba(110, 184, 232, 0.85);
+        background: rgba(110, 184, 232, 0.35);
+        box-shadow: 0 0 12px rgba(110, 184, 232, 0.6);
+        pointer-events: none; z-index: 5; opacity: 0;
+        transition: opacity 0.2s;
+      }
+      #compass.edge { width: 10px; height: 10px; border-width: 1.5px; }
+      #lore {
+        position: fixed; left: 50%; bottom: 18%; transform: translateX(-50%) translateY(8px);
+        max-width: 20rem; padding: 12px 16px; text-align: center;
+        background: rgba(6, 16, 32, 0.88); border: 1px solid rgba(110, 184, 232, 0.35);
+        border-radius: 10px; color: #c8d8ec; font-size: 13px; line-height: 1.5;
+        opacity: 0; pointer-events: none; transition: opacity 0.5s, transform 0.5s; z-index: 8;
+      }
+      #lore.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+      #lore strong { display: block; color: #6eb8e8; margin-bottom: 0.35rem; font-size: 12px; }
+      #lore p { margin: 0; font-size: 12px; color: #9ab0c8; }
+      #canvas { position: fixed; inset: 0; z-index: 1; }
+      #loading {
+        position: fixed; inset: 0; z-index: 40; display: flex; align-items: center; justify-content: center;
+        background: radial-gradient(
+          ellipse 120% 90% at 50% 50%,
+          rgba(3, 8, 16, 0.08) 0%,
+          rgba(3, 8, 16, 0.35) 50%,
+          rgba(3, 8, 16, 0.62) 100%
+        );
+        color: #e8f0ff; transition: opacity 0.85s ease, visibility 0.85s;
+        pointer-events: auto;
+      }
+      #loading.out { opacity: 0; visibility: hidden; pointer-events: none; }
+      .loading-inner {
+        text-align: center; padding: 1.5rem 2rem;
+        background: rgba(6, 16, 32, 0.42);
+        border: 1px solid rgba(110, 184, 232, 0.22);
+        border-radius: 14px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35);
+        text-shadow: 0 1px 12px rgba(0, 0, 0, 0.9);
+      }
+      .loading-brand {
+        font-size: 11px; letter-spacing: 0.35em; color: #6eb8e8; margin-bottom: 1.25rem;
+      }
+      .loading-text {
+        font-size: 1.35rem; font-weight: 300; letter-spacing: 0.35em; color: #c8d8ec;
+        animation: loading-breathe 2.4s ease-in-out infinite;
+      }
+      .loading-sub { margin-top: 0.75rem; font-size: 12px; color: #6a8098; letter-spacing: 0.12em; }
+      .loading-dots { display: flex; gap: 0.45rem; justify-content: center; margin-top: 1.25rem; }
+      .loading-dots span {
+        width: 5px; height: 5px; border-radius: 50%; background: #6eb8e8;
+        animation: loading-dot 1.2s ease-in-out infinite;
+      }
+      .loading-dots span:nth-child(2) { animation-delay: 0.15s; }
+      .loading-dots span:nth-child(3) { animation-delay: 0.3s; }
+      @keyframes loading-breathe {
+        0%, 100% { opacity: 0.55; }
+        50% { opacity: 1; }
+      }
+      @keyframes loading-dot {
+        0%, 80%, 100% { opacity: 0.25; transform: scale(0.85); }
+        40% { opacity: 1; transform: scale(1); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .loading-text, .loading-dots span { animation: none; opacity: 0.85; }
+        #prompt.wake-guide { animation: none; opacity: 1; }
+      }
     </style>
   </head>
   <body>
+    <div id="loading" aria-live="polite" aria-busy="true">
+      <div class="loading-inner">
+        <p class="loading-brand">DRIFT</p>
+        <p class="loading-text" id="loading-text">正在苏醒</p>
+        <p class="loading-sub" id="loading-sub">星野与意识正在汇聚</p>
+        <div class="loading-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+      </div>
+    </div>
+    <div id="vignette" aria-hidden="true"></div>
+    <div id="webgl-error" role="alert">
+      <div>
+        <p style="font-size:1.1rem;margin-bottom:0.75rem">无法启动 WebGL</p>
+        <p style="font-size:13px;color:#9ab0c8">请更新显卡驱动，或在浏览器设置中开启硬件加速后刷新。</p>
+      </div>
+    </div>
     <canvas id="canvas"></canvas>
+    <div id="touch-ui" aria-hidden="true">
+      <div class="touch-stick" id="move-stick"><span class="touch-stick-knob" id="move-knob"></span></div>
+      <div class="touch-look" id="look-zone"></div>
+    </div>
+    <div id="compass" aria-hidden="true"></div>
+    <div id="lore"><strong></strong><p></p></div>
+    <div id="settings" aria-hidden="true">
+      <div class="panel" role="dialog" aria-labelledby="settings-title">
+        <h2 id="settings-title">设置</h2>
+        <label for="sens">鼠标灵敏度 <span id="sens-val"></span></label>
+        <input id="sens" type="range" min="0.4" max="2" step="0.1" />
+        <label for="speed-range">基础速度 <span id="speed-val"></span></label>
+        <input id="speed-range" type="range" min="2" max="14" step="0.5" />
+        <label class="row"><input id="reduced" type="checkbox" /> 减动效模式（更少粒子与动画）</label>
+        <label class="row"><input id="bloom" type="checkbox" /> 柔光增强（星点与湖面）</label>
+        <label class="row"><input id="ambient" type="checkbox" /> 环境音（宇宙底噪）</label>
+        <label class="row"><input id="vignette" type="checkbox" /> 电影暗角</label>
+        <label for="quality">画质档位</label>
+        <select id="quality">
+          <option value="low">低（更流畅）</option>
+          <option value="medium" selected>中</option>
+          <option value="high">高</option>
+        </select>
+        <button type="button" id="settings-close">关闭 · Esc</button>
+        <p class="hint">设置会自动保存到本机浏览器。</p>
+      </div>
+    </div>
     <div id="ui">
       <div class="top">
         <strong>DRIFT</strong> · 星际漫游<br />
-        速度 <span id="speed">1.0</span> · 高度 <span id="alt">0</span>
+        <span class="hud-row">FPS <span id="fps">—</span></span><br />
+        速度 <span id="speed">6.0</span> · 高度 <span id="alt">0</span>
+        <div class="hud-row">目标 <span id="target">—</span> · <span id="dist">—</span></div>
       </div>
       <div id="prompt" class="center">
-        点击画面进入漫游<br />
-        <span style="font-size: 12px; opacity: 0.85">
-          <kbd>WASD</kbd> 平移 · <kbd>QE</kbd> 升降 · 鼠标环顾 · <kbd>Shift</kbd> 加速 · <kbd>Ctrl</kbd> 减速
-        </span>
+        <button type="button" id="start-btn" class="start-btn">进入漫游</button>
+        <p class="prompt-hints">
+          <kbd>WASD</kbd> 平移 · <kbd>QE</kbd> 升降 · <kbd>Tab</kbd> 切换目标 · <kbd>Esc</kbd> 设置<br />
+          <kbd>Enter</kbd> 进入 · <kbd>P</kbd> 截图模式 · 无法锁定鼠标时按住左键拖动环顾
+        </p>
       </div>
-      <p class="bottom">程序化星野 · WebGL · <a href="/spec/" style="color:#6eb8e8;pointer-events:auto">项目 Spec</a></p>
+      <p class="bottom">程序化星野 · WebGL · <a href="spec/" style="color:#6eb8e8;pointer-events:auto">项目 Spec</a></p>
     </div>
-    <script type="module" src="/src/game.js"></script>
+    <script>document.body.classList.add('is-loading')</script>
+    <script type="module" src="src/game.js"></script>
+    <script>
+      setTimeout(() => {
+        const el = document.getElementById('loading')
+        if (!el || el.classList.contains('out')) return
+        const sub = document.getElementById('loading-sub')
+        if (sub) sub.textContent = '仍在汇聚星光，请稍候…'
+      }, 10000)
+    </script>
+    <script>
+      const sens = document.getElementById('sens')
+      const spd = document.getElementById('speed-range')
+      const sensVal = document.getElementById('sens-val')
+      const speedVal = document.getElementById('speed-val')
+      function syncLabels() {
+        sensVal.textContent = Number(sens.value).toFixed(1)
+        speedVal.textContent = Number(spd.value).toFixed(1)
+      }
+      sens.addEventListener('input', syncLabels)
+      spd.addEventListener('input', syncLabels)
+      syncLabels()
+    </script>
   </body>
 </html>

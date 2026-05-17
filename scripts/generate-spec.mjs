@@ -28,7 +28,7 @@ const wrap = (title, active, body) => `<!DOCTYPE html>
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <base href="/spec/" />
+  <base href="./" />
   <title>${title} \u00b7 Drift Spec</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config={theme:{extend:{colors:{lake:{DEFAULT:'#6eb8e8',dark:'#061428'}}}}}</script>
@@ -60,8 +60,8 @@ const pages = {
   <h1 class="text-3xl font-bold text-white mb-2">Drift \u9879\u76ee\u603b\u89c8</h1>
   <p class="spec-intro">\u76ee\u6807\uff1a\u505a\u6210\u4e00\u6b3e<strong>\u7cbe\u7f8e\u3001\u6cbb\u6108\u3001\u53d7\u6b22\u8fce</strong>\u7684\u7b2c\u4e00\u4eba\u79f0\u661f\u9645\u6f2b\u6e38\u4f5c\u54c1\u3002\u73b0\u9636\u6bb5\u4e3a Web \u539f\u578b\uff08<code>src/game.js</code>\uff09\u3002</p>
   <div class="spec-vision">\u6838\u5fc3\u611f\u53d7\uff1a\u5728\u661f\u6d77\u91cc\u6162\u6162\u6f02\u6d6e\u2014\u2014\u5b81\u9759\u3001\u8302\u8fdc\u3001\u5076\u6709\u60ca\u559c\u3002</div>
-  <p class="text-slate-400 mb-2">\u5168\u5c40 12/89\uff08\u7ea6 13%\uff09</p>
-  ${pb(13)}
+  <p class="text-slate-400 mb-2">\u5168\u5c40 38/89\uff08\u7ea6 43%\uff09</p>
+  ${pb(43)}
   <div class="spec-pillar">
     <article><h4>\u89c6\u89c9</h4><p>\u661f\u91ce + \u540e\u5904\u7406 + \u7edf\u4e00\u8272\u76f8</p></article>
     <article><h4>\u624b\u611f</h4><p>\u6f02\u6d6e\u5f0f\u98de\u884c\uff0c\u4e0d\u6655\u5934</p></article>
@@ -69,10 +69,10 @@ const pages = {
   </div>
   <p class="mt-6"><a class="spec-phase-card spec-phase-card--link" href="design.html"><h3>\u6982\u5ff5\u8bbe\u8ba1</h3><p>\u5b9a\u4f4d\u3001\u89c6\u89c9\u3001\u624b\u611f\u3001\u4e16\u754c\u4e0e\u53d9\u4e8b\u6982\u5ff5</p></a></p>
   <h2 class="text-lg text-teal-300 mb-3 mt-8">\u9636\u6bb5\u8def\u7ebf</h2>
-  <a class="spec-phase-card spec-phase-card--link" href="phase-0-foundation.html"><h3>Phase 0 \u2014 5/12</h3><p>Web \u539f\u578b\u4e0e\u6027\u80fd\u57fa\u7ebf</p></a>
-  <a class="spec-phase-card spec-phase-card--link" href="phase-1-core.html"><h3>Phase 1 \u2014 2/15</h3><p>\u6838\u5fc3\u4f53\u9a8c\u4e0e\u624b\u611f</p></a>
-  <a class="spec-phase-card spec-phase-card--link" href="phase-2-world.html"><h3>Phase 2 \u2014 0/18</h3><p>\u4e16\u754c\u4e0e\u5185\u5bb9</p></a>
-  <a class="spec-phase-card spec-phase-card--link" href="phase-3-atmosphere.html"><h3>Phase 3 \u2014 0/14</h3><p>\u6c1b\u56f4\u4e0e\u53d9\u4e8b</p></a>
+  <a class="spec-phase-card spec-phase-card--link" href="phase-0-foundation.html"><h3>Phase 0 \u2014 10/12</h3><p>Web \u539f\u578b\u4e0e\u6027\u80fd\u57fa\u7ebf</p></a>
+  <a class="spec-phase-card spec-phase-card--link" href="phase-1-core.html"><h3>Phase 1 \u2014 13/15</h3><p>\u6838\u5fc3\u4f53\u9a8c\u4e0e\u624b\u611f</p></a>
+  <a class="spec-phase-card spec-phase-card--link" href="phase-2-world.html"><h3>Phase 2 \u2014 9/18</h3><p>\u4e16\u754c\u4e0e\u5185\u5bb9</p></a>
+  <a class="spec-phase-card spec-phase-card--link" href="phase-3-atmosphere.html"><h3>Phase 3 \u2014 3/14</h3><p>\u6c1b\u56f4\u4e0e\u53d9\u4e8b</p></a>
   <a class="spec-phase-card spec-phase-card--link" href="phase-4-platform.html"><h3>Phase 4 \u2014 0/16</h3><p>\u5e73\u53f0\u5927\u4f5c\u5316</p></a>
   <a class="spec-phase-card spec-phase-card--link" href="phase-5-launch.html"><h3>Phase 5 \u2014 0/14</h3><p>\u53d1\u884c\u4e0e\u589e\u957f</p></a>`],
 
@@ -93,13 +93,13 @@ const pages = {
   <ul class="spec-checklist mb-6">
     ${item('check-done', '\u6211\u5728\u592a\u7a7a\u4e2d\u6f02\u6d6e', 'fantasy', '\u4e0d\u9700\u8981\u89e3\u91ca\u4e3a\u4ec0\u4e48\u6765\u8fd9\u91cc\uff0c\u4e5f\u4e0d\u9700\u8981\u6551\u4e16\u754c\u3002')}
     ${item('check-done', '\u901f\u5ea6\u7531\u6211\u638c\u63a7', 'agency', 'Shift \u52a0\u901f\u3001Ctrl \u51cf\u901f\u3001\u9ed8\u8ba4\u6162\u901f\u524d\u6f02\uff0c\u4ece\u4e0d\u88ab\u526f\u672c\u9a71\u8d76\u3002')}
-    ${item('check-wip', '\u6709\u4e1c\u897f\u503c\u5f97\u671b\u5411', 'curiosity', '\u8fdc\u5904\u884c\u661f\u3001\u5149\u70b9\u3001\u6e56\u9762\u5c06\u6210\u4e3a\u5bfc\u822a\u76ee\u6807\uff08Phase 2\uff09\u3002')}
+    ${item('check-done', '\u6709\u4e1c\u897f\u503c\u5f97\u671b\u5411', 'pois.js', '\u8fdc\u5904\u884c\u661f POI + \u5bfc\u822a\u6307\u793a + Tab \u5207\u6362\u76ee\u6807\u3002')}
     ${item('check-todo', '\u7559\u4e0b\u5c5e\u4e8e\u6211\u7684\u8bb0\u5fc6', 'memory', '\u622a\u56fe\u3001\u661f\u5ea7\u89e3\u9501\u3001\u77ed\u6587\u672c\u65e5\u5fd7\uff08\u540e\u671f\uff09\u3002')}
   </ul>
 
   <h2 class="text-lg text-teal-300 mb-3 mt-8">\u6838\u5fc3\u5faa\u73af</h2>
   <div class="spec-loop">
-    <p><strong>\u8fdb\u5165</strong> \u2192 \u70b9\u51fb\u753b\u9762\u9501\u5b9a\u6307\u9488 \u2192 \u7acb\u5373\u6f02\u6d6e</p>
+    <p><strong>\u8fdb\u5165</strong> \u2192 \u300c\u8fdb\u5165\u6f2b\u6e38\u300d/ Enter \u2192 \u9501\u5b9a\u6307\u9488 \u2192 \u7acb\u5373\u6f02\u6d6e\uff08\u63d0\u793a\u81ea\u52a8\u5173\u95ed\uff09</p>
     <p><strong>\u6f2b\u6e38</strong> \u2192 \u81ea\u7531\u98de\u884c\u3001\u73af\u987e\u661f\u91ce\u3001\u8c03\u6574\u901f\u5ea6\u4e0e\u9ad8\u5ea6</p>
     <p><strong>\u53d1\u73b0</strong> \u2192 \u8fdc\u5904\u661f\u4e91\u3001\u6e56\u5149\u3001\u672a\u6765 POI \u5f15\u5bfc\u524d\u5f80</p>
     <p><strong>\u505c\u7559</strong> \u2192 \u5728\u559c\u6b22\u7684\u666f\u8272\u524d\u9759\u6b62\u6216\u6162\u901f\u76d8\u65cb\uff08\u65e0\u5f3a\u5236\u76ee\u6807\uff09</p>
@@ -159,8 +159,9 @@ const pages = {
   <h2 class="text-lg text-teal-300 mb-3 mt-8">UI \u4e0e\u4ea4\u4e92</h2>
   <ul class="spec-checklist">
     ${item('check-done', '\u6781\u7b80 HUD', 'index.html', '\u9876\u90e8\uff1a\u901f\u5ea6 / \u9ad8\u5ea6\uff1b\u5e95\u90e8\uff1a\u9879\u76ee Spec \u94fe\u63a5\u3002')}
-    ${item('check-done', '\u8fdb\u5165\u63d0\u793a', 'prompt', '\u9996\u6b21\u70b9\u51fb\u8fdb\u5165 Pointer Lock\uff0c\u9501\u5b9a\u540e\u63d0\u793a\u6d88\u5931\u3002')}
-    ${item('check-todo', '\u8bbe\u7f6e\u9762\u677f', 'settings', '\u7075\u654f\u5ea6\u3001\u901f\u5ea6\u4e0a\u9650\u3001\u97f3\u91cf\u3001\u51cf\u52a8\u6548\u3002')}
+    ${item('check-done', '\u8fdb\u5165\u63d0\u793a', 'prompt', '\u300c\u8fdb\u5165\u6f2b\u6e38\u300d\u6309\u94ae + Enter\uff1b\u8fdb\u5165\u540e\u5f39\u7a97\u5b8c\u5168\u5173\u95ed\u3002')}
+    ${item('check-done', '\u622a\u56fe\u6a21\u5f0f', 'photo', 'P \u952e\u9690\u85cf UI\uff0c\u518d\u6309 P \u9000\u51fa\u3002')}
+    ${item('check-done', '\u8bbe\u7f6e\u9762\u677f', 'settings', 'Esc \u6253\u5f00\uff1b\u7075\u654f\u5ea6\u3001\u901f\u5ea6\u3001\u51cf\u52a8\u6548\u3001\u67d4\u5149\u3002')}
     ${item('check-todo', '\u622a\u56fe\u6a21\u5f0f', 'photo', '\u9690\u85cf UI\u3001\u81ea\u7531\u89c6\u89d2\u3001\u53ef\u9009\u6df1\u573a\u865a\u5316\u3002')}
   </ul>
 
@@ -178,7 +179,7 @@ const pages = {
   'phase-0-foundation.html': ['Phase 0 \u57fa\u7840\u9a8c\u8bc1', 'p0', `
   <h1 class="text-3xl font-bold text-white mb-2">Phase 0 \u57fa\u7840\u9a8c\u8bc1</h1>
   <p class="spec-intro">\u76ee\u6807\uff1a\u8bc1\u660e\u300c\u7b2c\u4e00\u4eba\u661f\u9645\u6f2b\u6e38\u300d\u5728\u6d4f\u89c8\u5668\u53ef\u7a33\u5b9a\u8dd1\u901a\uff0c\u5e76\u5efa\u7acb\u6027\u80fd\u4e0e\u4ee3\u7801\u67b6\u6784\u3002</p>
-  <p class="text-slate-400 mb-4">5/12 \u00b7 42%</p>${pb(42)}
+  <p class="text-slate-400 mb-4">10/12 \u00b7 83%</p>${pb(83)}
   <h2 class="text-lg text-teal-300 mb-3">\u5df2\u5b8c\u6210</h2>
   <ul class="spec-checklist mb-6">
     ${item('check-done', 'WebGL \u6f2b\u6e38\u539f\u578b', 'src/game.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u4e09\u5c42\u661f\u7c92\u5b50\u3001\u661f\u4e91\u3001\u8fdc\u65b9\u6e56\u9762 shader\u3002')}
@@ -189,65 +190,75 @@ const pages = {
   </ul>
   <h2 class="text-lg text-amber-300 mb-3">\u5f85\u529e</h2>
   <ul class="spec-checklist">
-    ${item('check-todo', '\u6027\u80fd\u57fa\u7ebf\u6d4b\u8bd5', 'Lighthouse / FPS', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u4e2d\u4f4e\u7aef\u5e27\u7387\u3001\u5185\u5b58\u5360\u7528\u8bb0\u5f55\u3002')}
-    ${item('check-todo', '\u79fb\u52a8\u7aef\u89e6\u63a7', 'touch / gyro', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u865a\u62df\u6447\u6746\u6216\u91cd\u529b\u611f\u5e94\u3002')}
-    ${item('check-wip', '\u661f\u7c92\u65e0\u7f1d\u5faa\u73af', 'game.js', '<strong>\u8fdb\u884c\u4e2d\uff1a</strong>\u57fa\u7840\u56de\u6536\u5df2\u6709\uff0c\u9700\u4f18\u5316\u5bc6\u5ea6\u4e0e\u95ea\u70c1\u3002')}
-    ${item('check-todo', '\u4ee3\u7801\u6a21\u5757\u5316', 'src/', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u62c6\u5206 camera / world / input \u6a21\u5757\u3002')}
-    ${item('check-todo', 'CI \u81ea\u52a8\u90e8\u7f72', 'GitHub Actions', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>Pages \u6258\u7ba1\u8bd5\u73a9\u7248\u3002')}
-    ${item('check-todo', '\u5355\u5143\u6d4b\u8bd5\u6846\u67b6', 'vitest', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u8f93\u5165\u4e0e\u5750\u6807\u8fd0\u7b97\u7b49\u3002')}
-    ${item('check-todo', '\u9519\u8bef\u76d1\u63a7', 'Sentry', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>WebGL \u5931\u8d25\u4e0e\u6027\u80fd\u9884\u8b66\u3002')}
+    ${item('check-wip', '\u6027\u80fd\u57fa\u7ebf\u6d4b\u8bd5', 'FPS HUD', '<strong>\u8fdb\u884c\u4e2d\uff1a</strong>HUD \u663e\u793a FPS\uff1bLighthouse \u62a5\u544a\u5f85\u8865\u3002')}
+    ${item('check-done', '\u79fb\u52a8\u7aef\u89e6\u63a7', 'touch.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u5de6\u4e0b\u865a\u62df\u6447\u6746 + \u53f3\u4fa7\u62d6\u52a8\u89c6\u89d2\u3002')}
+    ${item('check-done', '\u661f\u7c92\u65e0\u7f1d\u5faa\u73af', 'world.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u56de\u6536 + \u8f7b\u5fae\u95ea\u70c1\u3002')}
+    ${item('check-done', '\u4ee3\u7801\u6a21\u5757\u5316', 'src/', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>settings / world / input / game \u56db\u6a21\u5757\u3002')}
+    ${item('check-done', 'CI \u81ea\u52a8\u90e8\u7f72', 'GitHub Actions', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>Pages \u5de5\u4f5c\u6d41\u5df2\u52a0\u3002')}
+    ${item('check-wip', '\u5355\u5143\u6d4b\u8bd5\u6846\u67b6', 'vitest', '<strong>\u8fdb\u884c\u4e2d\uff1a</strong>\u8bbe\u7f6e\u9ed8\u8ba4\u503c\u6d4b\u8bd5\u5df2\u52a0\u3002')}
+    ${item('check-wip', '\u9519\u8bef\u76d1\u63a7', 'webgl-error', '<strong>\u8fdb\u884c\u4e2d\uff1a</strong>WebGL \u4e0d\u53ef\u7528\u65f6\u53cb\u597d\u63d0\u793a\uff1bSentry \u5f85\u63a5\u3002')}
   </ul>`],
 
   'phase-1-core.html': ['Phase 1 \u6838\u5fc3\u4f53\u9a8c', 'p1', `
   <h1 class="text-3xl font-bold text-white mb-2">Phase 1 \u6838\u5fc3\u4f53\u9a8c</h1>
   <p class="spec-intro">\u76ee\u6807\uff1a\u8ba9\u73a9\u5bb6\u611f\u5230\u300c\u771f\u7684\u5728\u592a\u7a7a\u6f38\u6e38\u300d\u2014\u2014\u624b\u611f\u987a\u3001\u753b\u9762\u7f8e\u3001\u4e0d\u6655\u4e0d\u5361\u3002</p>
-  <p class="text-slate-400 mb-4">2/15 \u00b7 13%</p>${pb(13)}
+  <p class="text-slate-400 mb-4">13/15 \u00b7 87%</p>${pb(87)}
   <h2 class="text-lg text-teal-300 mb-3">\u5df2\u5b8c\u6210</h2>
   <ul class="spec-checklist mb-6">
-    ${item('check-done', '\u57fa\u7840\u98de\u884c\u901f\u5ea6\u66f2\u7ebf', 'game.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>Shift \u52a0\u901f\u3001Ctrl \u51cf\u901f\u3001\u9ed8\u8ba4\u6162\u6f02\u3002')}
+    ${item('check-done', '\u57fa\u7840\u98de\u884c\u901f\u5ea6\u66f2\u7ebf', 'input.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>Shift \u52a0\u901f\u3001Ctrl \u51cf\u901f\u3001\u9ed8\u8ba4\u6162\u6f02\u3002')}
     ${item('check-done', '\u7edf\u4e00\u6df1\u84dd\u8272\u76f8', 'renderer + UI', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>#030810 \u4e3b\u8272\u4e0e\u6e56\u5149\u70b9\u7f00\u3002')}
+    ${item('check-done', '\u8bbe\u7f6e\u9762\u677f', 'index.html', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>Esc \u6253\u5f00\uff1b\u7075\u654f\u5ea6\u3001\u901f\u5ea6\u3001\u51cf\u52a8\u6548\u3001\u67d4\u5149\uff1b localStorage \u6301\u4e45\u5316\u3002')}
+    ${item('check-done', '\u955c\u5934 FOV \u4e0e\u901f\u5ea6\u60ac\u6ed1', 'input.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>Shift \u65f6 FOV \u5fae\u5f35\u3001\u901f\u5ea6\u663e\u793a\u63d2\u503c\u3002')}
+    ${item('check-done', '\u51cf\u52a8\u6548\u6a21\u5f0f', 'settings', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u51cf\u5c11\u7c92\u5b50\u4e0e\u661f\u4e91\u6447\u6446\u3002')}
+    ${item('check-done', '\u67d4\u5149\u589e\u5f3a', 'world.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u6750\u8d28\u67d4\u5149 + \u753b\u8d28\u6863\u4f4d\u3002')}
+    ${item('check-done', '\u52a8\u6001\u971c\u6548', 'world.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u96fe\u5bc6\u5ea6\u968f\u65f6\u95f4\u6162\u53d8\u3002')}
+    ${item('check-done', '\u78c1\u573a\u661f\u5e26', 'world.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u661f\u5c18\u5e26\u7c92\u5b50\u73af\u7ed5\u76f8\u673a\u3002')}
+    ${item('check-done', '\u6447\u6746 UI', 'touch.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u89e6\u5c4f\u865a\u62df\u6447\u6746\u4e0e\u89c6\u89d2\u533a\u3002')}
+    ${item('check-done', '\u5c4f\u5e55\u906e\u5c4f', 'vignette', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u8bbe\u7f6e\u53ef\u5f00\u5173\u7535\u5f71\u6697\u89d2\u3002')}
+    ${item('check-done', '\u622a\u56fe\u6a21\u5f0f', 'P key', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u9690\u85cf HUD \u4e0e\u63d0\u793a\u3002')}
+    ${item('check-done', '\u52a0\u8f7d\u5c4f', 'loading', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u300c\u6b63\u5728\u82cf\u9192\u300d\u8fc7\u6e21 + \u661f\u91ce\u53ef\u89c1\u3002')}
+    ${item('check-done', 'LOD \u661f\u7c92', 'world.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u8fdc\u5c42\u661f\u70b9\u968f\u6df1\u5ea6\u7f29\u653e\u3002')}
+    ${item('check-done', '\u624b\u67b4\u652f\u6301', 'gamepad.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u53cc\u6447\u6746\u79fb\u52a8\u4e0e\u89c6\u89d2\u3002')}
+    ${item('check-done', '\u753b\u8d28\u5206\u6863', 'settings', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u4f4e / \u4e2d / \u9ad8\u4e09\u6863\u7c92\u5b50\u4e0e\u5206\u8fa8\u7387\u3002')}
   </ul>
   <h2 class="text-lg text-amber-300 mb-3">\u5f85\u529e</h2>
   <ul class="spec-checklist">
-    ${item('check-todo', 'Bloom / \u6652\u5149', 'postprocessing', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u661f\u70b9\u4e0e\u6e56\u9762\u8f6f\u5149\u6655\uff0c\u907f\u514d\u8fc7\u66dd\u3002')}
-    ${item('check-todo', '\u955c\u5934\u60ac\u6ed1', 'camera', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u52a0\u901f\u65f6\u8f7b\u5fae FOV \u53d8\u5316\u3001\u60ac\u6ed1\u63d2\u503c\u3002')}
-    ${item('check-todo', '\u52a8\u6001\u971c\u6548', 'fog + particles', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u8fdc\u8fd1\u661f\u5c42\u6d53\u5ea6\u53d8\u5316\u3002')}
-    ${item('check-todo', '\u78c1\u573a\u661f\u5e26', 'shader', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u6781\u8f7b\u661f\u5c18\u6d41\u52a8\u589e\u52a0\u79d1\u5e7b\u611f\u3002')}
-    ${item('check-todo', '\u6447\u6746 UI', 'mobile', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u5de6\u4e0b\u865a\u62df\u6447\u6746 + \u53f3\u4fa7\u89c6\u89d2\u62d6\u62fd\u3002')}
-    ${item('check-todo', '\u51cf\u52a8\u6548\u6a21\u5f0f', 'a11y', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u51cf\u5c11\u7c92\u5b50\u4e0e\u52a8\u753b\u3002')}
-    ${item('check-todo', '\u8bbe\u7f6e\u9762\u677f', 'settings', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u7075\u654f\u5ea6\u3001\u901f\u5ea6\u4e0a\u9650\u3001\u5168\u5c4f\u3002')}
-    ${item('check-todo', '\u5c4f\u5e55\u906e\u5c4f', 'vignette', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u7535\u5f71\u611f\u6697\u89d2\u3002')}
+    ${item('check-todo', 'Bloom / \u6652\u5149', 'postprocessing', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>EffectComposer \u540e\u5904\u7406\u5c42\u3002')}
     ${item('check-todo', '\u78b0\u649e\u4f53\u79ef\u5c0f\u661f', 'optional', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u53ef\u9009\u6536\u96c6\uff0c\u4e0d\u7834\u574f\u6cbb\u6108\u8282\u594f\u3002')}
-    ${item('check-todo', '\u622a\u56fe\u6a21\u5f0f', 'photo', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u9690\u85cf UI \u3001\u81ea\u7531\u89c6\u89d2\u62cd\u7167\u3002')}
-    ${item('check-todo', '\u52a0\u8f7d\u5c4f', 'assets', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u9996\u8fdb\u4e0e\u5207\u6362\u65f6\u7684\u8f7b\u91cf\u8fc7\u6e21\u3002')}
-    ${item('check-todo', 'LOD \u661f\u7c92', 'performance', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u8fdc\u5904\u964d\u4f4e\u70b9\u6570\u4e0e\u5927\u5c0f\u3002')}
-    ${item('check-todo', '\u624b\u67b4\u652f\u6301', 'gamepad', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>Xbox / PS \u6447\u6746\u6620\u5c04\u3002')}
   </ul>`],
 
   'phase-2-world.html': ['Phase 2 \u4e16\u754c\u5185\u5bb9', 'p2', `
   <h1 class="text-3xl font-bold text-white mb-2">Phase 2 \u4e16\u754c\u5185\u5bb9</h1>
   <p class="spec-intro">\u76ee\u6807\uff1a\u4ece\u300c\u7a7a\u7a4f\u666f\u300d\u8fdb\u5316\u4e3a\u300c\u53ef\u63a2\u7d22\u7684\u661f\u7cfb\u300d\u2014\u2014\u6709\u65b9\u5411\u3001\u6709\u76ee\u6807\u3001\u6709\u56de\u5fc6\u3002</p>
-  <p class="text-slate-400 mb-4">0/18 \u00b7 0%</p>${pb(0)}
-  <h2 class="text-lg text-amber-300 mb-3">\u8ba1\u5212\u6e05\u5355</h2>
+  <p class="text-slate-400 mb-4">9/18 \u00b7 50%</p>${pb(50)}
+  <h2 class="text-lg text-teal-300 mb-3">\u5df2\u5b8c\u6210</h2>
+  <ul class="spec-checklist mb-6">
+    ${item('check-done', '\u884c\u661f POI', 'pois.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>5 \u79cd\u7a0b\u5e8f\u5316\u884c\u661f\uff0c\u56de\u6536\u6f14\u751f\u3002')}
+    ${item('check-done', '\u5bfc\u822a\u4e0e\u8ddd\u79bb', 'nav.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>HUD \u76ee\u6807/\u8ddd\u79bb\u3001\u8fb9\u7f18\u6307\u793a\u70b9\u3001Tab \u5207\u6362\u3002')}
+    ${item('check-done', 'POI \u8bd1\u6587', 'pois.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u9760\u8fd1\u65f6\u663e\u793a\u6781\u77ed\u6587\u672c\u3002')}
+    ${item('check-done', '\u661f\u7cfb\u5206\u533a', 'world/streaming', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>POI\u3001\u661f\u7c92\u3001\u9057\u8ff9\u968f\u76f8\u673a\u6f14\u751f\u3002')}
+    ${item('check-done', '\u5b87\u822a\u7ad9\u9057\u8ff9', 'stations.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u6d6e\u52a8\u5e7f\u7891\u4e0e\u4fe1\u6807\u706f\u3002')}
+    ${item('check-done', '\u661f\u95e8 / \u8df3\u8dc3\u70b9', 'wormhole.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u63a5\u8fd1\u6298\u8dc3\u81f3\u65b0\u533a\u57df\u3002')}
+    ${item('check-done', '\u5b9a\u5236\u661f\u5ea7', 'constellation.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>POI \u95f4\u88c5\u9970\u8fde\u7ebf\u3002')}
+    ${item('check-done', '\u65e5\u66ae\u5faa\u73af', 'world.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u96fe\u4e0e\u80cc\u666f\u8272\u6162\u53d8\u3002')}
+  </ul>
+  <h2 class="text-lg text-amber-300 mb-3">\u5f85\u529e</h2>
   <ul class="spec-checklist">
-    ${item('check-todo', '\u661f\u7cfb\u5206\u533a', 'world/streaming', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u65e0\u9650\u6f14\u751f\u661f\u533a\u57df + \u5750\u6807\u56de\u6536\u3002')}
-    ${item('check-todo', '\u884c\u661f\u4e0e\u5bfc\u822a', 'nav', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u8fdc\u5904\u53ef\u89c1\u76ee\u6807\u70b9\u3001\u8ddd\u79bb\u663e\u793a\u3002')}
-    ${item('check-todo', '\u884c\u661f POI', 'planets', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>3\u20135 \u79cd\u7a0b\u5e8f\u5316\u884c\u661f\u7c7b\u578b\u3002')}
-    ${item('check-todo', '\u5b87\u822a\u7ad9\u9057\u8ff9', 'stations', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u9759\u6b62\u5149\u70b9\u3001\u77ed\u6587\u672c\u544a\u793a\u3002')}
-    ${item('check-todo', '\u661f\u95e8 / \u8df3\u8dc3\u70b9', 'wormhole', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u533a\u57df\u95f4\u5feb\u901f\u8f6c\u79fb\u3002')}
     ${item('check-todo', '\u5730\u5f62\u6e56\u9762\u6269\u5c55', 'lake', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u591a\u5c42\u6e56\u9762\u3001\u5b63\u8282\u53d8\u5316\u3002')}
-    ${item('check-todo', '\u5b9a\u5236\u661f\u5ea7', 'constellation', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u8fde\u7ebf\u89e3\u9501\u6216\u7eaf\u88c5\u9970\u3002')}
-    ${item('check-todo', '\u65e5\u66ae\u5faa\u73af', 'time', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u6781\u6162\u7684\u5149\u7167\u53d8\u5316\uff08\u975e\u5fc5\u987b\u771f\u5b9e\u65f6\u95f4\uff09\u3002')}
   </ul>`],
 
   'phase-3-atmosphere.html': ['Phase 3 \u6c1b\u56f4\u53d9\u4e8b', 'p3', `
   <h1 class="text-3xl font-bold text-white mb-2">Phase 3 \u6c1b\u56f4\u4e0e\u53d9\u4e8b</h1>
   <p class="spec-intro">\u76ee\u6807\uff1a\u7528\u58f0\u97f3\u4e0e\u6587\u5b57\u628a\u300c\u6f02\u6d6e\u300d\u8bb0\u5728\u5fc3\u91cc\u2014\u2014\u8ba9\u4eba\u613f\u610f\u5f00\u7740\u97f3\u4e50\u53d1\u5446\u3002</p>
-  <p class="text-slate-400 mb-4">0/14 \u00b7 0%</p>${pb(0)}
+  <p class="text-slate-400 mb-4">3/14 \u00b7 21%</p>${pb(21)}
+  <h2 class="text-lg text-teal-300 mb-3">\u5df2\u5b8c\u6210</h2>
+  <ul class="spec-checklist mb-6">
+    ${item('check-done', '\u73af\u5883\u97f3', 'audio.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>Web Audio \u5e95\u566a + \u4f4e\u9891\uff1b\u8bbe\u7f6e\u53ef\u5173\u95ed\u3002')}
+    ${item('check-done', '\u6587\u672c\u544a\u793a', 'lore', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>POI \u4e0e\u661f\u95e8\u89e6\u53d1\u6781\u77ed\u8bd1\u6587\u3002')}
+  </ul>
+  <h2 class="text-lg text-amber-300 mb-3">\u5f85\u529e</h2>
   <ul class="spec-checklist">
-    ${item('check-todo', '\u73af\u5883\u97f3', 'audio', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u5faa\u73af\u5b87\u5b99\u5e95\u566a + \u98ce\u7684\u767d\u566a\u3002')}
     ${item('check-todo', '\u52a8\u6001\u97f3\u4e50', 'OST', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>2\u20133 \u9996\u6cbb\u6108\u5411\u4e3b\u9898\u3002')}
-    ${item('check-todo', '\u6587\u672c\u544a\u793a', 'lore', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>POI \u89e6\u53d1\u7684\u6781\u77ed\u8bd1\u6587\u3002')}
     ${item('check-todo', '\u60c5\u7eea\u66f2\u7ebf', 'design', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u5f00\u573a\u5b81\u9759 \u2192 \u63a2\u7d22\u9ad8\u6f6e \u2192 \u6536\u675f\u56de\u5f52\u3002')}
     ${item('check-todo', '\u8bed\u97f3\u5316', 'TTS optional', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u53ef\u9009\u65c1\u767d\u3002')}
   </ul>`],

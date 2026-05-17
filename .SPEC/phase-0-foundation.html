@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <base href="/spec/" />
+  <base href="./" />
   <title>Phase 0 基础验证 · Drift Spec</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config={theme:{extend:{colors:{lake:{DEFAULT:'#6eb8e8',dark:'#061428'}}}}}</script>
@@ -30,7 +30,7 @@
 
   <h1 class="text-3xl font-bold text-white mb-2">Phase 0 基础验证</h1>
   <p class="spec-intro">目标：证明「第一人星际漫游」在浏览器可稳定跑通，并建立性能与代码架构。</p>
-  <p class="text-slate-400 mb-4">5/12 · 42%</p><div class="progress-bar mb-6"><div class="progress-bar__fill" style="width:42%"></div></div>
+  <p class="text-slate-400 mb-4">10/12 · 83%</p><div class="progress-bar mb-6"><div class="progress-bar__fill" style="width:83%"></div></div>
   <h2 class="text-lg text-teal-300 mb-3">已完成</h2>
   <ul class="spec-checklist mb-6">
     <li class="check-done spec-item"><span class="spec-item-title">WebGL 漫游原型</span><span class="spec-tags">src/game.js</span><p class="spec-detail"><strong>做了什么：</strong>三层星粒子、星云、远方湖面 shader。</p></li>
@@ -41,13 +41,13 @@
   </ul>
   <h2 class="text-lg text-amber-300 mb-3">待办</h2>
   <ul class="spec-checklist">
-    <li class="check-todo spec-item"><span class="spec-item-title">性能基线测试</span><span class="spec-tags">Lighthouse / FPS</span><p class="spec-detail"><strong>还差什么：</strong>中低端帧率、内存占用记录。</p></li>
-    <li class="check-todo spec-item"><span class="spec-item-title">移动端触控</span><span class="spec-tags">touch / gyro</span><p class="spec-detail"><strong>还差什么：</strong>虚拟摇杆或重力感应。</p></li>
-    <li class="check-wip spec-item"><span class="spec-item-title">星粒无缝循环</span><span class="spec-tags">game.js</span><p class="spec-detail"><strong>进行中：</strong>基础回收已有，需优化密度与闪烁。</p></li>
-    <li class="check-todo spec-item"><span class="spec-item-title">代码模块化</span><span class="spec-tags">src/</span><p class="spec-detail"><strong>还差什么：</strong>拆分 camera / world / input 模块。</p></li>
-    <li class="check-todo spec-item"><span class="spec-item-title">CI 自动部署</span><span class="spec-tags">GitHub Actions</span><p class="spec-detail"><strong>还差什么：</strong>Pages 托管试玩版。</p></li>
-    <li class="check-todo spec-item"><span class="spec-item-title">单元测试框架</span><span class="spec-tags">vitest</span><p class="spec-detail"><strong>还差什么：</strong>输入与坐标运算等。</p></li>
-    <li class="check-todo spec-item"><span class="spec-item-title">错误监控</span><span class="spec-tags">Sentry</span><p class="spec-detail"><strong>还差什么：</strong>WebGL 失败与性能预警。</p></li>
+    <li class="check-wip spec-item"><span class="spec-item-title">性能基线测试</span><span class="spec-tags">FPS HUD</span><p class="spec-detail"><strong>进行中：</strong>HUD 显示 FPS；Lighthouse 报告待补。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">移动端触控</span><span class="spec-tags">touch.js</span><p class="spec-detail"><strong>做了什么：</strong>左下虚拟摇杆 + 右侧拖动视角。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">星粒无缝循环</span><span class="spec-tags">world.js</span><p class="spec-detail"><strong>做了什么：</strong>回收 + 轻微闪烁。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">代码模块化</span><span class="spec-tags">src/</span><p class="spec-detail"><strong>做了什么：</strong>settings / world / input / game 四模块。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">CI 自动部署</span><span class="spec-tags">GitHub Actions</span><p class="spec-detail"><strong>做了什么：</strong>Pages 工作流已加。</p></li>
+    <li class="check-wip spec-item"><span class="spec-item-title">单元测试框架</span><span class="spec-tags">vitest</span><p class="spec-detail"><strong>进行中：</strong>设置默认值测试已加。</p></li>
+    <li class="check-wip spec-item"><span class="spec-item-title">错误监控</span><span class="spec-tags">webgl-error</span><p class="spec-detail"><strong>进行中：</strong>WebGL 不可用时友好提示；Sentry 待接。</p></li>
   </ul>
 </main>
 </div>

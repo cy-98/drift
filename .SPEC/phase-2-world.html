@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <base href="/spec/" />
+  <base href="./" />
   <title>Phase 2 世界内容 · Drift Spec</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config={theme:{extend:{colors:{lake:{DEFAULT:'#6eb8e8',dark:'#061428'}}}}}</script>
@@ -30,17 +30,21 @@
 
   <h1 class="text-3xl font-bold text-white mb-2">Phase 2 世界内容</h1>
   <p class="spec-intro">目标：从「空穏景」进化为「可探索的星系」——有方向、有目标、有回忆。</p>
-  <p class="text-slate-400 mb-4">0/18 · 0%</p><div class="progress-bar mb-6"><div class="progress-bar__fill" style="width:0%"></div></div>
-  <h2 class="text-lg text-amber-300 mb-3">计划清单</h2>
+  <p class="text-slate-400 mb-4">9/18 · 50%</p><div class="progress-bar mb-6"><div class="progress-bar__fill" style="width:50%"></div></div>
+  <h2 class="text-lg text-teal-300 mb-3">已完成</h2>
+  <ul class="spec-checklist mb-6">
+    <li class="check-done spec-item"><span class="spec-item-title">行星 POI</span><span class="spec-tags">pois.js</span><p class="spec-detail"><strong>做了什么：</strong>5 种程序化行星，回收演生。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">导航与距离</span><span class="spec-tags">nav.js</span><p class="spec-detail"><strong>做了什么：</strong>HUD 目标/距离、边缘指示点、Tab 切换。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">POI 译文</span><span class="spec-tags">pois.js</span><p class="spec-detail"><strong>做了什么：</strong>靠近时显示极短文本。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">星系分区</span><span class="spec-tags">world/streaming</span><p class="spec-detail"><strong>做了什么：</strong>POI、星粒、遗迹随相机演生。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">宇航站遗迹</span><span class="spec-tags">stations.js</span><p class="spec-detail"><strong>做了什么：</strong>浮动广碑与信标灯。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">星门 / 跳跃点</span><span class="spec-tags">wormhole.js</span><p class="spec-detail"><strong>做了什么：</strong>接近折跃至新区域。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">定制星座</span><span class="spec-tags">constellation.js</span><p class="spec-detail"><strong>做了什么：</strong>POI 间装饰连线。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">日暮循环</span><span class="spec-tags">world.js</span><p class="spec-detail"><strong>做了什么：</strong>雾与背景色慢变。</p></li>
+  </ul>
+  <h2 class="text-lg text-amber-300 mb-3">待办</h2>
   <ul class="spec-checklist">
-    <li class="check-todo spec-item"><span class="spec-item-title">星系分区</span><span class="spec-tags">world/streaming</span><p class="spec-detail"><strong>还差什么：</strong>无限演生星区域 + 坐标回收。</p></li>
-    <li class="check-todo spec-item"><span class="spec-item-title">行星与导航</span><span class="spec-tags">nav</span><p class="spec-detail"><strong>还差什么：</strong>远处可见目标点、距离显示。</p></li>
-    <li class="check-todo spec-item"><span class="spec-item-title">行星 POI</span><span class="spec-tags">planets</span><p class="spec-detail"><strong>还差什么：</strong>3–5 种程序化行星类型。</p></li>
-    <li class="check-todo spec-item"><span class="spec-item-title">宇航站遗迹</span><span class="spec-tags">stations</span><p class="spec-detail"><strong>还差什么：</strong>静止光点、短文本告示。</p></li>
-    <li class="check-todo spec-item"><span class="spec-item-title">星门 / 跳跃点</span><span class="spec-tags">wormhole</span><p class="spec-detail"><strong>还差什么：</strong>区域间快速转移。</p></li>
     <li class="check-todo spec-item"><span class="spec-item-title">地形湖面扩展</span><span class="spec-tags">lake</span><p class="spec-detail"><strong>还差什么：</strong>多层湖面、季节变化。</p></li>
-    <li class="check-todo spec-item"><span class="spec-item-title">定制星座</span><span class="spec-tags">constellation</span><p class="spec-detail"><strong>还差什么：</strong>连线解锁或纯装饰。</p></li>
-    <li class="check-todo spec-item"><span class="spec-item-title">日暮循环</span><span class="spec-tags">time</span><p class="spec-detail"><strong>还差什么：</strong>极慢的光照变化（非必须真实时间）。</p></li>
   </ul>
 </main>
 </div>
