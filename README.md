@@ -1,8 +1,7 @@
 # Drift
 
 第一人称星际漫游：在程序化星野里漂着，远处有一条湖面光带。  
-纯 Web（Three.js），本地 `node serve.mjs` 即可玩。  
-纯 Web（Three.js），无构建步骤即可本地运行。
+纯 Web（Three.js），本地 `node serve.mjs` 即可玩，无需 build。
 
 ## 运行
 
