@@ -1,25 +1,14 @@
-const STORAGE_KEY = 'drift-settings'
+import { createWebStorage } from './platform/web/storage-web.js'
+import { createSettingsStore, defaults } from './core/settings.js'
 
-export const defaults = {
-  sensitivity: 1,
-  baseSpeed: 6,
-  reducedMotion: false,
-  bloom: true,
-  ambient: true,
-  vignette: true,
-  quality: 'medium',
-}
+export { defaults, createSettingsStore }
+
+const store = createSettingsStore(createWebStorage())
 
 export function loadSettings() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return { ...defaults }
-    return { ...defaults, ...JSON.parse(raw) }
-  } catch {
-    return { ...defaults }
-  }
+  return store.load()
 }
 
 export function saveSettings(settings) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(settings))
+  store.save(settings)
 }

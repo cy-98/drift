@@ -1,4 +1,4 @@
-import * as THREE from 'https://esm.sh/three@0.172.0'
+import * as THREE from 'three'
 
 const TYPES = [
   {
@@ -156,6 +156,10 @@ export function createPois(scene, { reducedMotion, bloom }) {
     }
   }
 
+  function visitedCount() {
+    return entries.filter((e) => e.visited).length
+  }
+
   function list() {
     return entries.map((e) => ({
       name: e.type.name,
@@ -177,5 +181,5 @@ export function createPois(scene, { reducedMotion, bloom }) {
     entries.length = 0
   }
 
-  return { update, list, dispose, entries }
+  return { update, list, visitedCount, dispose, entries }
 }

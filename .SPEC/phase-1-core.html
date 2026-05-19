@@ -30,7 +30,7 @@
 
   <h1 class="text-3xl font-bold text-white mb-2">Phase 1 核心体验</h1>
   <p class="spec-intro">目标：让玩家感到「真的在太空漸游」——手感顺、画面美、不晕不卡。</p>
-  <p class="text-slate-400 mb-4">13/15 · 87%</p><div class="progress-bar mb-6"><div class="progress-bar__fill" style="width:87%"></div></div>
+  <p class="text-slate-400 mb-4">15/15 · 100%</p><div class="progress-bar mb-6"><div class="progress-bar__fill" style="width:100%"></div></div>
   <h2 class="text-lg text-teal-300 mb-3">已完成</h2>
   <ul class="spec-checklist mb-6">
     <li class="check-done spec-item"><span class="spec-item-title">基础飞行速度曲线</span><span class="spec-tags">input.js</span><p class="spec-detail"><strong>做了什么：</strong>Shift 加速、Ctrl 减速、默认慢漂。</p></li>
@@ -48,11 +48,8 @@
     <li class="check-done spec-item"><span class="spec-item-title">LOD 星粒</span><span class="spec-tags">world.js</span><p class="spec-detail"><strong>做了什么：</strong>远层星点随深度缩放。</p></li>
     <li class="check-done spec-item"><span class="spec-item-title">手枴支持</span><span class="spec-tags">gamepad.js</span><p class="spec-detail"><strong>做了什么：</strong>双摇杆移动与视角。</p></li>
     <li class="check-done spec-item"><span class="spec-item-title">画质分档</span><span class="spec-tags">settings</span><p class="spec-detail"><strong>做了什么：</strong>低 / 中 / 高三档粒子与分辨率。</p></li>
-  </ul>
-  <h2 class="text-lg text-amber-300 mb-3">待办</h2>
-  <ul class="spec-checklist">
-    <li class="check-todo spec-item"><span class="spec-item-title">Bloom / 晒光</span><span class="spec-tags">postprocessing</span><p class="spec-detail"><strong>还差什么：</strong>EffectComposer 后处理层。</p></li>
-    <li class="check-todo spec-item"><span class="spec-item-title">碰撞体积小星</span><span class="spec-tags">optional</span><p class="spec-detail"><strong>还差什么：</strong>可选收集，不破坏治愈节奏。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">Bloom / 晒光</span><span class="spec-tags">postprocess.js</span><p class="spec-detail"><strong>做了什么：</strong>EffectComposer + UnrealBloomPass，跟柔光开关联动。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">碰撞体积小星</span><span class="spec-tags">collectibles.js</span><p class="spec-detail"><strong>做了什么：</strong>微光收集，设置可关，无任务压力。</p></li>
   </ul>
 </main>
 </div>

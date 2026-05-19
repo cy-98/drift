@@ -1,4 +1,4 @@
-import * as THREE from 'https://esm.sh/three@0.172.0'
+import * as THREE from 'three'
 
 export function createConstellation(scene) {
   const maxSeg = 24

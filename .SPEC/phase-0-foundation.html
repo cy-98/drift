@@ -30,24 +30,21 @@
 
   <h1 class="text-3xl font-bold text-white mb-2">Phase 0 基础验证</h1>
   <p class="spec-intro">目标：证明「第一人星际漫游」在浏览器可稳定跑通，并建立性能与代码架构。</p>
-  <p class="text-slate-400 mb-4">10/12 · 83%</p><div class="progress-bar mb-6"><div class="progress-bar__fill" style="width:83%"></div></div>
+  <p class="text-slate-400 mb-4">12/12 · 100%</p><div class="progress-bar mb-6"><div class="progress-bar__fill" style="width:100%"></div></div>
   <h2 class="text-lg text-teal-300 mb-3">已完成</h2>
-  <ul class="spec-checklist mb-6">
+  <ul class="spec-checklist">
     <li class="check-done spec-item"><span class="spec-item-title">WebGL 漫游原型</span><span class="spec-tags">src/game.js</span><p class="spec-detail"><strong>做了什么：</strong>三层星粒子、星云、远方湖面 shader。</p></li>
     <li class="check-done spec-item"><span class="spec-item-title">第一人摇杆 + WASD</span><span class="spec-tags">game.js</span><p class="spec-detail"><strong>做了什么：</strong>Pointer Lock 环顾、六向移动、默认慢速前漂。</p></li>
     <li class="check-done spec-item"><span class="spec-item-title">本地服务</span><span class="spec-tags">serve.mjs</span><p class="spec-detail"><strong>做了什么：</strong>node serve.mjs 即可跑，无构建。</p></li>
     <li class="check-done spec-item"><span class="spec-item-title">Docker 可选</span><span class="spec-tags">docker-compose.yml</span><p class="spec-detail"><strong>做了什么：</strong>容器内一键预览。</p></li>
     <li class="check-done spec-item"><span class="spec-item-title">Spec 文档目录</span><span class="spec-tags">.SPEC/</span><p class="spec-detail"><strong>做了什么：</strong>长远计划与阶段清单。</p></li>
-  </ul>
-  <h2 class="text-lg text-amber-300 mb-3">待办</h2>
-  <ul class="spec-checklist">
-    <li class="check-wip spec-item"><span class="spec-item-title">性能基线测试</span><span class="spec-tags">FPS HUD</span><p class="spec-detail"><strong>进行中：</strong>HUD 显示 FPS；Lighthouse 报告待补。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">性能基线测试</span><span class="spec-tags">docs/PERFORMANCE.md</span><p class="spec-detail"><strong>做了什么：</strong>FPS HUD 与低帧记录、本地基线文档。</p></li>
     <li class="check-done spec-item"><span class="spec-item-title">移动端触控</span><span class="spec-tags">touch.js</span><p class="spec-detail"><strong>做了什么：</strong>左下虚拟摇杆 + 右侧拖动视角。</p></li>
     <li class="check-done spec-item"><span class="spec-item-title">星粒无缝循环</span><span class="spec-tags">world.js</span><p class="spec-detail"><strong>做了什么：</strong>回收 + 轻微闪烁。</p></li>
-    <li class="check-done spec-item"><span class="spec-item-title">代码模块化</span><span class="spec-tags">src/</span><p class="spec-detail"><strong>做了什么：</strong>settings / world / input / game 四模块。</p></li>
-    <li class="check-done spec-item"><span class="spec-item-title">CI 自动部署</span><span class="spec-tags">GitHub Actions</span><p class="spec-detail"><strong>做了什么：</strong>Pages 工作流已加。</p></li>
-    <li class="check-wip spec-item"><span class="spec-item-title">单元测试框架</span><span class="spec-tags">vitest</span><p class="spec-detail"><strong>进行中：</strong>设置默认值测试已加。</p></li>
-    <li class="check-wip spec-item"><span class="spec-item-title">错误监控</span><span class="spec-tags">webgl-error</span><p class="spec-detail"><strong>进行中：</strong>WebGL 不可用时友好提示；Sentry 待接。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">代码模块化</span><span class="spec-tags">src/</span><p class="spec-detail"><strong>做了什么：</strong>多模块架构（world / input / nav 等）。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">CI 自动部署</span><span class="spec-tags">GitHub Actions</span><p class="spec-detail"><strong>做了什么：</strong>Pages 部署 + 单测步骤。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">单元测试框架</span><span class="spec-tags">vitest</span><p class="spec-detail"><strong>做了什么：</strong>settings / util 测试，<code>npm test</code>。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">错误监控</span><span class="spec-tags">monitor.js</span><p class="spec-detail"><strong>做了什么：</strong>WebGL 失败页、上下文丢失、低 FPS 日志。</p></li>
   </ul>
 </main>
 </div>

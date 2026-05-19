@@ -1,26 +1,48 @@
 export function createAudio(getSettings) {
   let ctx = null
-  let gain = null
-  let osc = null
+  let master = null
+  let ambientGain = null
+  let musicGain = null
+  let oscLow = null
+  let oscMid = null
   let noise = null
   let started = false
+  let sessionTime = 0
 
   function ensure() {
     if (ctx) return true
     try {
       ctx = new AudioContext()
-      gain = ctx.createGain()
-      gain.gain.value = 0
-      gain.connect(ctx.destination)
+      master = ctx.createGain()
+      master.gain.value = 0
+      master.connect(ctx.destination)
 
-      osc = ctx.createOscillator()
-      osc.type = 'sine'
-      osc.frequency.value = 52
-      const oscGain = ctx.createGain()
-      oscGain.gain.value = 0.04
-      osc.connect(oscGain)
-      oscGain.connect(gain)
-      osc.start()
+      ambientGain = ctx.createGain()
+      ambientGain.gain.value = 0
+      ambientGain.connect(master)
+
+      musicGain = ctx.createGain()
+      musicGain.gain.value = 0
+      musicGain.connect(master)
+
+      oscLow = ctx.createOscillator()
+      oscLow.type = 'sine'
+      oscLow.frequency.value = 52
+      const lowG = ctx.createGain()
+      lowG.gain.value = 0.04
+      oscLow.connect(lowG)
+      lowG.connect(ambientGain)
+      oscLow.start()
+
+      oscMid = ctx.createOscillator()
+      oscMid.type = 'triangle'
+      oscMid.frequency.value = 130
+      const midG = ctx.createGain()
+      midG.gain.value = 0
+      oscMid.connect(midG)
+      midG.connect(musicGain)
+      oscMid.start()
+      oscMid._gain = midG
 
       const bufferSize = 2 * ctx.sampleRate
       const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate)
@@ -36,7 +58,7 @@ export function createAudio(getSettings) {
       noiseGain.gain.value = 0.025
       noise.connect(filter)
       filter.connect(noiseGain)
-      noiseGain.connect(gain)
+      noiseGain.connect(ambientGain)
       noise.start()
       return true
     } catch {
@@ -52,15 +74,51 @@ export function createAudio(getSettings) {
   }
 
   function syncVolume() {
-    if (!gain) return
-    const { ambient } = getSettings()
-    const target = started && ambient ? 0.55 : 0
-    gain.gain.setTargetAtTime(target, ctx.currentTime, 0.4)
+    if (!master) return
+    const { ambient, music } = getSettings()
+    const on = started && (ambient || music)
+    master.gain.setTargetAtTime(on ? 0.55 : 0, ctx.currentTime, 0.5)
+    ambientGain.gain.setTargetAtTime(started && ambient ? 1 : 0, ctx.currentTime, 0.4)
+    musicGain.gain.setTargetAtTime(started && music ? 1 : 0, ctx.currentTime, 0.4)
+  }
+
+  /** 情绪曲线：宁静开场 → 探索上扬 → 久漂收束 */
+  function updateMood(dt, { speedNorm = 0, moving = false } = {}) {
+    if (!started || !ctx) return
+    const { ambient, music } = getSettings()
+    if (!ambient && !music) return
+
+    sessionTime += dt
+    const t = sessionTime
+    const open = Math.min(1, t / 100)
+    const explore = moving ? Math.min(1, speedNorm * 0.85) : 0
+    const windDown = t > 420 ? Math.min(1, (t - 420) / 200) : 0
+
+    const calm = open * (1 - windDown * 0.45)
+    const lift = explore * (1 - windDown * 0.65)
+    const pad = music ? calm * 0.35 + lift * 0.55 : 0
+
+    if (oscMid?._gain) {
+      oscMid._gain.gain.setTargetAtTime(pad * 0.06, ctx.currentTime, 0.35)
+    }
+    if (oscLow) {
+      const base = ambient ? 0.04 : 0
+      oscLow.frequency.setTargetAtTime(48 + lift * 8 + calm * 4, ctx.currentTime, 0.5)
+      oscLow.detune?.setTargetAtTime?.(lift * 12, ctx.currentTime, 0.5)
+    }
+    if (oscMid) {
+      oscMid.frequency.setTargetAtTime(124 + lift * 18 + seasonDrift(t), ctx.currentTime, 0.6)
+    }
+  }
+
+  function seasonDrift(t) {
+    return Math.sin(t * 0.07) * 3
   }
 
   function dispose() {
     try {
-      osc?.stop()
+      oscLow?.stop()
+      oscMid?.stop()
       noise?.stop()
       ctx?.close()
     } catch {
@@ -69,5 +127,5 @@ export function createAudio(getSettings) {
     ctx = null
   }
 
-  return { resume, syncVolume, dispose }
+  return { resume, syncVolume, updateMood, dispose }
 }

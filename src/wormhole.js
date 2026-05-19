@@ -1,4 +1,4 @@
-import * as THREE from 'https://esm.sh/three@0.172.0'
+import * as THREE from 'three'
 
 const WARP_DIST = 42
 const COOLDOWN = 8

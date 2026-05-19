@@ -1,4 +1,4 @@
-import * as THREE from 'https://esm.sh/three@0.172.0'
+import * as THREE from 'three'
 
 const QUALITY = {
   low: { starMul: 0.55, spreadMul: 0.9 },
@@ -55,7 +55,47 @@ function makeDustBelt(count) {
   return new THREE.Points(geo, mat)
 }
 
-export function createWorld(scene, { reducedMotion, bloom, quality = 'medium' }) {
+function makeLakeLayer(bloom, { rimScale, alphaScale, waveScale }) {
+  const rim = bloom ? 0.16 * rimScale : 0.1 * rimScale
+  const alpha = 0.1 * alphaScale
+  return new THREE.ShaderMaterial({
+    transparent: true,
+    depthWrite: false,
+    uniforms: {
+      uTime: { value: 0 },
+      uDay: { value: 0.5 },
+      uIntensity: { value: 1 },
+    },
+    vertexShader: `
+      varying vec2 vUv;
+      void main() {
+        vUv = uv;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform float uTime;
+      uniform float uDay;
+      uniform float uIntensity;
+      varying vec2 vUv;
+      void main() {
+        vec2 uv = vUv;
+        float wave = sin(uv.x * ${waveScale} + uTime * 0.35) * 0.5 + 0.5;
+        wave *= sin(uv.y * ${waveScale * 0.85} - uTime * 0.28) * 0.5 + 0.5;
+        vec3 deep = mix(vec3(0.02, 0.05, 0.1), vec3(0.05, 0.12, 0.22), uDay);
+        vec3 bright = mix(vec3(0.04, 0.1, 0.18), vec3(0.1, 0.22, 0.38), uDay);
+        vec3 col = mix(deep, bright, wave);
+        float rimBand = pow(1.0 - abs(uv.y - 0.68) * 1.45, 4.5);
+        col += vec3(0.12, 0.32, 0.5) * rimBand * ${rim.toFixed(4)} * uIntensity;
+        float edge = smoothstep(0.12, 0.5, uv.y);
+        float alpha = edge * (${alpha.toFixed(4)} + uDay * 0.04) * uIntensity;
+        gl_FragColor = vec4(col, alpha);
+      }
+    `,
+  })
+}
+
+export function createWorld(scene, { reducedMotion, bloom, quality = 'medium', lakeGlow = true }) {
   const q = QUALITY[quality] ?? QUALITY.medium
   const mul = (reducedMotion ? 0.5 : 1) * q.starMul
 
@@ -93,33 +133,27 @@ export function createWorld(scene, { reducedMotion, bloom, quality = 'medium' })
   nebula2.rotation.z = 0.4
   scene.add(nebula2)
 
-  const lakeMat = new THREE.ShaderMaterial({
-    transparent: true,
-    uniforms: { uTime: { value: 0 } },
-    vertexShader: `
-      varying vec2 vUv;
-      void main() {
-        vUv = uv;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-      }
-    `,
-    fragmentShader: `
-      uniform float uTime;
-      varying vec2 vUv;
-      void main() {
-        vec2 uv = vUv;
-        float wave = sin(uv.x * 12.0 + uTime * 0.4) * 0.5 + 0.5;
-        wave *= sin(uv.y * 10.0 - uTime * 0.3) * 0.5 + 0.5;
-        vec3 col = mix(vec3(0.02, 0.06, 0.12), vec3(0.08, 0.2, 0.35), wave);
-        float rim = pow(1.0 - abs(uv.y - 0.55) * 2.0, 3.0);
-        col += vec3(0.25, 0.55, 0.75) * rim * ${bloom ? '0.42' : '0.28'};
-        float alpha = smoothstep(0.0, 0.35, uv.y) * 0.38;
-        gl_FragColor = vec4(col, alpha);
-      }
-    `,
+  const lakeLayers = [
+    {
+      mat: makeLakeLayer(bloom, { rimScale: 1, alphaScale: 1, waveScale: 10 }),
+      size: 340,
+      ahead: 155,
+      down: 108,
+      tilt: -0.26,
+    },
+    {
+      mat: makeLakeLayer(bloom, { rimScale: 0.55, alphaScale: 0.65, waveScale: 7 }),
+      size: 480,
+      ahead: 210,
+      down: 125,
+      tilt: -0.2,
+    },
+  ].map((cfg) => {
+    const mesh = new THREE.Mesh(new THREE.PlaneGeometry(cfg.size, cfg.size), cfg.mat)
+    scene.add(mesh)
+    return { ...cfg, mesh }
   })
-  const lake = new THREE.Mesh(new THREE.PlaneGeometry(320, 320), lakeMat)
-  scene.add(lake)
+
   const _down = new THREE.Vector3()
   const _ahead = new THREE.Vector3()
   const _clear = new THREE.Color()
@@ -168,9 +202,19 @@ export function createWorld(scene, { reducedMotion, bloom, quality = 'medium' })
     const az = camera.position.z
 
     _down.set(0, -1, 0).applyQuaternion(camera.quaternion)
-    lake.position.copy(camera.position).addScaledVector(_ahead, 130).addScaledVector(_down, 72)
-    lake.quaternion.copy(camera.quaternion)
-    lake.rotateX(-Math.PI * 0.42)
+    const pitchFade = THREE.MathUtils.clamp(1 - Math.abs(camera.rotation.x) / 0.95, 0.08, 1)
+
+    for (const layer of lakeLayers) {
+      layer.mesh.visible = lakeGlow
+      if (!lakeGlow) continue
+      layer.mesh.position
+        .copy(camera.position)
+        .addScaledVector(_ahead, layer.ahead)
+        .addScaledVector(_down, layer.down)
+      layer.mesh.quaternion.copy(camera.quaternion)
+      layer.mesh.rotateX(-Math.PI * layer.tilt)
+      layer.mat.uniforms.uIntensity.value = pitchFade
+    }
 
     nebula.position.set(ax + 40 + Math.sin(elapsed * 0.08) * 12 * motion, ay + 15, az - 175)
     nebula2.position.set(ax - 60 + Math.cos(elapsed * 0.06) * 18 * motion, ay - 10, az - 235)
@@ -179,18 +223,27 @@ export function createWorld(scene, { reducedMotion, bloom, quality = 'medium' })
       dust.position.copy(camera.position)
       dust.rotation.y = elapsed * 0.04
     }
+
+    return pitchFade
   }
 
   function update(elapsed, camera, dt, state = {}) {
     const motion = reducedMotion ? 0.35 : 1
     const day = 0.5 + 0.5 * Math.sin(elapsed * 0.018)
+    const season = 0.5 + 0.5 * Math.sin(elapsed * 0.0047 + 1.2)
     const fogBase = reducedMotion ? 0.01 : 0.0055
     scene.fog.density = fogBase * (0.82 + 0.28 * Math.sin(elapsed * 0.11))
     scene.fog.color.setHex(day > 0.55 ? dayFog : nightFog)
     _clear.copy(nightBg).lerp(dayBg, day * 0.22)
     state.clearColor = _clear
+    state.dayFactor = day
 
     followCamera(camera, elapsed, motion)
+    for (const layer of lakeLayers) {
+      layer.mat.uniforms.uTime.value = elapsed
+      layer.mat.uniforms.uDay.value = day * 0.65 + season * 0.35
+    }
+
     for (const layer of starLayers) {
       recycleStars(layer, camera)
       applyLod(layer, camera)
@@ -203,8 +256,6 @@ export function createWorld(scene, { reducedMotion, bloom, quality = 'medium' })
       twinkle /= Math.ceil(phases.length / 97) || 1
       layer.material.opacity = base * (0.88 + twinkle * 0.12 * motion)
     }
-    lakeMat.uniforms.uTime.value = elapsed
-    state.dayFactor = day
   }
 
   return { update, starLayers, dispose: () => {} }

@@ -60,8 +60,8 @@ const pages = {
   <h1 class="text-3xl font-bold text-white mb-2">Drift \u9879\u76ee\u603b\u89c8</h1>
   <p class="spec-intro">\u76ee\u6807\uff1a\u505a\u6210\u4e00\u6b3e<strong>\u7cbe\u7f8e\u3001\u6cbb\u6108\u3001\u53d7\u6b22\u8fce</strong>\u7684\u7b2c\u4e00\u4eba\u79f0\u661f\u9645\u6f2b\u6e38\u4f5c\u54c1\u3002\u73b0\u9636\u6bb5\u4e3a Web \u539f\u578b\uff08<code>src/game.js</code>\uff09\u3002</p>
   <div class="spec-vision">\u6838\u5fc3\u611f\u53d7\uff1a\u5728\u661f\u6d77\u91cc\u6162\u6162\u6f02\u6d6e\u2014\u2014\u5b81\u9759\u3001\u8302\u8fdc\u3001\u5076\u6709\u60ca\u559c\u3002</div>
-  <p class="text-slate-400 mb-2">\u5168\u5c40 38/89\uff08\u7ea6 43%\uff09</p>
-  ${pb(43)}
+  <p class="text-slate-400 mb-2">\u5168\u5c40 48/89\uff08\u7ea6 54%\uff09</p>
+  ${pb(54)}
   <div class="spec-pillar">
     <article><h4>\u89c6\u89c9</h4><p>\u661f\u91ce + \u540e\u5904\u7406 + \u7edf\u4e00\u8272\u76f8</p></article>
     <article><h4>\u624b\u611f</h4><p>\u6f02\u6d6e\u5f0f\u98de\u884c\uff0c\u4e0d\u6655\u5934</p></article>
@@ -69,11 +69,11 @@ const pages = {
   </div>
   <p class="mt-6"><a class="spec-phase-card spec-phase-card--link" href="design.html"><h3>\u6982\u5ff5\u8bbe\u8ba1</h3><p>\u5b9a\u4f4d\u3001\u89c6\u89c9\u3001\u624b\u611f\u3001\u4e16\u754c\u4e0e\u53d9\u4e8b\u6982\u5ff5</p></a></p>
   <h2 class="text-lg text-teal-300 mb-3 mt-8">\u9636\u6bb5\u8def\u7ebf</h2>
-  <a class="spec-phase-card spec-phase-card--link" href="phase-0-foundation.html"><h3>Phase 0 \u2014 10/12</h3><p>Web \u539f\u578b\u4e0e\u6027\u80fd\u57fa\u7ebf</p></a>
-  <a class="spec-phase-card spec-phase-card--link" href="phase-1-core.html"><h3>Phase 1 \u2014 13/15</h3><p>\u6838\u5fc3\u4f53\u9a8c\u4e0e\u624b\u611f</p></a>
-  <a class="spec-phase-card spec-phase-card--link" href="phase-2-world.html"><h3>Phase 2 \u2014 9/18</h3><p>\u4e16\u754c\u4e0e\u5185\u5bb9</p></a>
-  <a class="spec-phase-card spec-phase-card--link" href="phase-3-atmosphere.html"><h3>Phase 3 \u2014 3/14</h3><p>\u6c1b\u56f4\u4e0e\u53d9\u4e8b</p></a>
-  <a class="spec-phase-card spec-phase-card--link" href="phase-4-platform.html"><h3>Phase 4 \u2014 0/16</h3><p>\u5e73\u53f0\u5927\u4f5c\u5316</p></a>
+  <a class="spec-phase-card spec-phase-card--link" href="phase-0-foundation.html"><h3>Phase 0 \u2014 12/12</h3><p>Web \u539f\u578b\u4e0e\u6027\u80fd\u57fa\u7ebf</p></a>
+  <a class="spec-phase-card spec-phase-card--link" href="phase-1-core.html"><h3>Phase 1 \u2014 15/15</h3><p>\u6838\u5fc3\u4f53\u9a8c\u4e0e\u624b\u611f</p></a>
+  <a class="spec-phase-card spec-phase-card--link" href="phase-2-world.html"><h3>Phase 2 \u2014 10/18</h3><p>\u4e16\u754c\u4e0e\u5185\u5bb9</p></a>
+  <a class="spec-phase-card spec-phase-card--link" href="phase-3-atmosphere.html"><h3>Phase 3 \u2014 6/14</h3><p>\u6c1b\u56f4\u4e0e\u53d9\u4e8b</p></a>
+  <a class="spec-phase-card spec-phase-card--link" href="phase-4-platform.html"><h3>Phase 4 \u2014 2/16</h3><p>\u5e73\u53f0\u5927\u4f5c\u5316</p></a>
   <a class="spec-phase-card spec-phase-card--link" href="phase-5-launch.html"><h3>Phase 5 \u2014 0/14</h3><p>\u53d1\u884c\u4e0e\u589e\u957f</p></a>`],
 
   'design.html': ['\u6982\u5ff5\u8bbe\u8ba1', 'design', `
@@ -179,30 +179,27 @@ const pages = {
   'phase-0-foundation.html': ['Phase 0 \u57fa\u7840\u9a8c\u8bc1', 'p0', `
   <h1 class="text-3xl font-bold text-white mb-2">Phase 0 \u57fa\u7840\u9a8c\u8bc1</h1>
   <p class="spec-intro">\u76ee\u6807\uff1a\u8bc1\u660e\u300c\u7b2c\u4e00\u4eba\u661f\u9645\u6f2b\u6e38\u300d\u5728\u6d4f\u89c8\u5668\u53ef\u7a33\u5b9a\u8dd1\u901a\uff0c\u5e76\u5efa\u7acb\u6027\u80fd\u4e0e\u4ee3\u7801\u67b6\u6784\u3002</p>
-  <p class="text-slate-400 mb-4">10/12 \u00b7 83%</p>${pb(83)}
+  <p class="text-slate-400 mb-4">12/12 \u00b7 100%</p>${pb(100)}
   <h2 class="text-lg text-teal-300 mb-3">\u5df2\u5b8c\u6210</h2>
-  <ul class="spec-checklist mb-6">
+  <ul class="spec-checklist">
     ${item('check-done', 'WebGL \u6f2b\u6e38\u539f\u578b', 'src/game.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u4e09\u5c42\u661f\u7c92\u5b50\u3001\u661f\u4e91\u3001\u8fdc\u65b9\u6e56\u9762 shader\u3002')}
     ${item('check-done', '\u7b2c\u4e00\u4eba\u6447\u6746 + WASD', 'game.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>Pointer Lock \u73af\u987e\u3001\u516d\u5411\u79fb\u52a8\u3001\u9ed8\u8ba4\u6162\u901f\u524d\u6f02\u3002')}
     ${item('check-done', '\u672c\u5730\u670d\u52a1', 'serve.mjs', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>node serve.mjs \u5373\u53ef\u8dd1\uff0c\u65e0\u6784\u5efa\u3002')}
     ${item('check-done', 'Docker \u53ef\u9009', 'docker-compose.yml', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u5bb9\u5668\u5185\u4e00\u952e\u9884\u89c8\u3002')}
     ${item('check-done', 'Spec \u6587\u6863\u76ee\u5f55', '.SPEC/', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u957f\u8fdc\u8ba1\u5212\u4e0e\u9636\u6bb5\u6e05\u5355\u3002')}
-  </ul>
-  <h2 class="text-lg text-amber-300 mb-3">\u5f85\u529e</h2>
-  <ul class="spec-checklist">
-    ${item('check-wip', '\u6027\u80fd\u57fa\u7ebf\u6d4b\u8bd5', 'FPS HUD', '<strong>\u8fdb\u884c\u4e2d\uff1a</strong>HUD \u663e\u793a FPS\uff1bLighthouse \u62a5\u544a\u5f85\u8865\u3002')}
+    ${item('check-done', '\u6027\u80fd\u57fa\u7ebf\u6d4b\u8bd5', 'docs/PERFORMANCE.md', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>FPS HUD \u4e0e\u4f4e\u5e27\u8bb0\u5f55\u3001\u672c\u5730\u57fa\u7ebf\u6587\u6863\u3002')}
     ${item('check-done', '\u79fb\u52a8\u7aef\u89e6\u63a7', 'touch.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u5de6\u4e0b\u865a\u62df\u6447\u6746 + \u53f3\u4fa7\u62d6\u52a8\u89c6\u89d2\u3002')}
     ${item('check-done', '\u661f\u7c92\u65e0\u7f1d\u5faa\u73af', 'world.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u56de\u6536 + \u8f7b\u5fae\u95ea\u70c1\u3002')}
-    ${item('check-done', '\u4ee3\u7801\u6a21\u5757\u5316', 'src/', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>settings / world / input / game \u56db\u6a21\u5757\u3002')}
-    ${item('check-done', 'CI \u81ea\u52a8\u90e8\u7f72', 'GitHub Actions', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>Pages \u5de5\u4f5c\u6d41\u5df2\u52a0\u3002')}
-    ${item('check-wip', '\u5355\u5143\u6d4b\u8bd5\u6846\u67b6', 'vitest', '<strong>\u8fdb\u884c\u4e2d\uff1a</strong>\u8bbe\u7f6e\u9ed8\u8ba4\u503c\u6d4b\u8bd5\u5df2\u52a0\u3002')}
-    ${item('check-wip', '\u9519\u8bef\u76d1\u63a7', 'webgl-error', '<strong>\u8fdb\u884c\u4e2d\uff1a</strong>WebGL \u4e0d\u53ef\u7528\u65f6\u53cb\u597d\u63d0\u793a\uff1bSentry \u5f85\u63a5\u3002')}
+    ${item('check-done', '\u4ee3\u7801\u6a21\u5757\u5316', 'src/', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u591a\u6a21\u5757\u67b6\u6784\uff08world / input / nav \u7b49\uff09\u3002')}
+    ${item('check-done', 'CI \u81ea\u52a8\u90e8\u7f72', 'GitHub Actions', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>Pages \u90e8\u7f72 + \u5355\u6d4b\u6b65\u9aa4\u3002')}
+    ${item('check-done', '\u5355\u5143\u6d4b\u8bd5\u6846\u67b6', 'vitest', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>settings / util \u6d4b\u8bd5\uff0c<code>npm test</code>\u3002')}
+    ${item('check-done', '\u9519\u8bef\u76d1\u63a7', 'monitor.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>WebGL \u5931\u8d25\u9875\u3001\u4e0a\u4e0b\u6587\u4e22\u5931\u3001\u4f4e FPS \u65e5\u5fd7\u3002')}
   </ul>`],
 
   'phase-1-core.html': ['Phase 1 \u6838\u5fc3\u4f53\u9a8c', 'p1', `
   <h1 class="text-3xl font-bold text-white mb-2">Phase 1 \u6838\u5fc3\u4f53\u9a8c</h1>
   <p class="spec-intro">\u76ee\u6807\uff1a\u8ba9\u73a9\u5bb6\u611f\u5230\u300c\u771f\u7684\u5728\u592a\u7a7a\u6f38\u6e38\u300d\u2014\u2014\u624b\u611f\u987a\u3001\u753b\u9762\u7f8e\u3001\u4e0d\u6655\u4e0d\u5361\u3002</p>
-  <p class="text-slate-400 mb-4">13/15 \u00b7 87%</p>${pb(87)}
+  <p class="text-slate-400 mb-4">15/15 \u00b7 100%</p>${pb(100)}
   <h2 class="text-lg text-teal-300 mb-3">\u5df2\u5b8c\u6210</h2>
   <ul class="spec-checklist mb-6">
     ${item('check-done', '\u57fa\u7840\u98de\u884c\u901f\u5ea6\u66f2\u7ebf', 'input.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>Shift \u52a0\u901f\u3001Ctrl \u51cf\u901f\u3001\u9ed8\u8ba4\u6162\u6f02\u3002')}
@@ -220,17 +217,14 @@ const pages = {
     ${item('check-done', 'LOD \u661f\u7c92', 'world.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u8fdc\u5c42\u661f\u70b9\u968f\u6df1\u5ea6\u7f29\u653e\u3002')}
     ${item('check-done', '\u624b\u67b4\u652f\u6301', 'gamepad.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u53cc\u6447\u6746\u79fb\u52a8\u4e0e\u89c6\u89d2\u3002')}
     ${item('check-done', '\u753b\u8d28\u5206\u6863', 'settings', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u4f4e / \u4e2d / \u9ad8\u4e09\u6863\u7c92\u5b50\u4e0e\u5206\u8fa8\u7387\u3002')}
-  </ul>
-  <h2 class="text-lg text-amber-300 mb-3">\u5f85\u529e</h2>
-  <ul class="spec-checklist">
-    ${item('check-todo', 'Bloom / \u6652\u5149', 'postprocessing', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>EffectComposer \u540e\u5904\u7406\u5c42\u3002')}
-    ${item('check-todo', '\u78b0\u649e\u4f53\u79ef\u5c0f\u661f', 'optional', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u53ef\u9009\u6536\u96c6\uff0c\u4e0d\u7834\u574f\u6cbb\u6108\u8282\u594f\u3002')}
+    ${item('check-done', 'Bloom / \u6652\u5149', 'postprocess.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>EffectComposer + UnrealBloomPass\uff0c\u8ddf\u67d4\u5149\u5f00\u5173\u8054\u52a8\u3002')}
+    ${item('check-done', '\u78b0\u649e\u4f53\u79ef\u5c0f\u661f', 'collectibles.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u5fae\u5149\u6536\u96c6\uff0c\u8bbe\u7f6e\u53ef\u5173\uff0c\u65e0\u4efb\u52a1\u538b\u529b\u3002')}
   </ul>`],
 
   'phase-2-world.html': ['Phase 2 \u4e16\u754c\u5185\u5bb9', 'p2', `
   <h1 class="text-3xl font-bold text-white mb-2">Phase 2 \u4e16\u754c\u5185\u5bb9</h1>
   <p class="spec-intro">\u76ee\u6807\uff1a\u4ece\u300c\u7a7a\u7a4f\u666f\u300d\u8fdb\u5316\u4e3a\u300c\u53ef\u63a2\u7d22\u7684\u661f\u7cfb\u300d\u2014\u2014\u6709\u65b9\u5411\u3001\u6709\u76ee\u6807\u3001\u6709\u56de\u5fc6\u3002</p>
-  <p class="text-slate-400 mb-4">9/18 \u00b7 50%</p>${pb(50)}
+  <p class="text-slate-400 mb-4">10/18 \u00b7 56%</p>${pb(56)}
   <h2 class="text-lg text-teal-300 mb-3">\u5df2\u5b8c\u6210</h2>
   <ul class="spec-checklist mb-6">
     ${item('check-done', '\u884c\u661f POI', 'pois.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>5 \u79cd\u7a0b\u5e8f\u5316\u884c\u661f\uff0c\u56de\u6536\u6f14\u751f\u3002')}
@@ -241,37 +235,36 @@ const pages = {
     ${item('check-done', '\u661f\u95e8 / \u8df3\u8dc3\u70b9', 'wormhole.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u63a5\u8fd1\u6298\u8dc3\u81f3\u65b0\u533a\u57df\u3002')}
     ${item('check-done', '\u5b9a\u5236\u661f\u5ea7', 'constellation.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>POI \u95f4\u88c5\u9970\u8fde\u7ebf\u3002')}
     ${item('check-done', '\u65e5\u66ae\u5faa\u73af', 'world.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u96fe\u4e0e\u80cc\u666f\u8272\u6162\u53d8\u3002')}
-  </ul>
-  <h2 class="text-lg text-amber-300 mb-3">\u5f85\u529e</h2>
-  <ul class="spec-checklist">
-    ${item('check-todo', '\u5730\u5f62\u6e56\u9762\u6269\u5c55', 'lake', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u591a\u5c42\u6e56\u9762\u3001\u5b63\u8282\u53d8\u5316\u3002')}
+    ${item('check-done', '\u5730\u5f62\u6e56\u9762\u6269\u5c55', 'world.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u53cc\u5c42\u6e56\u9762\u3001\u65e5\u66ae/\u5b63\u8282\u8272\u76f8\u3001\u53ef\u5173\u95ed\uff1b\u5e73\u89c6\u65f6\u67d4\u5316\u65e0\u5730\u5e73\u7ebf\u3002')}
   </ul>`],
 
   'phase-3-atmosphere.html': ['Phase 3 \u6c1b\u56f4\u53d9\u4e8b', 'p3', `
   <h1 class="text-3xl font-bold text-white mb-2">Phase 3 \u6c1b\u56f4\u4e0e\u53d9\u4e8b</h1>
   <p class="spec-intro">\u76ee\u6807\uff1a\u7528\u58f0\u97f3\u4e0e\u6587\u5b57\u628a\u300c\u6f02\u6d6e\u300d\u8bb0\u5728\u5fc3\u91cc\u2014\u2014\u8ba9\u4eba\u613f\u610f\u5f00\u7740\u97f3\u4e50\u53d1\u5446\u3002</p>
-  <p class="text-slate-400 mb-4">3/14 \u00b7 21%</p>${pb(21)}
+  <p class="text-slate-400 mb-4">6/14 \u00b7 43%</p>${pb(43)}
   <h2 class="text-lg text-teal-300 mb-3">\u5df2\u5b8c\u6210</h2>
   <ul class="spec-checklist mb-6">
     ${item('check-done', '\u73af\u5883\u97f3', 'audio.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>Web Audio \u5e95\u566a + \u4f4e\u9891\uff1b\u8bbe\u7f6e\u53ef\u5173\u95ed\u3002')}
     ${item('check-done', '\u6587\u672c\u544a\u793a', 'lore', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>POI \u4e0e\u661f\u95e8\u89e6\u53d1\u6781\u77ed\u8bd1\u6587\u3002')}
-  </ul>
-  <h2 class="text-lg text-amber-300 mb-3">\u5f85\u529e</h2>
-  <ul class="spec-checklist">
-    ${item('check-todo', '\u52a8\u6001\u97f3\u4e50', 'OST', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>2\u20133 \u9996\u6cbb\u6108\u5411\u4e3b\u9898\u3002')}
-    ${item('check-todo', '\u60c5\u7eea\u66f2\u7ebf', 'design', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u5f00\u573a\u5b81\u9759 \u2192 \u63a2\u7d22\u9ad8\u6f6e \u2192 \u6536\u675f\u56de\u5f52\u3002')}
-    ${item('check-todo', '\u8bed\u97f3\u5316', 'TTS optional', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u53ef\u9009\u65c1\u767d\u3002')}
+    ${item('check-done', '\u52a8\u6001\u97f3\u4e50', 'audio.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u7a0b\u5e8f\u5316\u548c\u58f0\u5c42\uff08\u53cc\u632f\u8361\u5668\uff09\uff0c\u8bbe\u7f6e\u53ef\u5173\u3002')}
+    ${item('check-done', '\u60c5\u7eea\u66f2\u7ebf', 'audio.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u5b81\u9759\u5f00\u573a \u2192 \u79fb\u52a8\u4e0a\u626c \u2192 \u4e45\u6f02\u6536\u675f\u3002')}
+    ${item('check-done', '\u8bed\u97f3\u5316', 'narration-web.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u8bbe\u7f6e\u53ef\u5f00\u542f\u6d4f\u89c8\u5668 TTS \u6717\u8bfb\u544a\u793a\u6587\u672c\u3002')}
   </ul>`],
 
   'phase-4-platform.html': ['Phase 4 \u5e73\u53f0\u5927\u4f5c', 'p4', `
   <h1 class="text-3xl font-bold text-white mb-2">Phase 4 \u5e73\u53f0\u5927\u4f5c\u5316</h1>
   <p class="spec-intro">\u76ee\u6807\uff1a\u4ece Web \u539f\u578b\u5347\u7ea7\u4e3a\u53ef\u53d1\u5e03\u7684\u591a\u5e73\u53f0\u4f5c\u54c1\uff08Unity / \u79fb\u52a8\u7aef\u4f18\u5148\uff09\u3002</p>
-  <p class="text-slate-400 mb-4">0/16 \u00b7 0%</p>${pb(0)}
+  <p class="text-slate-400 mb-4">2/16 \u00b7 13%</p>${pb(13)}
+  <h2 class="text-lg text-teal-300 mb-3">\u5df2\u5b8c\u6210\uff08Web \u539f\u578b\u8303\u56f4\uff09</h2>
+  <ul class="spec-checklist mb-6">
+    ${item('check-done', '\u79fb\u52a8\u7aef\u89e6\u63a7', 'touch.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u865a\u62df\u6447\u6746 + \u89c6\u89d2\u533a\uff08Web \u7248\u5148\u884c\u3002')}
+    ${item('check-done', '\u672c\u5730\u6863\u5b58', 'progress.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u6f2b\u6e38\u7edf\u8ba1\u3001JSON \u5bfc\u51fa/\u5bfc\u5165\uff1b\u4e91\u540c\u6b65\u5f85\u540e\u7eed\u3002')}
+  </ul>
+  <h2 class="text-lg text-amber-300 mb-3">\u5f85\u529e</h2>
   <ul class="spec-checklist">
     ${item('check-todo', 'Unity \u5de5\u7a0b\u91cd\u6784', 'unity/', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>3D \u7b2c\u4e00\u4eba\u98de\u884c\u4e0e\u573a\u666f\u6d41\u5f0f\u52a0\u8f7d\u3002')}
-    ${item('check-todo', 'Android / iOS', 'mobile', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u89e6\u63a7\u4e0e\u753b\u8d28\u5206\u6863\u3002')}
-    ${item('check-todo', '\u4e91\u6863\u5b58', 'save', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u63a2\u7d22\u8fdb\u5ea6\u3001\u8bbe\u7f6e\u540c\u6b65\u3002')}
-    ${item('check-todo', '\u753b\u8d28\u5206\u7ea7', 'graphics', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u4f4e / \u4e2d / \u9ad8 \u4e09\u6863\u3002')}
+    ${item('check-todo', 'Android / iOS \u539f\u751f\u5305', 'mobile', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>Capacitor / Tauri \u7b49\u6253\u5305\u4e0e\u5e94\u7528\u5e97\u3002')}
+    ${item('check-todo', '\u4e91\u6863\u5b58', 'save', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u8d26\u53f7\u4e0e\u670d\u52a1\u7aef\u540c\u6b65\u3002')}
     ${item('check-todo', 'Steam \u6280\u672f\u9884\u7814', 'steam', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u6210\u5c31\u3001\u4e91\u5b58\u6863\u3001\u624b\u67b4\u3002')}
   </ul>`],
 

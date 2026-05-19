@@ -4,7 +4,11 @@
   "private": true,
   "description": "第一人称星际漫游 — WebGL / Three.js",
   "type": "module",
+  "dependencies": {
+    "three": "^0.172.0"
+  },
   "scripts": {
+    "postinstall": "node scripts/check-three.mjs",
     "dev": "node serve.mjs",
     "start": "node serve.mjs",
     "test": "vitest run",

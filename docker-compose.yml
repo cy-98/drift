@@ -6,4 +6,4 @@ services:
       - .:/app
     ports:
       - "5180:5180"
-    command: node serve.mjs
+    command: sh -c "test -f vendor/three/build/three.module.js || npm install; node serve.mjs"
