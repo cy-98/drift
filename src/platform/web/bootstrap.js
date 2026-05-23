@@ -27,6 +27,7 @@ const collectInput = document.getElementById('collectibles')
 const progressSummary = document.getElementById('progress-summary')
 const progressExportBtn = document.getElementById('progress-export')
 const progressImportInput = document.getElementById('progress-import')
+const achievementsList = document.getElementById('achievements-list')
 const qualityInput = document.getElementById('quality')
 
 const hud = createDomHud({
@@ -101,6 +102,15 @@ function syncSettingsForm() {
   collectInput.checked = settings.collectibles
   if (progressSummary && app?.getProgressSummary) {
     progressSummary.textContent = app.getProgressSummary()
+  }
+  if (achievementsList && app?.listAchievements) {
+    achievementsList.innerHTML = app
+      .listAchievements()
+      .map(
+        (a) =>
+          `<li class="${a.unlocked ? 'unlocked' : 'locked'}"><span>${a.title}</span><small>${a.desc}</small></li>`,
+      )
+      .join('')
   }
   qualityInput.value = settings.quality
   document.getElementById('sens-val').textContent = settings.sensitivity.toFixed(1)
@@ -233,3 +243,7 @@ progressImportInput?.addEventListener('change', async (e) => {
   }
   e.target.value = ''
 })
+
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+  navigator.serviceWorker.register('/sw.js').catch((err) => console.warn('[Drift] sw', err))
+}

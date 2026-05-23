@@ -60,8 +60,8 @@ const pages = {
   <h1 class="text-3xl font-bold text-white mb-2">Drift \u9879\u76ee\u603b\u89c8</h1>
   <p class="spec-intro">\u76ee\u6807\uff1a\u505a\u6210\u4e00\u6b3e<strong>\u7cbe\u7f8e\u3001\u6cbb\u6108\u3001\u53d7\u6b22\u8fce</strong>\u7684\u7b2c\u4e00\u4eba\u79f0\u661f\u9645\u6f2b\u6e38\u4f5c\u54c1\u3002\u73b0\u9636\u6bb5\u4e3a Web \u539f\u578b\uff08<code>src/game.js</code>\uff09\u3002</p>
   <div class="spec-vision">\u6838\u5fc3\u611f\u53d7\uff1a\u5728\u661f\u6d77\u91cc\u6162\u6162\u6f02\u6d6e\u2014\u2014\u5b81\u9759\u3001\u8302\u8fdc\u3001\u5076\u6709\u60ca\u559c\u3002</div>
-  <p class="text-slate-400 mb-2">\u5168\u5c40 48/89\uff08\u7ea6 54%\uff09</p>
-  ${pb(54)}
+  <p class="text-slate-400 mb-2">\u5168\u5c40 50/89\uff08\u7ea6 56%\uff09</p>
+  ${pb(56)}
   <div class="spec-pillar">
     <article><h4>\u89c6\u89c9</h4><p>\u661f\u91ce + \u540e\u5904\u7406 + \u7edf\u4e00\u8272\u76f8</p></article>
     <article><h4>\u624b\u611f</h4><p>\u6f02\u6d6e\u5f0f\u98de\u884c\uff0c\u4e0d\u6655\u5934</p></article>
@@ -73,7 +73,7 @@ const pages = {
   <a class="spec-phase-card spec-phase-card--link" href="phase-1-core.html"><h3>Phase 1 \u2014 15/15</h3><p>\u6838\u5fc3\u4f53\u9a8c\u4e0e\u624b\u611f</p></a>
   <a class="spec-phase-card spec-phase-card--link" href="phase-2-world.html"><h3>Phase 2 \u2014 10/18</h3><p>\u4e16\u754c\u4e0e\u5185\u5bb9</p></a>
   <a class="spec-phase-card spec-phase-card--link" href="phase-3-atmosphere.html"><h3>Phase 3 \u2014 6/14</h3><p>\u6c1b\u56f4\u4e0e\u53d9\u4e8b</p></a>
-  <a class="spec-phase-card spec-phase-card--link" href="phase-4-platform.html"><h3>Phase 4 \u2014 2/16</h3><p>\u5e73\u53f0\u5927\u4f5c\u5316</p></a>
+  <a class="spec-phase-card spec-phase-card--link" href="phase-4-platform.html"><h3>Phase 4 \u2014 4/16</h3><p>\u5e73\u53f0\u5927\u4f5c\u5316</p></a>
   <a class="spec-phase-card spec-phase-card--link" href="phase-5-launch.html"><h3>Phase 5 \u2014 0/14</h3><p>\u53d1\u884c\u4e0e\u589e\u957f</p></a>`],
 
   'design.html': ['\u6982\u5ff5\u8bbe\u8ba1', 'design', `
@@ -254,18 +254,20 @@ const pages = {
   'phase-4-platform.html': ['Phase 4 \u5e73\u53f0\u5927\u4f5c', 'p4', `
   <h1 class="text-3xl font-bold text-white mb-2">Phase 4 \u5e73\u53f0\u5927\u4f5c\u5316</h1>
   <p class="spec-intro">\u76ee\u6807\uff1a\u4ece Web \u539f\u578b\u5347\u7ea7\u4e3a\u53ef\u53d1\u5e03\u7684\u591a\u5e73\u53f0\u4f5c\u54c1\uff08Unity / \u79fb\u52a8\u7aef\u4f18\u5148\uff09\u3002</p>
-  <p class="text-slate-400 mb-4">2/16 \u00b7 13%</p>${pb(13)}
+  <p class="text-slate-400 mb-4">4/16 \u00b7 25%</p>${pb(25)}
   <h2 class="text-lg text-teal-300 mb-3">\u5df2\u5b8c\u6210\uff08Web \u539f\u578b\u8303\u56f4\uff09</h2>
   <ul class="spec-checklist mb-6">
     ${item('check-done', '\u79fb\u52a8\u7aef\u89e6\u63a7', 'touch.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u865a\u62df\u6447\u6746 + \u89c6\u89d2\u533a\uff08Web \u7248\u5148\u884c\u3002')}
     ${item('check-done', '\u672c\u5730\u6863\u5b58', 'progress.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u6f2b\u6e38\u7edf\u8ba1\u3001JSON \u5bfc\u51fa/\u5bfc\u5165\uff1b\u4e91\u540c\u6b65\u5f85\u540e\u7eed\u3002')}
+    ${item('check-done', '\u79bb\u7ebf PWA', 'sw.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>Service Worker \u7f13\u5b58\u6838\u5fc3\u8d44\u6e90\uff0c\u652f\u6301\u79bb\u7ebf\u542f\u52a8\u3002')}
+    ${item('check-done', '\u6210\u5c31\u7cfb\u7edf\u9884\u7814', 'achievements.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>7 \u9879\u672c\u5730\u6210\u5c31\uff0c\u6863\u6848\u53ef\u5bfc\u51fa\uff08Steam \u524d\u7f6e\u3002')}
   </ul>
   <h2 class="text-lg text-amber-300 mb-3">\u5f85\u529e</h2>
   <ul class="spec-checklist">
     ${item('check-todo', 'Unity \u5de5\u7a0b\u91cd\u6784', 'unity/', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>3D \u7b2c\u4e00\u4eba\u98de\u884c\u4e0e\u573a\u666f\u6d41\u5f0f\u52a0\u8f7d\u3002')}
     ${item('check-todo', 'Android / iOS \u539f\u751f\u5305', 'mobile', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>Capacitor / Tauri \u7b49\u6253\u5305\u4e0e\u5e94\u7528\u5e97\u3002')}
     ${item('check-todo', '\u4e91\u6863\u5b58', 'save', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u8d26\u53f7\u4e0e\u670d\u52a1\u7aef\u540c\u6b65\u3002')}
-    ${item('check-todo', 'Steam \u6280\u672f\u9884\u7814', 'steam', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u6210\u5c31\u3001\u4e91\u5b58\u6863\u3001\u624b\u67b4\u3002')}
+    ${item('check-todo', 'Steam \u6280\u672f\u9884\u7814', 'steam', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>Steamworks SDK \u96c6\u6210\u4e0e\u4e91\u5b58\u6863\u3002')}
   </ul>`],
 
   'phase-5-launch.html': ['Phase 5 \u53d1\u884c\u589e\u957f', 'p5', `

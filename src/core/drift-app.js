@@ -11,6 +11,7 @@ import { createPostprocess } from '../postprocess.js'
 import { createCollectibles } from '../collectibles.js'
 import { createPerformanceTracker } from './performance.js'
 import { createProgressTracker } from './progress.js'
+import { createAchievementTracker } from './achievements.js'
 
 /**
  * @typedef {ReturnType<import('./settings.js').createSettingsStore>} SettingsStore
@@ -67,7 +68,9 @@ export function createDriftApp(deps) {
     dpr: typeof window !== 'undefined' ? window.devicePixelRatio : 1,
   })
   const progress = createProgressTracker(storage)
+  const achievements = createAchievementTracker(storage)
   const narration = createNarration?.(() => settings)
+  const achievementCtx = { engaged: false, photoUsed: false }
 
   let loadingDone = false
   let loadingScheduled = false
@@ -86,6 +89,15 @@ export function createDriftApp(deps) {
 
   let loreTimer = 0
   let progressSaveTimer = 0
+
+  function checkAchievements() {
+    progress.syncRuntime({
+      collectTotal: collectibles?.getCount() ?? 0,
+      poiVisited: pois?.visitedCount?.() ?? 0,
+    })
+    const hit = achievements.evaluate(progress.getState(), achievementCtx)
+    if (hit) showLore(`成就 · ${hit.title}`, hit.desc)
+  }
 
   function showLore(title, text) {
     hud.showLore(title, text)
@@ -128,6 +140,8 @@ export function createDriftApp(deps) {
     platform.setPhotoMode(photoMode)
     applyVignette()
     if (photoMode) {
+      achievementCtx.photoUsed = true
+      checkAchievements()
       platform.exitPointerLock()
       showLore('截图模式', 'UI 已隐藏，按 P 退出。')
       loreTimer = 4
@@ -216,7 +230,11 @@ export function createDriftApp(deps) {
   }
 
   input = createInput(canvas, camera, () => settings, hud, {
-    onEngage: () => audio.resume(),
+    onEngage: () => {
+      audio.resume()
+      achievementCtx.engaged = true
+      checkAchievements()
+    },
     canStart: () => loadingDone,
     touch,
     gamepad,
@@ -287,6 +305,7 @@ export function createDriftApp(deps) {
       wormholes?.update(elapsed, camera, dt, (title, text) => {
         progress.noteWarp()
         showLore(title, text)
+        checkAchievements()
       })
       if (constellation && pois) {
         constellation.update(() => pois.list().map((p) => p.position))
@@ -295,6 +314,7 @@ export function createDriftApp(deps) {
         const { count } = collectibles.update(elapsed, camera, dt, (n) => {
           hud.setCollectCount(n)
           if (n % 12 === 0) showLore('微光', `已掠过 ${n} 粒星尘，它们并不催促你。`)
+          checkAchievements()
         })
         hud.setCollectCount(count)
       }
@@ -314,6 +334,7 @@ export function createDriftApp(deps) {
           poiVisited: pois?.visitedCount?.() ?? 0,
         })
         progress.save()
+        checkAchievements()
         progressSaveTimer = 0
       }
       renderFrame()
@@ -333,7 +354,9 @@ export function createDriftApp(deps) {
   function importProgress(json) {
     try {
       const data = typeof json === 'string' ? JSON.parse(json) : json
-      if (!progress.applyImport(data)) return false
+      const payload = data.progress && typeof data.progress === 'object' ? data.progress : data
+      if (!progress.applyImport(payload)) return false
+      if (Array.isArray(data.achievements)) achievements.applyImport(data.achievements)
       collectibles?.setCount(progress.getState().collectTotal)
       hud.setCollectCount(progress.getState().collectTotal)
       return true
@@ -351,14 +374,19 @@ export function createDriftApp(deps) {
     togglePhotoMode,
     cycleNavTarget: () => nav?.cycleTarget(),
     forceFinishLoading,
-    getProgressSummary: () => progress.formatSummary(),
+    getProgressSummary: () => `${progress.formatSummary()} · ${achievements.formatSummary()}`,
+    listAchievements: () => achievements.list(),
     exportProgress: () => {
       progress.syncRuntime({
         collectTotal: collectibles?.getCount() ?? 0,
         poiVisited: pois?.visitedCount?.() ?? 0,
       })
       progress.save()
-      return progress.exportJson()
+      return JSON.stringify(
+        { ...JSON.parse(progress.exportJson()), achievements: achievements.unlockedIds() },
+        null,
+        2,
+      )
     },
     importProgress,
   }

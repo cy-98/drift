@@ -173,6 +173,17 @@
         background: rgba(110, 184, 232, 0.08); color: #c8d8ec; font-size: 0.85rem;
       }
       #settings .progress-actions input[type="file"] { display: none; }
+      #achievements-list {
+        list-style: none; margin: 0 0 0.65rem; padding: 0; max-height: 8.5rem; overflow: auto;
+      }
+      #achievements-list li {
+        display: flex; flex-direction: column; gap: 0.1rem; padding: 0.35rem 0;
+        border-bottom: 1px solid rgba(110, 184, 232, 0.08); font-size: 0.78rem;
+      }
+      #achievements-list li span { color: #c8d8ec; }
+      #achievements-list li small { color: #6a8098; }
+      #achievements-list li.unlocked span { color: #6eb8e8; }
+      #achievements-list li.locked { opacity: 0.45; }
       .hud-row { margin-top: 0.35rem; font-size: 12px; color: #9ab0c8; }
       .hud-row span { color: #6eb8e8; }
       #target.flash { color: #ffe066; }
@@ -293,6 +304,7 @@
         <div class="progress-block">
           <h3>漫游档案</h3>
           <p id="progress-summary">—</p>
+          <ul id="achievements-list" aria-label="成就列表"></ul>
           <div class="progress-actions">
             <button type="button" id="progress-export">导出 JSON</button>
             <label class="btn-file">导入 JSON<input id="progress-import" type="file" accept="application/json,.json" /></label>
