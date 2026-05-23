@@ -15,7 +15,6 @@ import { createAchievementTracker } from './achievements.js'
 import { createAnalytics } from './analytics.js'
 import { createJournal } from './journal.js'
 import { createConstellationUnlock } from './constellation-unlock.js'
-import * as THREE from 'three'
 
 /**
  * @typedef {ReturnType<import('./settings.js').createSettingsStore>} SettingsStore
