@@ -247,3 +247,21 @@ progressImportInput?.addEventListener('change', async (e) => {
 if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
   navigator.serviceWorker.register('/sw.js').catch((err) => console.warn('[Drift] sw', err))
 }
+
+let installPrompt = null
+const installBtn = document.getElementById('install-app')
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault()
+  installPrompt = e
+  installBtn?.classList.remove('hidden')
+})
+installBtn?.addEventListener('click', async () => {
+  if (!installPrompt) return
+  installPrompt.prompt()
+  await installPrompt.userChoice
+  installPrompt = null
+  installBtn.classList.add('hidden')
+})
+
+window.addEventListener('beforeunload', () => app?.endSession?.())
+window.addEventListener('pagehide', () => app?.endSession?.())

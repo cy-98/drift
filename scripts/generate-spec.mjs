@@ -60,8 +60,8 @@ const pages = {
   <h1 class="text-3xl font-bold text-white mb-2">Drift \u9879\u76ee\u603b\u89c8</h1>
   <p class="spec-intro">\u76ee\u6807\uff1a\u505a\u6210\u4e00\u6b3e<strong>\u7cbe\u7f8e\u3001\u6cbb\u6108\u3001\u53d7\u6b22\u8fce</strong>\u7684\u7b2c\u4e00\u4eba\u79f0\u661f\u9645\u6f2b\u6e38\u4f5c\u54c1\u3002\u73b0\u9636\u6bb5\u4e3a Web \u539f\u578b\uff08<code>src/game.js</code>\uff09\u3002</p>
   <div class="spec-vision">\u6838\u5fc3\u611f\u53d7\uff1a\u5728\u661f\u6d77\u91cc\u6162\u6162\u6f02\u6d6e\u2014\u2014\u5b81\u9759\u3001\u8302\u8fdc\u3001\u5076\u6709\u60ca\u559c\u3002</div>
-  <p class="text-slate-400 mb-2">\u5168\u5c40 50/89\uff08\u7ea6 56%\uff09</p>
-  ${pb(56)}
+  <p class="text-slate-400 mb-2">\u5168\u5c40 52/89\uff08\u7ea6 58%\uff09</p>
+  ${pb(58)}
   <div class="spec-pillar">
     <article><h4>\u89c6\u89c9</h4><p>\u661f\u91ce + \u540e\u5904\u7406 + \u7edf\u4e00\u8272\u76f8</p></article>
     <article><h4>\u624b\u611f</h4><p>\u6f02\u6d6e\u5f0f\u98de\u884c\uff0c\u4e0d\u6655\u5934</p></article>
@@ -74,7 +74,7 @@ const pages = {
   <a class="spec-phase-card spec-phase-card--link" href="phase-2-world.html"><h3>Phase 2 \u2014 10/18</h3><p>\u4e16\u754c\u4e0e\u5185\u5bb9</p></a>
   <a class="spec-phase-card spec-phase-card--link" href="phase-3-atmosphere.html"><h3>Phase 3 \u2014 6/14</h3><p>\u6c1b\u56f4\u4e0e\u53d9\u4e8b</p></a>
   <a class="spec-phase-card spec-phase-card--link" href="phase-4-platform.html"><h3>Phase 4 \u2014 4/16</h3><p>\u5e73\u53f0\u5927\u4f5c\u5316</p></a>
-  <a class="spec-phase-card spec-phase-card--link" href="phase-5-launch.html"><h3>Phase 5 \u2014 0/14</h3><p>\u53d1\u884c\u4e0e\u589e\u957f</p></a>`],
+  <a class="spec-phase-card spec-phase-card--link" href="phase-5-launch.html"><h3>Phase 5 \u2014 2/14</h3><p>\u53d1\u884c\u4e0e\u589e\u957f</p></a>`],
 
   'design.html': ['\u6982\u5ff5\u8bbe\u8ba1', 'design', `
   <h1 class="text-3xl font-bold text-white mb-2">\u6982\u5ff5\u8bbe\u8ba1</h1>
@@ -273,13 +273,18 @@ const pages = {
   'phase-5-launch.html': ['Phase 5 \u53d1\u884c\u589e\u957f', 'p5', `
   <h1 class="text-3xl font-bold text-white mb-2">Phase 5 \u53d1\u884c\u4e0e\u589e\u957f</h1>
   <p class="spec-intro">\u76ee\u6807\uff1a\u8ba9\u66f4\u591a\u4eba\u77e5\u9053 Drift\uff0c\u5e76\u5efa\u7acb\u6301\u7eed\u8fed\u4ee3\u7684\u793e\u533a\u3002</p>
-  <p class="text-slate-400 mb-4">0/14 \u00b7 0%</p>${pb(0)}
+  <p class="text-slate-400 mb-4">2/14 \u00b7 14%</p>${pb(14)}
+  <h2 class="text-lg text-teal-300 mb-3">\u5df2\u5b8c\u6210\uff08Web \u539f\u578b\u8303\u56f4\uff09</h2>
+  <ul class="spec-checklist mb-6">
+    ${item('check-done', '\u6570\u636e\u5206\u6790', 'analytics.js', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u672c\u5730\u4f1a\u8bdd\u6570\u3001\u5747\u65f6\u3001\u70ed\u95e8 POI\uff1b\u968f\u6863\u6848\u5bfc\u51fa\u3002')}
+    ${item('check-done', '\u66f4\u65b0\u65e5\u5fd7', 'CHANGELOG.md', '<strong>\u505a\u4e86\u4ec0\u4e48\uff1a</strong>\u7248\u672c\u8bb0\u5f55\u4e0e\u793e\u533a\u901a\u544a\u57fa\u7840\u3002')}
+  </ul>
+  <h2 class="text-lg text-amber-300 mb-3">\u5f85\u529e</h2>
   <ul class="spec-checklist">
     ${item('check-todo', '\u5ba3\u4f20\u7247', 'trailer', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>60\u201390 \u79d2\u6cbb\u6108\u5411\u5ba3\u4f20\u3002')}
     ${item('check-todo', 'Steam \u4e0a\u67b6', 'store', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u9875\u9762\u3001\u622a\u56fe\u3001\u5b9a\u4ef7\u7b56\u7565\u3002')}
     ${item('check-todo', '\u79fb\u52a8\u5e94\u7528\u5e97', 'mobile store', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>iOS / Android \u53d1\u5e03\u3002')}
-    ${item('check-todo', 'Discord / \u793e\u533a', 'community', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u73a9\u5bb6\u53cd\u9988\u4e0e\u66f4\u65b0\u65e5\u5fd7\u3002')}
-    ${item('check-todo', '\u6570\u636e\u5206\u6790', 'analytics', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>\u7559\u5b58\u3001\u5e73\u5747\u65f6\u957f\u3001\u70ed\u95e8 POI\u3002')}
+    ${item('check-todo', 'Discord / \u793e\u533a', 'community', '<strong>\u8fd8\u5dee\u4ec0\u4e48\uff1a</strong>Discord \u670d\u52a1\u5668\u4e0e\u73a9\u5bb6\u53cd\u9988\u6e20\u9053\u3002')}
   </ul>`],
 }
 

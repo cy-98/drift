@@ -12,6 +12,7 @@ import { createCollectibles } from '../collectibles.js'
 import { createPerformanceTracker } from './performance.js'
 import { createProgressTracker } from './progress.js'
 import { createAchievementTracker } from './achievements.js'
+import { createAnalytics } from './analytics.js'
 
 /**
  * @typedef {ReturnType<import('./settings.js').createSettingsStore>} SettingsStore
@@ -69,6 +70,7 @@ export function createDriftApp(deps) {
   })
   const progress = createProgressTracker(storage)
   const achievements = createAchievementTracker(storage)
+  const analytics = createAnalytics(storage)
   const narration = createNarration?.(() => settings)
   const achievementCtx = { engaged: false, photoUsed: false }
 
@@ -97,6 +99,11 @@ export function createDriftApp(deps) {
     })
     const hit = achievements.evaluate(progress.getState(), achievementCtx)
     if (hit) showLore(`成就 · ${hit.title}`, hit.desc)
+  }
+
+  function onWorldLore(name, text) {
+    analytics.notePoi(name)
+    showLore(name, text)
   }
 
   function showLore(title, text) {
@@ -192,6 +199,7 @@ export function createDriftApp(deps) {
   function finishLoading() {
     if (loadingDone) return
     loadingDone = true
+    analytics.startSession()
     collectibles?.warm(camera)
     input?.showStartGuide()
     platform.onReady()
@@ -286,7 +294,7 @@ export function createDriftApp(deps) {
         const drift = settings.reducedMotion ? 1.2 : 2.8
         camera.position.z -= drift * dt
         world.update(elapsed, camera, dt, worldState)
-        if (pois) pois.update(elapsed, camera, dt, showLore)
+        if (pois) pois.update(elapsed, camera, dt, onWorldLore)
         renderFrame()
         readyFrames += 1
         if (readyFrames >= 2) hideLoadingWhenReady()
@@ -300,11 +308,11 @@ export function createDriftApp(deps) {
         moving: input.isMoving?.() ?? false,
       })
       world.update(elapsed, camera, dt, worldState)
-      if (pois) pois.update(elapsed, camera, dt, showLore)
+      if (pois) pois.update(elapsed, camera, dt, onWorldLore)
       stations?.update(elapsed, camera)
       wormholes?.update(elapsed, camera, dt, (title, text) => {
         progress.noteWarp()
-        showLore(title, text)
+        onWorldLore(title, text)
         checkAchievements()
       })
       if (constellation && pois) {
@@ -327,6 +335,7 @@ export function createDriftApp(deps) {
         }
       }
       progress.tick(dt)
+      analytics.tick(dt)
       progressSaveTimer += dt
       if (progressSaveTimer >= 28) {
         progress.syncRuntime({
@@ -357,6 +366,7 @@ export function createDriftApp(deps) {
       const payload = data.progress && typeof data.progress === 'object' ? data.progress : data
       if (!progress.applyImport(payload)) return false
       if (Array.isArray(data.achievements)) achievements.applyImport(data.achievements)
+      if (data.analytics) analytics.applyImport(data.analytics)
       collectibles?.setCount(progress.getState().collectTotal)
       hud.setCollectCount(progress.getState().collectTotal)
       return true
@@ -374,8 +384,10 @@ export function createDriftApp(deps) {
     togglePhotoMode,
     cycleNavTarget: () => nav?.cycleTarget(),
     forceFinishLoading,
-    getProgressSummary: () => `${progress.formatSummary()} · ${achievements.formatSummary()}`,
+    getProgressSummary: () =>
+      `${progress.formatSummary()} · ${achievements.formatSummary()} · ${analytics.formatSummary()}`,
     listAchievements: () => achievements.list(),
+    endSession: () => analytics.endSession(),
     exportProgress: () => {
       progress.syncRuntime({
         collectTotal: collectibles?.getCount() ?? 0,
@@ -383,7 +395,11 @@ export function createDriftApp(deps) {
       })
       progress.save()
       return JSON.stringify(
-        { ...JSON.parse(progress.exportJson()), achievements: achievements.unlockedIds() },
+        {
+          ...JSON.parse(progress.exportJson()),
+          achievements: achievements.unlockedIds(),
+          analytics: analytics.exportPayload(),
+        },
         null,
         2,
       )
