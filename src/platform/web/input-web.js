@@ -3,6 +3,14 @@ import * as THREE from 'three'
 const SENS_BASE = 0.0022
 const FOV_BASE = 68
 const FOV_BOOST = 4
+const FOV_OVERDRIVE = 9
+const FOV_HYPER = 14
+const SHIFT_RAMP_SEC = 3
+const SHIFT_HYPER_SEC = 8
+const SHIFT_MULT = 2.2
+const SHIFT_OVERDRIVE_MULT = 3
+const SHIFT_HYPER_MULT = 9
+const OVERDRIVE_BLEND_SEC = 0.45
 
 export function createWebInput(canvas, camera, getSettings, hud, { onEscape, onEngage, canStart, touch, gamepad }) {
   const keys = {}
@@ -15,6 +23,10 @@ export function createWebInput(canvas, camera, getSettings, hud, { onEscape, onE
   let lastY = 0
   let displaySpeed = getSettings().baseSpeed
   let currentFov = FOV_BASE
+  let shiftHoldSec = 0
+  let overdrive = false
+  let hyper = false
+  let lastPad = { w: false, s: false, a: false, d: false, q: false, e: false, shift: false }
 
   const forward = new THREE.Vector3()
   const right = new THREE.Vector3()
@@ -122,6 +134,24 @@ export function createWebInput(canvas, camera, getSettings, hud, { onEscape, onE
     if (k === 'control') keys.control = false
   })
 
+  function shiftMultiplier(shiftActive) {
+    if (!shiftActive) return 1
+    if (shiftHoldSec < SHIFT_RAMP_SEC) return SHIFT_MULT
+
+    let mult = SHIFT_OVERDRIVE_MULT
+    if (shiftHoldSec < SHIFT_RAMP_SEC + OVERDRIVE_BLEND_SEC) {
+      const t = (shiftHoldSec - SHIFT_RAMP_SEC) / OVERDRIVE_BLEND_SEC
+      mult = SHIFT_MULT + (SHIFT_OVERDRIVE_MULT - SHIFT_MULT) * Math.min(1, t)
+    }
+
+    if (shiftHoldSec >= SHIFT_HYPER_SEC) {
+      const t = Math.min(1, (shiftHoldSec - SHIFT_HYPER_SEC) / OVERDRIVE_BLEND_SEC)
+      mult = SHIFT_OVERDRIVE_MULT + (SHIFT_HYPER_MULT - SHIFT_OVERDRIVE_MULT) * t
+    }
+
+    return mult
+  }
+
   function applyLookDelta(dy, dp) {
     yaw -= dy
     pitch -= dp
@@ -129,30 +159,38 @@ export function createWebInput(canvas, camera, getSettings, hud, { onEscape, onE
   }
 
   function applyExternalInput() {
+    const pad = { w: false, s: false, a: false, d: false, q: false, e: false, shift: false }
     touch?.apply(keys, applyLookDelta)
-    gamepad?.apply(keys, applyLookDelta)
+    gamepad?.apply(pad, applyLookDelta)
+    return pad
   }
 
   function updateMovement(dt) {
     if (!engaged && !locked) return
-    applyExternalInput()
+    const pad = applyExternalInput()
+    lastPad = pad
 
     const { baseSpeed, reducedMotion } = getSettings()
     forward.set(0, 0, -1).applyEuler(camera.rotation)
     right.set(1, 0, 0).applyEuler(new THREE.Euler(0, camera.rotation.y, 0))
 
-    let target = baseSpeed
-    if (keys.shift) target *= 2.2
+    const shift = keys.shift || pad.shift
+    if (shift) shiftHoldSec += dt
+    else shiftHoldSec = 0
+    overdrive = shift && shiftHoldSec >= SHIFT_RAMP_SEC
+    hyper = shift && shiftHoldSec >= SHIFT_HYPER_SEC
+
+    let target = baseSpeed * shiftMultiplier(shift)
     if (keys.control) target *= 0.45
 
     const drift = reducedMotion ? 0.2 : 0.35
     velocity.set(0, 0, 0)
-    if (keys.w) velocity.add(forward)
-    if (keys.s) velocity.sub(forward)
-    if (keys.a) velocity.sub(right)
-    if (keys.d) velocity.add(right)
-    if (keys.q) velocity.sub(up)
-    if (keys.e) velocity.add(up)
+    if (keys.w || pad.w) velocity.add(forward)
+    if (keys.s || pad.s) velocity.sub(forward)
+    if (keys.a || pad.a) velocity.sub(right)
+    if (keys.d || pad.d) velocity.add(right)
+    if (keys.q || pad.q) velocity.sub(up)
+    if (keys.e || pad.e) velocity.add(up)
 
     if (velocity.lengthSq() > 0) {
       velocity.normalize().multiplyScalar(target * dt)
@@ -170,7 +208,8 @@ export function createWebInput(canvas, camera, getSettings, hud, { onEscape, onE
     hud.setSpeed(displaySpeed.toFixed(1))
     hud.setAlt(camera.position.y.toFixed(0))
 
-    const wantFov = FOV_BASE + (keys.shift ? FOV_BOOST : 0)
+    const wantFov =
+      FOV_BASE + (hyper ? FOV_HYPER : overdrive ? FOV_OVERDRIVE : shift ? FOV_BOOST : 0)
     currentFov += (wantFov - currentFov) * smooth
     if (Math.abs(camera.fov - currentFov) > 0.01) {
       camera.fov = currentFov
@@ -186,12 +225,29 @@ export function createWebInput(canvas, camera, getSettings, hud, { onEscape, onE
   }
 
   function isMoving() {
-    return !!(keys.w || keys.s || keys.a || keys.d || keys.q || keys.e || keys.shift)
+    const p = lastPad
+    return !!(
+      keys.w ||
+      keys.s ||
+      keys.a ||
+      keys.d ||
+      keys.q ||
+      keys.e ||
+      keys.shift ||
+      p.w ||
+      p.s ||
+      p.a ||
+      p.d ||
+      p.q ||
+      p.e ||
+      p.shift
+    )
   }
 
   return {
     updateMovement,
     getSpeedNorm: () => displaySpeed / Math.max(getSettings().baseSpeed, 0.1),
+    getMotionState: () => ({ overdrive, hyper, shiftHoldSec }),
     isMoving,
     isLocked: () => locked,
     isEngaged: () => engaged || locked,

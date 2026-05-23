@@ -1,0 +1,8 @@
+{
+  "appId": "com.drift.roam",
+  "appName": "Drift",
+  "webDir": ".",
+  "server": {
+    "androidScheme": "https"
+  }
+}

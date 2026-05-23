@@ -10,6 +10,7 @@ export function createDomHud(refs) {
     distEl,
     compass,
     loreToast,
+    sectorEl,
     startBtn,
   } = refs
 
@@ -35,6 +36,15 @@ export function createDomHud(refs) {
     },
     setDistance(text) {
       if (distEl) distEl.textContent = text
+    },
+    setSector(text) {
+      if (sectorEl) sectorEl.textContent = text
+    },
+    applyLoreStyle(scale) {
+      if (!loreToast) return
+      loreToast.classList.remove('lore-sm', 'lore-md', 'lore-lg')
+      const cls = scale === 'small' ? 'lore-sm' : scale === 'large' ? 'lore-lg' : 'lore-md'
+      loreToast.classList.add(cls)
     },
     flashTarget(name) {
       if (!targetEl) return

@@ -25,14 +25,14 @@ Three.js 由仓库内 **`vendor/three/`** 本地提供（`serve.mjs` 映射为 `
 
 1. 点击 **进入漫游**（或按 **Enter** / 点击画面）锁定鼠标，环顾四周  
 2. `WASD` — 平移 · `QE` — 升降  
-3. `Shift` — 加速 · `Ctrl` — 减速  
+3. `Shift` — 加速（3 秒 ×3 · 8 秒再 ×3 至 ×9，边缘模糊）· `Ctrl` — 减速  
 4. 不按键时也会缓慢向前漂游  
 5. `Esc` — 设置（灵敏度、速度、减动效、柔光 Bloom、微光收集、环境音、旁白、湖面光带）  
 6. `Tab` — 切换导航目标（屏幕边缘有方向指示点）  
 7. 靠近金色 **微光** 自动收集（可在设置中关闭）  
-8. `P` — 截图模式 · 设置内可 **导出/导入** 漫游档案与成就
+8. `P` — 截图模式（**S** 保存 PNG）· 设置内可 **导出/导入/分享** 漫游档案
 
-性能基线见 [docs/PERFORMANCE.md](docs/PERFORMANCE.md)。单元测试：`npm test`。
+性能基线见 [docs/PERFORMANCE.md](docs/PERFORMANCE.md)。移动端打包见 [docs/MOBILE.md](docs/MOBILE.md)。云存档见 [docs/CLOUD-SAVE.md](docs/CLOUD-SAVE.md)。单元测试：`npm test`。
 
 ## 架构（平台 / 核心分离）
 

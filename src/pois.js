@@ -38,6 +38,33 @@ const TYPES = [
   },
 ]
 
+const RARE_TYPES = [
+  {
+    name: '镜像晶球',
+    color: 0xaaccff,
+    emissive: 0x304080,
+    scale: 7.8,
+    lore: '它反射的不是光，而是别处尚未发生的黄昏。',
+    rare: true,
+  },
+  {
+    name: '静默裂隙',
+    color: 0xcc88ff,
+    emissive: 0x402060,
+    scale: 6.2,
+    lore: '裂隙里没有风，只有被折叠的星光在缓慢呼吸。',
+    rare: true,
+  },
+  {
+    name: '古航灯塔',
+    color: 0xffddaa,
+    emissive: 0x806030,
+    scale: 8.5,
+    lore: '无人记得谁为它添过燃料，它仍向深空眨着温柔的眼。',
+    rare: true,
+  },
+]
+
 const POI_COUNT = 6
 const SPAWN_MIN = 180
 const SPAWN_MAX = 360
@@ -45,7 +72,10 @@ const RECYCLE_DIST = 520
 const DISCOVER_DIST = 90
 const CLOSE_DIST = 55
 
-function pickType(seed) {
+function pickType(seed, camera) {
+  const posLen = camera?.position?.length?.() ?? 0
+  const h = (seed * 2654435761 + Math.floor(posLen * 0.13)) >>> 0
+  if (h % 100 < 8) return RARE_TYPES[h % RARE_TYPES.length]
   return TYPES[Math.abs(seed) % TYPES.length]
 }
 
@@ -66,34 +96,57 @@ function viewBasis(camera) {
 function makePoiMesh(type, bloom) {
   const group = new THREE.Group()
   const core = new THREE.Mesh(
-    new THREE.SphereGeometry(1, 20, 20),
+    new THREE.SphereGeometry(1, 24, 24),
     new THREE.MeshBasicMaterial({ color: type.color }),
   )
-  const glow = new THREE.Mesh(
-    new THREE.SphereGeometry(1.35, 16, 16),
+  const innerGlow = new THREE.Mesh(
+    new THREE.SphereGeometry(1.18, 20, 20),
+    new THREE.MeshBasicMaterial({
+      color: type.color,
+      transparent: true,
+      opacity: bloom ? 0.32 : 0.22,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    }),
+  )
+  const halo = new THREE.Mesh(
+    new THREE.SphereGeometry(1.5, 18, 18),
     new THREE.MeshBasicMaterial({
       color: type.emissive,
       transparent: true,
-      opacity: bloom ? 0.35 : 0.22,
+      opacity: bloom ? 0.26 : 0.16,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
     }),
   )
   const ring = new THREE.Mesh(
-    new THREE.RingGeometry(1.5, 2.1, 32),
+    new THREE.RingGeometry(1.68, 2.95, 56),
     new THREE.MeshBasicMaterial({
       color: type.color,
       transparent: true,
-      opacity: 0.2,
+      opacity: bloom ? 0.34 : 0.26,
+      side: THREE.DoubleSide,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    }),
+  )
+  const ringHaze = new THREE.Mesh(
+    new THREE.RingGeometry(2.55, 3.15, 40),
+    new THREE.MeshBasicMaterial({
+      color: type.emissive,
+      transparent: true,
+      opacity: bloom ? 0.14 : 0.1,
       side: THREE.DoubleSide,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
     }),
   )
   ring.rotation.x = Math.PI * 0.42
-  group.add(core, glow, ring)
+  ringHaze.rotation.x = Math.PI * 0.38
+  ringHaze.rotation.y = 0.15
+  group.add(core, innerGlow, halo, ring, ringHaze)
   group.scale.setScalar(type.scale)
-  return { group, core, glow, ring }
+  return { group, core, innerGlow, halo, ring, ringHaze }
 }
 
 export function createPois(scene, { reducedMotion, bloom }) {
@@ -103,7 +156,7 @@ export function createPois(scene, { reducedMotion, bloom }) {
   let loreCooldown = 0
 
   function spawnOne(camera, slot) {
-    const type = pickType(slot + Math.floor(camera.position.length() * 0.07))
+    const type = pickType(slot + Math.floor(camera.position.length() * 0.07), camera)
     const meshes = makePoiMesh(type, bloom)
     const { ahead, right } = viewBasis(camera)
     const dist = SPAWN_MIN + ((slot * 47) % 100) * ((SPAWN_MAX - SPAWN_MIN) / 100)
@@ -141,9 +194,12 @@ export function createPois(scene, { reducedMotion, bloom }) {
       const dist = entry.group.position.distanceTo(camera.position)
       if (dist > RECYCLE_DIST) recycle(entry, camera)
 
-      const pulse = 1 + Math.sin(elapsed * 1.1 + entry.slot) * 0.04 * motion
-      entry.glow.scale.setScalar(pulse * 1.35)
+      const pulse = 1 + Math.sin(elapsed * 1.1 + entry.slot) * 0.05 * motion
+      const glowPulse = 1 + Math.sin(elapsed * 0.85 + entry.slot * 1.3) * 0.06 * motion
+      entry.innerGlow.scale.setScalar(pulse * 1.18)
+      entry.halo.scale.setScalar(glowPulse * 1.52)
       entry.ring.rotation.z += dt * 0.12 * motion
+      entry.ringHaze.rotation.z -= dt * 0.06 * motion
 
       if (dist < DISCOVER_DIST && !entry.discovered) {
         entry.discovered = true
@@ -151,7 +207,8 @@ export function createPois(scene, { reducedMotion, bloom }) {
       if (dist < CLOSE_DIST && !entry.visited && loreCooldown <= 0) {
         entry.visited = true
         loreCooldown = 8
-        onLore?.(entry.type.name, entry.type.lore)
+        const title = entry.type.rare ? `稀有 · ${entry.type.name}` : entry.type.name
+        onLore?.(title, entry.type.lore)
       }
     }
   }
@@ -166,6 +223,8 @@ export function createPois(scene, { reducedMotion, bloom }) {
       position: e.group.position,
       discovered: e.discovered,
       visited: e.visited,
+      slot: e.slot,
+      rare: !!e.type.rare,
     }))
   }
 

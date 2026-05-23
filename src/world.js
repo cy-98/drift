@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { sectorLabel } from './core/sectors.js'
 
 const QUALITY = {
   low: { starMul: 0.55, spreadMul: 0.9 },
@@ -133,6 +134,8 @@ export function createWorld(scene, { reducedMotion, bloom, quality = 'medium', l
   nebula2.rotation.z = 0.4
   scene.add(nebula2)
 
+  const _sectorColor = new THREE.Color()
+
   const lakeLayers = [
     {
       mat: makeLakeLayer(bloom, { rimScale: 1, alphaScale: 1, waveScale: 10 }),
@@ -195,7 +198,7 @@ export function createWorld(scene, { reducedMotion, bloom, quality = 'medium', l
     layer.material.size = layer.userData.baseSize * lod * (bloom ? 1.05 : 1)
   }
 
-  function followCamera(camera, elapsed, motion) {
+  function followCamera(camera, elapsed, motion, state) {
     _ahead.set(0, 0, -1).applyQuaternion(camera.quaternion)
     const ax = camera.position.x
     const ay = camera.position.y
@@ -219,6 +222,16 @@ export function createWorld(scene, { reducedMotion, bloom, quality = 'medium', l
     nebula.position.set(ax + 40 + Math.sin(elapsed * 0.08) * 12 * motion, ay + 15, az - 175)
     nebula2.position.set(ax - 60 + Math.cos(elapsed * 0.06) * 18 * motion, ay - 10, az - 235)
 
+    const sx = Math.floor(camera.position.x / 720)
+    const sz = Math.floor(camera.position.z / 720)
+    const seed = (sx * 374761393 + sz * 668265263) >>> 0
+    const warmth = (seed % 1000) / 1000
+    _sectorColor.setRGB(0.08 + warmth * 0.14, 0.14 + (1 - warmth) * 0.1, 0.26 + (1 - warmth) * 0.14)
+    nebulaMat.color.copy(_sectorColor)
+    nebula2.material.color.copy(_sectorColor).multiplyScalar(0.82)
+
+    state.sectorLabel = sectorLabel(ax, az)
+
     if (dust) {
       dust.position.copy(camera.position)
       dust.rotation.y = elapsed * 0.04
@@ -238,7 +251,7 @@ export function createWorld(scene, { reducedMotion, bloom, quality = 'medium', l
     state.clearColor = _clear
     state.dayFactor = day
 
-    followCamera(camera, elapsed, motion)
+    followCamera(camera, elapsed, motion, state)
     for (const layer of lakeLayers) {
       layer.mat.uniforms.uTime.value = elapsed
       layer.mat.uniforms.uDay.value = day * 0.65 + season * 0.35

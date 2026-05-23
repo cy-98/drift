@@ -13,6 +13,7 @@
     <title>Drift</title>
     <style>
       * { box-sizing: border-box; margin: 0; }
+      html { color-scheme: dark; background: #030810; }
       html, body { height: 100%; overflow: hidden; background: #030810; font-family: 'Segoe UI', 'PingFang SC', system-ui, sans-serif; }
       body::before {
         content: '';
@@ -72,14 +73,44 @@
         transition: opacity 0.4s;
       }
       body.vignette-on #vignette { opacity: 1; }
+      #boost-edge {
+        position: fixed; inset: 0; z-index: 5; pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.55s ease;
+        backdrop-filter: blur(10px) saturate(1.08);
+        -webkit-backdrop-filter: blur(10px) saturate(1.08);
+        mask-image: radial-gradient(ellipse 78% 72% at 50% 46%, transparent 36%, black 82%);
+        -webkit-mask-image: radial-gradient(ellipse 78% 72% at 50% 46%, transparent 36%, black 82%);
+      }
+      #boost-edge::after {
+        content: '';
+        position: absolute; inset: 0;
+        background: radial-gradient(ellipse 88% 80% at 50% 45%, transparent 44%, rgba(3, 8, 16, 0.42) 100%);
+      }
+      body.boost-overdrive #boost-edge { opacity: 1; }
+      body.boost-hyper #boost-edge {
+        opacity: 1;
+        backdrop-filter: blur(18px) saturate(1.25);
+        -webkit-backdrop-filter: blur(18px) saturate(1.25);
+        mask-image: radial-gradient(ellipse 66% 62% at 50% 46%, transparent 26%, black 74%);
+        -webkit-mask-image: radial-gradient(ellipse 66% 62% at 50% 46%, transparent 26%, black 74%);
+      }
+      body.boost-hyper #boost-edge::after {
+        background: radial-gradient(ellipse 82% 76% at 50% 45%, transparent 36%, rgba(20, 48, 72, 0.55) 100%);
+      }
+      body.photo-mode #boost-edge { opacity: 0 !important; visibility: hidden; }
       body.photo-mode #ui,
       body.photo-mode #compass,
       body.photo-mode #lore,
       body.photo-mode #settings,
       body.photo-mode #touch-ui,
       body.photo-mode #vignette { opacity: 0 !important; pointer-events: none !important; visibility: hidden; }
+      body.settings-open #ui,
+      body.settings-open #compass,
+      body.settings-open #lore,
+      body.settings-open #touch-ui { opacity: 0; visibility: hidden; pointer-events: none; }
       body.photo-mode::after {
-        content: '截图模式 · P 退出';
+        content: '截图模式 · S 保存 · P 退出';
         position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
         font-size: 12px; color: #9ab0c8; letter-spacing: 0.15em; z-index: 12;
         pointer-events: none;
@@ -136,25 +167,45 @@
       }
       #settings {
         position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
-        background: rgba(3, 8, 16, 0.72); pointer-events: none; opacity: 0;
-        transition: opacity 0.25s; z-index: 20;
+        background: transparent; pointer-events: none; opacity: 0;
+        transition: opacity 0.25s; z-index: 45;
+        padding: 1rem 0;
       }
-      #settings.open { pointer-events: auto; opacity: 1; }
+      #settings.open {
+        pointer-events: auto; opacity: 1;
+        background: rgba(3, 8, 16, 0.42);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+      }
       #settings .panel {
-        width: min(22rem, 92vw); padding: 1.25rem 1.35rem;
-        background: rgba(6, 16, 32, 0.95); border: 1px solid rgba(110, 184, 232, 0.28);
+        width: min(22rem, 92vw); max-height: min(90vh, 100%);
+        overflow-x: hidden; overflow-y: auto;
+        padding: 1.25rem 1.35rem;
+        background: #061428; border: 1px solid rgba(110, 184, 232, 0.28);
         border-radius: 12px; color: #c8d8ec; pointer-events: auto;
+        box-shadow: 0 12px 48px rgba(0, 0, 0, 0.45);
+        scrollbar-color: rgba(110, 184, 232, 0.45) #061428;
+      }
+      #settings .panel::-webkit-scrollbar { width: 8px; }
+      #settings .panel::-webkit-scrollbar-track { background: #061428; }
+      #settings .panel::-webkit-scrollbar-thumb {
+        background: rgba(110, 184, 232, 0.35); border-radius: 4px;
       }
       #settings h2 { font-size: 1rem; color: #6eb8e8; margin-bottom: 1rem; }
       #settings label {
         display: block; font-size: 0.82rem; color: #9ab0c8; margin: 0.75rem 0 0.35rem;
       }
-      #settings input[type="range"] { width: 100%; accent-color: #6eb8e8; }
+      #settings input[type="range"] { width: 100%; accent-color: #6eb8e8; background: transparent; }
+      #settings input[type="checkbox"] {
+        width: 1rem; height: 1rem; accent-color: #6eb8e8;
+        background: #030810; border: 1px solid rgba(110, 184, 232, 0.35);
+      }
       #settings select {
         width: 100%; margin-top: 0.25rem; padding: 0.45rem 0.5rem;
         border-radius: 8px; border: 1px solid rgba(110, 184, 232, 0.35);
-        background: rgba(3, 8, 16, 0.9); color: #e8f0ff; font: inherit; font-size: 0.85rem;
+        background: #030810; color: #e8f0ff; font: inherit; font-size: 0.85rem;
       }
+      #settings select option { background: #061428; color: #e8f0ff; }
       #settings .row { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; }
       #settings .row input { accent-color: #6eb8e8; }
       #settings button {
@@ -179,8 +230,25 @@
         background: rgba(110, 184, 232, 0.08); color: #c8d8ec; font-size: 0.85rem;
       }
       #settings .progress-actions input[type="file"] { display: none; }
+      #settings .achievements-fold {
+        margin: 0 0 0.65rem; border: 1px solid rgba(110, 184, 232, 0.2); border-radius: 8px;
+      }
+      #settings .achievements-fold summary {
+        padding: 0.5rem 0.65rem; cursor: pointer; font-size: 0.82rem; color: #9ab0c8;
+        list-style: none; user-select: none;
+      }
+      #settings .achievements-fold summary::-webkit-details-marker { display: none; }
+      #settings .achievements-fold[open] summary {
+        border-bottom: 1px solid rgba(110, 184, 232, 0.12);
+      }
+      #settings .achievements-fold #achievements-list {
+        margin: 0; padding: 0.35rem 0.65rem 0.5rem; max-height: 9rem;
+      }
+      #settings .achievements-fold #journal-list {
+        margin: 0; padding: 0.35rem 0.65rem 0.5rem; max-height: 10rem;
+      }
       #achievements-list {
-        list-style: none; margin: 0 0 0.65rem; padding: 0; max-height: 8.5rem; overflow: auto;
+        list-style: none; margin: 0; padding: 0; overflow: auto;
       }
       #achievements-list li {
         display: flex; flex-direction: column; gap: 0.1rem; padding: 0.35rem 0;
@@ -190,6 +258,17 @@
       #achievements-list li small { color: #6a8098; }
       #achievements-list li.unlocked span { color: #6eb8e8; }
       #achievements-list li.locked { opacity: 0.45; }
+      #journal-list {
+        list-style: none; margin: 0; padding: 0; overflow: auto;
+      }
+      #journal-list li {
+        padding: 0.35rem 0; border-bottom: 1px solid rgba(110, 184, 232, 0.08);
+        font-size: 0.76rem;
+      }
+      #journal-list li time { color: #6a8098; font-size: 0.7rem; display: block; margin-bottom: 0.15rem; }
+      #journal-list li span { color: #6eb8e8; }
+      #journal-list li p { color: #8aa4bc; margin-top: 0.1rem; line-height: 1.35; }
+      #settings .progress-actions button.progress-share { flex: 1 1 100%; min-width: 100%; }
       .hud-row { margin-top: 0.35rem; font-size: 12px; color: #9ab0c8; }
       .hud-row span { color: #6eb8e8; }
       #target.flash { color: #ffe066; }
@@ -210,6 +289,13 @@
         opacity: 0; pointer-events: none; transition: opacity 0.5s, transform 0.5s; z-index: 8;
       }
       #lore.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+      #lore.lore-sm { font-size: 11px; max-width: 16rem; }
+      #lore.lore-sm strong { font-size: 10px; }
+      #lore.lore-sm p { font-size: 10px; }
+      #lore.lore-md { font-size: 13px; max-width: 20rem; }
+      #lore.lore-lg { font-size: 15px; max-width: 24rem; padding: 14px 18px; }
+      #lore.lore-lg strong { font-size: 14px; }
+      #lore.lore-lg p { font-size: 14px; }
       #lore strong { display: block; color: #6eb8e8; margin-bottom: 0.35rem; font-size: 12px; }
       #lore p { margin: 0; font-size: 12px; color: #9ab0c8; }
       #canvas { position: fixed; inset: 0; z-index: 1; }
@@ -273,6 +359,7 @@
       </div>
     </div>
     <div id="vignette" aria-hidden="true"></div>
+    <div id="boost-edge" aria-hidden="true"></div>
     <div id="webgl-error" role="alert">
       <div>
         <p style="font-size:1.1rem;margin-bottom:0.75rem">无法启动 WebGL</p>
@@ -285,7 +372,7 @@
       <div class="touch-look" id="look-zone"></div>
     </div>
     <div id="compass" aria-hidden="true"></div>
-    <div id="lore"><strong></strong><p></p></div>
+    <div id="lore" class="lore-md"><strong></strong><p></p></div>
     <div id="settings" aria-hidden="true">
       <div class="panel" role="dialog" aria-labelledby="settings-title">
         <h2 id="settings-title">设置</h2>
@@ -299,8 +386,17 @@
         <label class="row"><input id="ambient" type="checkbox" /> 环境音（宇宙底噪）</label>
         <label class="row"><input id="vignette" type="checkbox" /> 电影暗角</label>
         <label class="row"><input id="lake-glow" type="checkbox" /> 远方湖面光带</label>
-        <label class="row"><input id="music" type="checkbox" /> 程序化氛围音乐（情绪曲线）</label>
+        <label class="row"><input id="music" type="checkbox" /> 氛围音乐（程序化；可选 /audio/drift-theme.mp3）</label>
+        <label class="row"><input id="sfx" type="checkbox" /> 邂逅提示音（极轻铃音）</label>
         <label class="row"><input id="narration" type="checkbox" /> 旁白朗读（浏览器语音）</label>
+        <label for="lore-duration">字幕停留 <span id="lore-duration-val">6</span> 秒</label>
+        <input id="lore-duration" type="range" min="4" max="14" step="1" />
+        <label for="lore-scale">字幕大小</label>
+        <select id="lore-scale">
+          <option value="small">小</option>
+          <option value="medium" selected>中</option>
+          <option value="large">大</option>
+        </select>
         <label for="quality">画质档位</label>
         <select id="quality">
           <option value="low">低（更流畅）</option>
@@ -310,9 +406,18 @@
         <div class="progress-block">
           <h3>漫游档案</h3>
           <p id="progress-summary">—</p>
-          <ul id="achievements-list" aria-label="成就列表"></ul>
+          <details class="achievements-fold">
+            <summary>成就列表（<span id="achievements-count">0</span>）</summary>
+            <ul id="achievements-list" aria-label="成就列表"></ul>
+          </details>
+          <details class="achievements-fold">
+            <summary>漫游日志（<span id="journal-count">0</span>）</summary>
+            <ul id="journal-list" aria-label="漫游日志"></ul>
+          </details>
           <div class="progress-actions">
             <button type="button" id="progress-export">导出 JSON</button>
+            <button type="button" id="progress-copy">复制到剪贴板</button>
+            <button type="button" id="progress-share" class="progress-share">生成分享链接</button>
             <label class="btn-file">导入 JSON<input id="progress-import" type="file" accept="application/json,.json" /></label>
           </div>
         </div>
@@ -324,6 +429,7 @@
     <div id="ui">
       <div class="top">
         <strong>DRIFT</strong> · 星际漫游<br />
+        <span class="hud-row">星区 <span id="sector">—</span></span><br />
         <span class="hud-row">FPS <span id="fps">—</span> · 微光 <span id="collect-count">0</span></span><br />
         速度 <span id="speed">6.0</span> · 高度 <span id="alt">0</span>
         <div class="hud-row">目标 <span id="target">—</span> · <span id="dist">—</span></div>
@@ -366,6 +472,11 @@
       }
       sens.addEventListener('input', syncLabels)
       spd.addEventListener('input', syncLabels)
+      const loreDur = document.getElementById('lore-duration')
+      const loreDurVal = document.getElementById('lore-duration-val')
+      loreDur?.addEventListener('input', () => {
+        if (loreDurVal) loreDurVal.textContent = loreDur.value
+      })
       syncLabels()
     </script>
   </body>

@@ -1,4 +1,5 @@
 export function createAudio(getSettings) {
+  const THEME_PATHS = ['/audio/drift-theme.mp3', '/audio/drift-theme.ogg']
   let ctx = null
   let master = null
   let ambientGain = null
@@ -8,6 +9,48 @@ export function createAudio(getSettings) {
   let noise = null
   let started = false
   let sessionTime = 0
+  let themeEl = null
+  let themeReady = false
+  let themePathIdx = 0
+
+  function initTheme() {
+    if (themeEl || typeof Audio === 'undefined') return
+    themeEl = new Audio()
+    themeEl.loop = true
+    themeEl.preload = 'auto'
+    themeEl.addEventListener(
+      'canplaythrough',
+      () => {
+        themeReady = true
+        syncTheme()
+      },
+      { once: true },
+    )
+    themeEl.addEventListener('error', () => {
+      themePathIdx += 1
+      if (themePathIdx < THEME_PATHS.length) {
+        themeEl.src = THEME_PATHS[themePathIdx]
+        themeEl.load()
+      } else {
+        themeEl = null
+      }
+    })
+    themeEl.src = THEME_PATHS[0]
+    themeEl.load()
+  }
+
+  function hasTheme() {
+    return !!(themeReady && themeEl)
+  }
+
+  function syncTheme() {
+    if (!hasTheme()) return
+    const { music } = getSettings()
+    const vol = started && music ? 0.42 : 0
+    themeEl.volume = vol
+    if (vol > 0 && themeEl.paused) themeEl.play().catch(() => {})
+    if (vol === 0 && !themeEl.paused) themeEl.pause()
+  }
 
   function ensure() {
     if (ctx) return true
@@ -70,7 +113,9 @@ export function createAudio(getSettings) {
     if (!ensure()) return
     if (ctx.state === 'suspended') ctx.resume()
     started = true
+    initTheme()
     syncVolume()
+    syncTheme()
   }
 
   function syncVolume() {
@@ -80,6 +125,7 @@ export function createAudio(getSettings) {
     master.gain.setTargetAtTime(on ? 0.55 : 0, ctx.currentTime, 0.5)
     ambientGain.gain.setTargetAtTime(started && ambient ? 1 : 0, ctx.currentTime, 0.4)
     musicGain.gain.setTargetAtTime(started && music ? 1 : 0, ctx.currentTime, 0.4)
+    syncTheme()
   }
 
   /** 情绪曲线：宁静开场 → 探索上扬 → 久漂收束 */
@@ -97,9 +143,10 @@ export function createAudio(getSettings) {
     const calm = open * (1 - windDown * 0.45)
     const lift = explore * (1 - windDown * 0.65)
     const pad = music ? calm * 0.35 + lift * 0.55 : 0
+    const themeBlend = hasTheme() ? 0.22 : 1
 
     if (oscMid?._gain) {
-      oscMid._gain.gain.setTargetAtTime(pad * 0.06, ctx.currentTime, 0.35)
+      oscMid._gain.gain.setTargetAtTime(pad * 0.06 * themeBlend, ctx.currentTime, 0.35)
     }
     if (oscLow) {
       const base = ambient ? 0.04 : 0
@@ -115,8 +162,28 @@ export function createAudio(getSettings) {
     return Math.sin(t * 0.07) * 3
   }
 
+  function playChime() {
+    if (!ensure()) return
+    const { sfx } = getSettings()
+    if (!started || !sfx) return
+    const o = ctx.createOscillator()
+    const g = ctx.createGain()
+    o.type = 'sine'
+    o.frequency.value = 784
+    g.gain.value = 0
+    o.connect(g)
+    g.connect(musicGain)
+    const t = ctx.currentTime
+    g.gain.linearRampToValueAtTime(0.035, t + 0.015)
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.85)
+    o.start(t)
+    o.stop(t + 0.9)
+  }
+
   function dispose() {
     try {
+      themeEl?.pause()
+      themeEl = null
       oscLow?.stop()
       oscMid?.stop()
       noise?.stop()
@@ -127,5 +194,5 @@ export function createAudio(getSettings) {
     ctx = null
   }
 
-  return { resume, syncVolume, updateMood, dispose }
+  return { resume, syncVolume, updateMood, playChime, dispose }
 }

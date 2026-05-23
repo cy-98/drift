@@ -13,6 +13,9 @@ import { createPerformanceTracker } from './performance.js'
 import { createProgressTracker } from './progress.js'
 import { createAchievementTracker } from './achievements.js'
 import { createAnalytics } from './analytics.js'
+import { createJournal } from './journal.js'
+import { createConstellationUnlock } from './constellation-unlock.js'
+import * as THREE from 'three'
 
 /**
  * @typedef {ReturnType<import('./settings.js').createSettingsStore>} SettingsStore
@@ -33,12 +36,16 @@ import { createAnalytics } from './analytics.js'
  *   getStartButton(): HTMLElement | null | undefined,
  *   showLore(title: string, text: string): void,
  *   hideLore(): void,
+ *   setSector(text: string): void,
+ *   applyLoreStyle(scale: string): void,
  * }} GameHud
  * @typedef {{
  *   getPixelRatio(quality: string): number,
  *   onReady(): void,
  *   setVignette(on: boolean): void,
  *   setPhotoMode(on: boolean): void,
+ *   setBoostOverdrive(on: boolean): void,
+ *   setBoostHyper(on: boolean): void,
  *   exitPointerLock(): void,
  * }} PlatformShell
  */
@@ -71,6 +78,8 @@ export function createDriftApp(deps) {
   const progress = createProgressTracker(storage)
   const achievements = createAchievementTracker(storage)
   const analytics = createAnalytics(storage)
+  const journal = createJournal(storage)
+  const constellationUnlock = createConstellationUnlock(storage)
   const narration = createNarration?.(() => settings)
   const achievementCtx = { engaged: false, photoUsed: false }
 
@@ -98,19 +107,26 @@ export function createDriftApp(deps) {
       poiVisited: pois?.visitedCount?.() ?? 0,
     })
     const hit = achievements.evaluate(progress.getState(), achievementCtx)
-    if (hit) showLore(`成就 · ${hit.title}`, hit.desc)
+    if (hit) showLore(`成就 · ${hit.title}`, hit.desc, { journal: false, chime: false })
+  }
+
+  function loreDurationSec() {
+    const n = Number(settings.loreDuration ?? 6)
+    return Math.max(4, Math.min(14, n))
+  }
+
+  function showLore(title, text, opts = {}) {
+    hud.showLore(title, text)
+    narration?.speak(title, text)
+    if (opts.journal !== false) journal.note(title, text)
+    if (opts.chime) audio.playChime?.()
+    progress.noteLore()
+    loreTimer = opts.duration ?? loreDurationSec()
   }
 
   function onWorldLore(name, text) {
     analytics.notePoi(name)
-    showLore(name, text)
-  }
-
-  function showLore(title, text) {
-    hud.showLore(title, text)
-    narration?.speak(title, text)
-    progress.noteLore()
-    loreTimer = 6
+    showLore(name, text, { chime: true })
   }
 
   let renderer
@@ -150,7 +166,7 @@ export function createDriftApp(deps) {
       achievementCtx.photoUsed = true
       checkAchievements()
       platform.exitPointerLock()
-      showLore('截图模式', 'UI 已隐藏，按 P 退出。')
+      showLore('截图模式', 'UI 已隐藏 · S 保存 PNG · P 退出', { journal: false, chime: false })
       loreTimer = 4
     }
   }
@@ -183,6 +199,7 @@ export function createDriftApp(deps) {
     settings = next
     settingsStore.save(settings)
     audio.syncVolume()
+    hud.applyLoreStyle?.(settings.loreScale ?? 'medium')
     applyVignette()
     syncPostprocess()
     if (
@@ -231,6 +248,7 @@ export function createDriftApp(deps) {
     rebuildWorld()
     applyVignette()
     syncPostprocess()
+    hud.applyLoreStyle?.(settings.loreScale ?? 'medium')
     resize()
   } catch (err) {
     console.error(err)
@@ -295,6 +313,7 @@ export function createDriftApp(deps) {
         camera.position.z -= drift * dt
         world.update(elapsed, camera, dt, worldState)
         if (pois) pois.update(elapsed, camera, dt, onWorldLore)
+        if (worldState.sectorLabel) hud.setSector?.(worldState.sectorLabel)
         renderFrame()
         readyFrames += 1
         if (readyFrames >= 2) hideLoadingWhenReady()
@@ -303,12 +322,23 @@ export function createDriftApp(deps) {
       }
 
       if (!photoMode) input.updateMovement(dt)
+      const motion = input.getMotionState?.()
+      const allowFx = !settings.reducedMotion
+      platform.setBoostOverdrive?.(!!motion?.overdrive && allowFx)
+      platform.setBoostHyper?.(!!motion?.hyper && allowFx)
       audio.updateMood(dt, {
         speedNorm: input.getSpeedNorm?.() ?? 0,
         moving: input.isMoving?.() ?? false,
       })
       world.update(elapsed, camera, dt, worldState)
-      if (pois) pois.update(elapsed, camera, dt, onWorldLore)
+      if (pois) {
+        pois.update(elapsed, camera, dt, onWorldLore)
+        constellationUnlock.check(pois.entries, (name, a, b) => {
+          showLore(`星座 · ${name}`, `「${a}」与「${b}」之间的光被重新点亮。`, { chime: true })
+          checkAchievements()
+        })
+      }
+      if (worldState.sectorLabel) hud.setSector?.(worldState.sectorLabel)
       stations?.update(elapsed, camera)
       wormholes?.update(elapsed, camera, dt, (title, text) => {
         progress.noteWarp()
@@ -316,7 +346,10 @@ export function createDriftApp(deps) {
         checkAchievements()
       })
       if (constellation && pois) {
-        constellation.update(() => pois.list().map((p) => p.position))
+        constellation.update(
+          () => pois.list(),
+          (a, b) => constellationUnlock.hasPair(a, b),
+        )
       }
       if (collectibles) {
         const { count } = collectibles.update(elapsed, camera, dt, (n) => {
@@ -360,6 +393,21 @@ export function createDriftApp(deps) {
   requestAnimationFrame(loop)
   setTimeout(hideLoadingWhenReady, MIN_LOAD_MS + 50)
 
+  function capturePhoto() {
+    if (!photoMode || !canvas) return false
+    try {
+      const link = document.createElement('a')
+      link.download = `drift-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')}.png`
+      link.href = canvas.toDataURL('image/png')
+      link.click()
+      showLore('截图', 'PNG 已保存到下载文件夹。', { journal: false, chime: false })
+      loreTimer = 3
+      return true
+    } catch {
+      return false
+    }
+  }
+
   function importProgress(json) {
     try {
       const data = typeof json === 'string' ? JSON.parse(json) : json
@@ -367,6 +415,8 @@ export function createDriftApp(deps) {
       if (!progress.applyImport(payload)) return false
       if (Array.isArray(data.achievements)) achievements.applyImport(data.achievements)
       if (data.analytics) analytics.applyImport(data.analytics)
+      if (Array.isArray(data.journal)) journal.applyImport(data.journal)
+      if (Array.isArray(data.constellations)) constellationUnlock.applyImport(data.constellations)
       collectibles?.setCount(progress.getState().collectTotal)
       hud.setCollectCount(progress.getState().collectTotal)
       return true
@@ -385,9 +435,11 @@ export function createDriftApp(deps) {
     cycleNavTarget: () => nav?.cycleTarget(),
     forceFinishLoading,
     getProgressSummary: () =>
-      `${progress.formatSummary()} · ${achievements.formatSummary()} · ${analytics.formatSummary()}`,
+      `${progress.formatSummary()} · ${achievements.formatSummary()} · ${journal.formatSummary()} · ${analytics.formatSummary()}`,
     listAchievements: () => achievements.list(),
+    listJournal: () => journal.list(),
     endSession: () => analytics.endSession(),
+    capturePhoto,
     exportProgress: () => {
       progress.syncRuntime({
         collectTotal: collectibles?.getCount() ?? 0,
@@ -399,6 +451,8 @@ export function createDriftApp(deps) {
           ...JSON.parse(progress.exportJson()),
           achievements: achievements.unlockedIds(),
           analytics: analytics.exportPayload(),
+          journal: journal.exportPayload(),
+          constellations: constellationUnlock.exportPayload(),
         },
         null,
         2,

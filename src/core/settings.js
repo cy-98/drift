@@ -12,8 +12,11 @@ export const defaults = {
   lakeGlow: true,
   music: true,
   narration: false,
+  sfx: true,
   quality: 'medium',
   collectibles: true,
+  loreDuration: 6,
+  loreScale: 'medium',
 }
 
 export function createSettingsStore(storage) {
