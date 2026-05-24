@@ -47,6 +47,18 @@ export const ACHIEVEMENT_DEFS = [
     check: (_s, ctx) => (ctx.bookmarks ?? 0) >= 1,
   },
   {
+    id: 'inter_gate',
+    title: '际门旅人',
+    desc: '穿过际间星门一次。',
+    check: (s) => s.interWarps >= 1,
+  },
+  {
+    id: 'four_skies',
+    title: '阅尽四象',
+    desc: '造访四种星系气候。',
+    check: (_s, ctx) => (ctx.archetypesVisited ?? 0) >= 4,
+  },
+  {
     id: 'photo',
     title: '取景',
     desc: '使用截图模式。',

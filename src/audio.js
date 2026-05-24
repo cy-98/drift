@@ -1,5 +1,9 @@
 export function createAudio(getSettings) {
-  const THEME_PATHS = ['/audio/drift-theme.mp3', '/audio/drift-theme.ogg']
+  const THEME_PLAYLIST = [
+    ['/audio/drift-theme.mp3', '/audio/drift-theme.ogg'],
+    ['/audio/drift-theme-b.mp3', '/audio/drift-theme-b.ogg'],
+    ['/audio/drift-theme-c.mp3', '/audio/drift-theme-c.ogg'],
+  ]
   let ctx = null
   let master = null
   let ambientGain = null
@@ -13,31 +17,92 @@ export function createAudio(getSettings) {
   let themeEl = null
   let themeReady = false
   let themePathIdx = 0
+  let playlistIdx = 0
+  let playlistReady = []
 
   function initTheme() {
     if (themeEl || typeof Audio === 'undefined') return
     themeEl = new Audio()
-    themeEl.loop = true
     themeEl.preload = 'auto'
-    themeEl.addEventListener(
-      'canplaythrough',
-      () => {
-        themeReady = true
-        syncTheme()
-      },
-      { once: true },
-    )
-    themeEl.addEventListener('error', () => {
-      themePathIdx += 1
-      if (themePathIdx < THEME_PATHS.length) {
-        themeEl.src = THEME_PATHS[themePathIdx]
-        themeEl.load()
-      } else {
-        themeEl = null
-      }
-    })
-    themeEl.src = THEME_PATHS[0]
+    themeEl.addEventListener('canplaythrough', onThemeReady)
+    themeEl.addEventListener('error', onThemeError)
+    themeEl.addEventListener('ended', onThemeEnded)
+    probePlaylist()
+    loadThemeSlot(0)
+  }
+
+  function onThemeReady() {
+    themeReady = true
+    if (themeEl) themeEl.loop = playlistReady.length <= 1
+    syncTheme()
+  }
+
+  function onThemeError() {
+    themePathIdx += 1
+    const paths = THEME_PLAYLIST[playlistIdx]
+    if (paths && themePathIdx < paths.length) {
+      themeEl.src = paths[themePathIdx]
+      themeEl.load()
+      return
+    }
+    themePathIdx = 0
+    playlistIdx += 1
+    if (playlistIdx < THEME_PLAYLIST.length) {
+      loadThemeSlot(playlistIdx)
+      return
+    }
+    themeEl = null
+    themeReady = false
+  }
+
+  function loadThemeSlot(idx) {
+    if (!themeEl) return
+    playlistIdx = idx
+    themePathIdx = 0
+    themeReady = false
+    themeEl.src = THEME_PLAYLIST[idx][0]
     themeEl.load()
+  }
+
+  function onThemeEnded() {
+    if (playlistReady.length <= 1) return
+    const pos = playlistReady.indexOf(playlistIdx)
+    const next = playlistReady[(pos + 1) % playlistReady.length]
+    crossfadeToTrack(next)
+  }
+
+  function crossfadeToTrack(nextIdx) {
+    if (!themeEl || nextIdx === playlistIdx) return
+    const prevVol = themeEl.volume
+    themeEl.volume = 0
+    loadThemeSlot(nextIdx)
+    themeEl.loop = playlistReady.length <= 1
+    themeEl.play().catch(() => {})
+    const step = () => {
+      if (!themeEl) return
+      themeEl.volume = Math.min(prevVol, themeEl.volume + 0.04)
+      if (themeEl.volume < prevVol - 0.01) requestAnimationFrame(step)
+      else themeEl.volume = prevVol
+    }
+    requestAnimationFrame(step)
+  }
+
+  function probePlaylist() {
+    playlistReady = [0]
+    for (let i = 1; i < THEME_PLAYLIST.length; i++) {
+      const probe = new Audio()
+      probe.preload = 'metadata'
+      probe.src = THEME_PLAYLIST[i][0]
+      probe.addEventListener(
+        'loadedmetadata',
+        () => {
+          if (!playlistReady.includes(i)) playlistReady.push(i)
+          if (themeEl) themeEl.loop = playlistReady.length <= 1
+        },
+        { once: true },
+      )
+      probe.addEventListener('error', () => {}, { once: true })
+    }
   }
 
   function hasTheme() {
@@ -155,7 +220,6 @@ export function createAudio(getSettings) {
       oscMid._gain.gain.setTargetAtTime(pad * 0.06 * themeBlend, ctx.currentTime, 0.35)
     }
     if (oscLow) {
-      const base = ambient ? 0.04 : 0
       oscLow.frequency.setTargetAtTime(48 + lift * 8 + calm * 4, ctx.currentTime, 0.5)
       oscLow.detune?.setTargetAtTime?.(lift * 12, ctx.currentTime, 0.5)
     }

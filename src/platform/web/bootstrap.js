@@ -6,6 +6,8 @@ import { createWebInput } from './input-web.js'
 import { createTouch } from './touch.js'
 import { createGamepad } from './gamepad.js'
 import { createWebNarration } from './narration-web.js'
+import { renderGalaxyMap } from './galaxy-map-canvas.js'
+import { loadGalaxyCatalog } from '../../core/galaxy-loader.js'
 
 const LOAD_START = performance.now()
 const storage = createWebStorage()
@@ -35,6 +37,9 @@ const journalList = document.getElementById('journal-list')
 const journalCount = document.getElementById('journal-count')
 const bookmarksList = document.getElementById('bookmarks-list')
 const bookmarksCount = document.getElementById('bookmarks-count')
+const galaxiesList = document.getElementById('galaxies-list')
+const galaxiesCount = document.getElementById('galaxies-count')
+const galaxyMapCanvas = document.getElementById('galaxy-map')
 const progressShareBtn = document.getElementById('progress-share')
 const qualityInput = document.getElementById('quality')
 const loreDurationInput = document.getElementById('lore-duration')
@@ -64,6 +69,7 @@ const hud = createDomHud({
   compass: document.getElementById('compass'),
   loreToast: document.getElementById('lore'),
   sectorEl: document.getElementById('sector'),
+  galaxyEl: document.getElementById('galaxy'),
   startBtn: document.getElementById('start-btn'),
 })
 
@@ -166,7 +172,7 @@ function syncSettingsForm() {
         ? marks
             .map(
               (b) =>
-                `<li><span>${b.label}</span><small>${Math.round(b.x)}, ${Math.round(b.y)}, ${Math.round(b.z)}</small><button type="button" data-id="${b.id}" class="bookmark-del">删除</button></li>`,
+                `<li><span>${b.label}</span><small>${b.galaxyName ? `${b.galaxyName} · ` : ''}${Math.round(b.x)}, ${Math.round(b.y)}, ${Math.round(b.z)}</small><button type="button" data-id="${b.id}" class="bookmark-del">删除</button></li>`,
             )
             .join('')
         : '<li><p>漫游中按 <kbd>B</kbd> 记下当前位置（最多 8 个）。</p></li>'
@@ -177,6 +183,21 @@ function syncSettingsForm() {
           syncSettingsForm()
         }
       })
+    }
+    if (galaxiesList && app?.listGalaxyVisits) {
+      const visited = app.listGalaxyVisits()
+      galaxiesList.innerHTML = visited.length
+        ? visited
+            .map(
+              (g) =>
+                `<li><span>${g.name}</span><small>${g.archetype || '—'} · ${formatJournalTime(g.at)}</small></li>`,
+            )
+            .join('')
+        : '<li><p>进入新星系或穿过际门后会自动记录。</p></li>'
+      if (galaxiesCount) galaxiesCount.textContent = String(visited.length)
+    }
+    if (galaxyMapCanvas && app?.getGalaxyMap) {
+      renderGalaxyMap(galaxyMapCanvas, app.getGalaxyMap())
     }
     qualityInput.value = settings.quality
     if (loreDurationInput) {
@@ -238,6 +259,7 @@ function bootError(err) {
 }
 
 try {
+  await loadGalaxyCatalog()
   app = createDriftApp({
     canvas,
     storage,

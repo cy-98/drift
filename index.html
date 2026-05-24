@@ -283,6 +283,12 @@
         border: 1px solid rgba(110, 184, 232, 0.35); border-radius: 4px;
         background: transparent; color: #9ab0c8; cursor: pointer;
       }
+      #galaxy-map {
+        display: block; width: 100%; max-width: 280px; height: auto;
+        margin: 0.35rem 0 0.25rem; border-radius: 8px;
+        border: 1px solid rgba(110, 184, 232, 0.2); background: #061428;
+      }
+      .map-hint { font-size: 0.72rem; color: #6a8098; margin: 0 0 0.35rem; line-height: 1.35; }
       #settings .progress-actions button.progress-share { flex: 1 1 100%; min-width: 100%; }
       .hud-row { margin-top: 0.35rem; font-size: 12px; color: #9ab0c8; }
       .hud-row span { color: #6eb8e8; }
@@ -430,6 +436,15 @@
             <ul id="bookmarks-list" aria-label="星图标记"></ul>
           </details>
           <details class="achievements-fold">
+            <summary>抽象星图</summary>
+            <p class="map-hint">蓝点为已造访星系，中心为当前位置（相对坐标）。</p>
+            <canvas id="galaxy-map" width="280" height="160" aria-label="造访星图"></canvas>
+          </details>
+          <details class="achievements-fold">
+            <summary>造访星系（<span id="galaxies-count">0</span>）</summary>
+            <ul id="galaxies-list" aria-label="造访星系"></ul>
+          </details>
+          <details class="achievements-fold">
             <summary>漫游日志（<span id="journal-count">0</span>）</summary>
             <ul id="journal-list" aria-label="漫游日志"></ul>
           </details>
@@ -448,6 +463,7 @@
     <div id="ui">
       <div class="top">
         <strong>DRIFT</strong> · 星际漫游<br />
+        <span class="hud-row">星系 <span id="galaxy">—</span></span><br />
         <span class="hud-row">星区 <span id="sector">—</span></span><br />
         <span class="hud-row">FPS <span id="fps">—</span> · 微光 <span id="collect-count">0</span></span><br />
         速度 <span id="speed">6.0</span> · 高度 <span id="alt">0</span>

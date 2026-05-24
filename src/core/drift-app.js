@@ -16,6 +16,8 @@ import { createAnalytics } from './analytics.js'
 import { createJournal } from './journal.js'
 import { createConstellationUnlock } from './constellation-unlock.js'
 import { createBookmarks } from './bookmarks.js'
+import { galaxyMeta } from './galaxies.js'
+import { createGalaxyVisits } from './galaxy-visits.js'
 
 /**
  * @typedef {ReturnType<import('./settings.js').createSettingsStore>} SettingsStore
@@ -37,6 +39,7 @@ import { createBookmarks } from './bookmarks.js'
  *   showLore(title: string, text: string): void,
  *   hideLore(): void,
  *   setSector(text: string): void,
+ *   setGalaxy(text: string): void,
  *   applyLoreStyle(scale: string): void,
  * }} GameHud
  * @typedef {{
@@ -80,6 +83,7 @@ export function createDriftApp(deps) {
   const journal = createJournal(storage)
   const constellationUnlock = createConstellationUnlock(storage)
   const bookmarks = createBookmarks(storage)
+  const galaxyVisits = createGalaxyVisits(storage)
   const narration = createNarration?.(() => settings)
   const achievementCtx = { engaged: false, photoUsed: false, bookmarks: 0 }
 
@@ -101,7 +105,48 @@ export function createDriftApp(deps) {
   let loreTimer = 0
   let progressSaveTimer = 0
   let lastSector = ''
+  let lastGalaxyId = ''
+  let inRevisitedGalaxy = false
   let wasHyper = false
+
+  function poiOptions() {
+    return {
+      ...settings,
+      getGalaxyMeta: (x, z) => galaxyMeta(x, z),
+    }
+  }
+
+  function updateLocationHud() {
+    if (worldState.galaxyLabel) hud.setGalaxy?.(`星系 · ${worldState.galaxyLabel}`)
+    if (worldState.sectorLabel) hud.setSector?.(`星区 · ${worldState.sectorLabel}`)
+  }
+
+  function recordGalaxyVisit() {
+    if (!loadingDone || !worldState.galaxyMeta) return
+    if (galaxyVisits.visit(worldState.galaxyMeta)) checkAchievements()
+  }
+
+  function checkGalaxyCrossing() {
+    if (!worldState.galaxyId || worldState.galaxyId === lastGalaxyId) return
+  inRevisitedGalaxy = !!lastGalaxyId && galaxyVisits.has(worldState.galaxyId)
+    if (lastGalaxyId && worldState.galaxyLore) {
+      const lore = worldState.galaxyLore
+      showLore(`星系 · ${worldState.galaxyLabel}`, lore.text, { chime: false, duration: 6 })
+      journal.note(lore.title, lore.text)
+    }
+    lastGalaxyId = worldState.galaxyId
+    recordGalaxyVisit()
+  }
+
+  function checkSectorCrossing() {
+    if (!worldState.sectorLabel || worldState.sectorLabel === lastSector) return
+    if (lastSector && worldState.sectorEvent) {
+      const evt = worldState.sectorEvent
+      showLore(`星区 · ${worldState.sectorLabel}`, evt.text, { chime: false, duration: 5 })
+      journal.note(evt.title, evt.text)
+    }
+    lastSector = worldState.sectorLabel
+  }
 
   function getNavTargets() {
     const list = pois ? pois.list() : []
@@ -115,6 +160,7 @@ export function createDriftApp(deps) {
 
   function checkAchievements() {
     achievementCtx.bookmarks = bookmarks.list().length
+    achievementCtx.archetypesVisited = galaxyVisits.archetypesVisited().size
     progress.syncRuntime({
       collectTotal: collectibles?.getCount() ?? 0,
       poiVisited: pois?.visitedCount?.() ?? 0,
@@ -196,8 +242,10 @@ export function createDriftApp(deps) {
     pois?.dispose()
     for (const child of [...scene.children]) scene.remove(child)
     world = createWorld(scene, settings)
-    pois = createPois(scene, settings)
-    wormholes = createWormholes(scene)
+    pois = createPois(scene, poiOptions())
+    wormholes = createWormholes(scene, {
+      getGalaxyMeta: (x, z) => galaxyMeta(x, z),
+    })
     stations = createStations(scene)
     constellation = createConstellation(scene)
     collectibles = createCollectibles(scene, () => settings)
@@ -231,6 +279,7 @@ export function createDriftApp(deps) {
     loadingDone = true
     analytics.startSession()
     collectibles?.warm(camera)
+    recordGalaxyVisit()
     input?.showStartGuide()
     platform.onReady()
   }
@@ -326,7 +375,9 @@ export function createDriftApp(deps) {
         camera.position.z -= drift * dt
         world.update(elapsed, camera, dt, worldState)
         if (pois) pois.update(elapsed, camera, dt, onWorldLore)
-        if (worldState.sectorLabel) hud.setSector?.(worldState.sectorLabel)
+        updateLocationHud()
+        if (worldState.galaxyId) lastGalaxyId = worldState.galaxyId
+        if (worldState.sectorLabel) lastSector = worldState.sectorLabel
         renderFrame()
         readyFrames += 1
         if (readyFrames >= 2) hideLoadingWhenReady()
@@ -352,26 +403,24 @@ export function createDriftApp(deps) {
           checkAchievements()
         })
       }
-      if (worldState.sectorLabel) hud.setSector?.(worldState.sectorLabel)
-      if (worldState.sectorLabel && worldState.sectorLabel !== lastSector) {
-        if (lastSector && worldState.sectorEvent) {
-          const evt = worldState.sectorEvent
-          showLore(`星区 · ${worldState.sectorLabel}`, evt.text, { chime: false, duration: 5 })
-          journal.note(evt.title, evt.text)
-        }
-        lastSector = worldState.sectorLabel
-      }
+      updateLocationHud()
+      checkGalaxyCrossing()
+      checkSectorCrossing()
       stations?.update(elapsed, camera)
-      wormholes?.update(elapsed, camera, dt, (title, text) => {
-        progress.noteWarp()
+      wormholes?.update(elapsed, camera, dt, (payload) => {
+        const evt = typeof payload === 'string' ? { kind: 'inner', title: '星门', text: payload } : payload
+        if (evt.kind === 'inter') progress.noteInterWarp()
+        else progress.noteWarp()
         audio.playWarp?.()
-        onWorldLore(title, text)
+        onWorldLore(evt.title, evt.text)
         checkAchievements()
       })
       if (constellation && pois) {
+        const revisitBoost = inRevisitedGalaxy
         constellation.update(
           () => pois.list(),
           (a, b) => constellationUnlock.hasPair(a, b),
+          revisitBoost,
         )
       }
       if (collectibles) {
@@ -441,6 +490,7 @@ export function createDriftApp(deps) {
       if (Array.isArray(data.journal)) journal.applyImport(data.journal)
       if (Array.isArray(data.constellations)) constellationUnlock.applyImport(data.constellations)
       if (Array.isArray(data.bookmarks)) bookmarks.applyImport(data.bookmarks)
+      if (Array.isArray(data.galaxyVisits)) galaxyVisits.applyImport(data.galaxyVisits)
       collectibles?.setCount(progress.getState().collectTotal)
       hud.setCollectCount(progress.getState().collectTotal)
       return true
@@ -459,13 +509,20 @@ export function createDriftApp(deps) {
     cycleNavTarget: () => nav?.cycleTarget(),
     forceFinishLoading,
     getProgressSummary: () =>
-      `${progress.formatSummary()} · ${achievements.formatSummary()} · ${bookmarks.formatSummary()} · ${journal.formatSummary()} · ${analytics.formatSummary()}`,
+      `${progress.formatSummary()} · ${galaxyVisits.formatSummary()} · ${achievements.formatSummary()} · ${bookmarks.formatSummary()} · ${journal.formatSummary()} · ${analytics.formatSummary()}`,
+    listGalaxyVisits: () => galaxyVisits.list(),
+    getGalaxyMap: () => ({
+      gx: worldState.galaxyMeta?.gx ?? 0,
+      gz: worldState.galaxyMeta?.gz ?? 0,
+      visited: galaxyVisits.list(),
+    }),
     listBookmarks: () => bookmarks.list(),
     addBookmark: () => {
       if (!loadingDone) return null
       const label = worldState.sectorLabel || '星标'
-      const entry = bookmarks.add(camera.position, label)
-      journal.note('星标', `记下「${label}」`)
+      const g = worldState.galaxyMeta ?? galaxyMeta(camera.position.x, camera.position.z)
+      const entry = bookmarks.add(camera.position, label, { id: g.id, name: g.name })
+      journal.note('星标', `记下「${label}」· ${g.name}`)
       showLore('星标', `${label} 已加入导航（Tab 切换目标）`, { journal: false, chime: true })
       checkAchievements()
       return entry
@@ -489,6 +546,7 @@ export function createDriftApp(deps) {
           journal: journal.exportPayload(),
           constellations: constellationUnlock.exportPayload(),
           bookmarks: bookmarks.exportPayload(),
+          galaxyVisits: galaxyVisits.exportPayload(),
         },
         null,
         2,

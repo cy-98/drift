@@ -5,9 +5,10 @@ palette:
   fog: 0.38
   starDensity: 1.12
   lakeIntensity: 0.85
-poiWeights:
-  rare: 1.2
-  desert: 1.15
+  poiWeights:
+    rare: 1.2
+    ember: 1.15
+    amber: 1.1
 lore:
   title: 余烬星系
   text: 余温不散，像被遗忘的篝火群。

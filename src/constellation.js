@@ -20,7 +20,7 @@ export function createConstellation(scene) {
   const dim = new THREE.Color(0x6eb8e8)
   const bright = new THREE.Color(0xb8f0ff)
 
-  function update(getPoints, isUnlocked) {
+  function update(getPoints, isUnlocked, sameGalaxyBoost = false) {
     const pts = getPoints()
     let i = 0
     let anyUnlocked = false
@@ -33,7 +33,8 @@ export function createConstellation(scene) {
         if (dist > 220 || dist < 40) continue
         const unlocked = isUnlocked?.(pts[a].slot, pts[b].slot)
         if (unlocked) anyUnlocked = true
-        const c = unlocked ? bright : dim
+        const c = unlocked ? bright.clone() : dim
+        if (unlocked && sameGalaxyBoost) c.multiplyScalar(1.12)
         const i3 = i * 3
         positions[i3] = pa.x
         positions[i3 + 1] = pa.y
@@ -54,7 +55,7 @@ export function createConstellation(scene) {
     geo.attributes.position.needsUpdate = true
     geo.attributes.color.needsUpdate = true
     lines.visible = i > 0
-    mat.opacity = anyUnlocked ? 0.38 : 0.28
+    mat.opacity = anyUnlocked ? (sameGalaxyBoost ? 0.46 : 0.38) : 0.28
   }
 
   function dispose() {

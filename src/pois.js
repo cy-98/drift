@@ -72,10 +72,23 @@ const RECYCLE_DIST = 520
 const DISCOVER_DIST = 90
 const CLOSE_DIST = 55
 
-function pickType(seed, camera) {
+const POI_WEIGHT_KEYS = ['frozen', 'ring', 'amber', 'ember', 'aurora']
+
+function pickType(seed, camera, poiWeights) {
   const posLen = camera?.position?.length?.() ?? 0
   const h = (seed * 2654435761 + Math.floor(posLen * 0.13)) >>> 0
-  if (h % 100 < 8) return RARE_TYPES[h % RARE_TYPES.length]
+  const rareMult = poiWeights?.rare ?? 1
+  const rareThreshold = Math.min(20, Math.floor(8 * rareMult))
+  if (h % 100 < rareThreshold) return RARE_TYPES[h % RARE_TYPES.length]
+
+  const weights = POI_WEIGHT_KEYS.map((key) => poiWeights?.[key] ?? 1)
+  let sum = 0
+  for (const w of weights) sum += w
+  let pick = h % sum
+  for (let i = 0; i < weights.length; i++) {
+    pick -= weights[i]
+    if (pick < 0) return TYPES[i]
+  }
   return TYPES[Math.abs(seed) % TYPES.length]
 }
 
@@ -176,14 +189,17 @@ function makePoiMesh(type, bloom) {
   return { group, core, bodyGlow, rimGlow, innerGlow, halo, ring, ringHaze }
 }
 
-export function createPois(scene, { reducedMotion, bloom }) {
+export function createPois(scene, { reducedMotion, bloom, getGalaxyMeta }) {
   const root = new THREE.Group()
   scene.add(root)
   const entries = []
   let loreCooldown = 0
 
   function spawnOne(camera, slot) {
-    const type = pickType(slot + Math.floor(camera.position.length() * 0.07), camera)
+    const gx = camera.position.x
+    const gz = camera.position.z
+    const weights = getGalaxyMeta?.(gx, gz)?.poiWeights
+    const type = pickType(slot + Math.floor(camera.position.length() * 0.07), camera, weights)
     const meshes = makePoiMesh(type, bloom)
     const { ahead, right } = viewBasis(camera)
     const dist = SPAWN_MIN + ((slot * 47) % 100) * ((SPAWN_MAX - SPAWN_MIN) / 100)

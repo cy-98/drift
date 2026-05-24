@@ -11,6 +11,7 @@ export function createDomHud(refs) {
     compass,
     loreToast,
     sectorEl,
+    galaxyEl,
     startBtn,
   } = refs
 
@@ -39,6 +40,9 @@ export function createDomHud(refs) {
     },
     setSector(text) {
       if (sectorEl) sectorEl.textContent = text
+    },
+    setGalaxy(text) {
+      if (galaxyEl) galaxyEl.textContent = text
     },
     applyLoreStyle(scale) {
       if (!loreToast) return

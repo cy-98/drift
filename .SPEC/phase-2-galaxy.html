@@ -31,7 +31,7 @@
 
   <h1 class="text-3xl font-bold text-white mb-2">Phase 2.5 星系</h1>
   <p class="spec-intro">目标：在星区之上增加<strong>宏观气候带</strong>——星系不是关卡，而是同一套「宇宙天气」覆盖的星区群；可落在 <code>data/galaxies/*.yml</code>，后续可调物理法则与丰富内容。</p>
-  <p class="text-slate-400 mb-4">0/14 · 0%</p><div class="progress-bar mb-6"><div class="progress-bar__fill" style="width:0%"></div></div>
+  <p class="text-slate-400 mb-4">14/14 · 100%</p><div class="progress-bar mb-6"><div class="progress-bar__fill" style="width:100%"></div></div>
 
   <h2 class="text-lg text-teal-300 mb-3 mt-6">已确认的设计决策</h2>
   <ul class="spec-checklist mb-6">
@@ -51,40 +51,29 @@
   </div>
 
   <h2 class="text-lg text-teal-300 mb-3">界面位置显示（HUD）</h2>
-  <p class="spec-detail mb-4">HUD = Head-Up Display，即演玩时屏幕上的轻量信息层（速度、高度、当前星区名等）。计划在现有星区行上方增加星系行：<code>星系 · 薄雾弧群</code> / <code>星区 · 静潮星域</code>。</p>
+  <p class="spec-detail mb-4">HUD = Head-Up Display，即演玩时屏幕上的轻量信息层。已在星区行上方增加星系行：<code>星系 · 薄雾弧群</code> / <code>星区 · 静潮星域</code>。</p>
 
-  <h2 class="text-lg text-teal-300 mb-3">G0 命名层（优先）</h2>
+  <h2 class="text-lg text-teal-300 mb-3">已完成（G0–G3）</h2>
   <ul class="spec-checklist mb-6">
-    <li class="check-todo spec-item"><span class="spec-item-title">星系坐标与命名</span><span class="spec-tags">galaxies.js</span><p class="spec-detail"><strong>还差什么：</strong><code>galaxyCoords</code> / <code>galaxyLabel</code> / <code>galaxyMeta</code>；与 <code>sectors.js</code> 同样纯函数。</p></li>
-    <li class="check-todo spec-item"><span class="spec-item-title">HUD 双行位置</span><span class="spec-tags">dom-hud.js</span><p class="spec-detail"><strong>还差什么：</strong>星系名 + 星区名；进入新星系时更新。</p></li>
-    <li class="check-todo spec-item"><span class="spec-item-title">进入星系 lore</span><span class="spec-tags">journal.js</span><p class="spec-detail"><strong>还差什么：</strong>跨星系边界字幕 + 日志自动记录；可关闭。</p></li>
-    <li class="check-todo spec-item"><span class="spec-item-title">星系定义文件</span><span class="spec-tags">data/galaxies/</span><p class="spec-detail"><strong>还差什么：</strong>加载 <code>*.yml</code> / JSON；无文件时程序化 fallback；示例见 <code>_schema.example.yml</code>。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">星系坐标与命名</span><span class="spec-tags">galaxies.js</span><p class="spec-detail"><strong>做了什么：</strong><code>galaxyCoords</code> / <code>galaxyLabel</code> / <code>galaxyMeta</code>；4×4 星区格。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">HUD 双行位置</span><span class="spec-tags">dom-hud.js</span><p class="spec-detail"><strong>做了什么：</strong>星系 + 星区双行；跨边界更新。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">进入星系 lore</span><span class="spec-tags">drift-app.js</span><p class="spec-detail"><strong>做了什么：</strong>跨星系字幕 + 日志自动记录。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">星系定义文件</span><span class="spec-tags">galaxy-loader.js</span><p class="spec-detail"><strong>做了什么：</strong><code>data/galaxies/archetypes.json</code> 加载 + 内置 fallback。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">四原型 palette</span><span class="spec-tags">world.js</span><p class="spec-detail"><strong>做了什么：</strong>星云/雾/星密/湖光随星系插值。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">POI 权重</span><span class="spec-tags">pois.js</span><p class="spec-detail"><strong>做了什么：</strong><code>pickType</code> 参考 <code>galaxyMeta.poiWeights</code>。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">渲染合成</span><span class="spec-tags">world.js</span><p class="spec-detail"><strong>做了什么：</strong>galaxy × sector × 日暮 相乘合成。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">区内星门语义</span><span class="spec-tags">wormhole.js</span><p class="spec-detail"><strong>做了什么：</strong>「折跃」同星系内大距离位移；文案区分。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">隑间星门</span><span class="spec-tags">wormhole.js</span><p class="spec-detail"><strong>做了什么：</strong>约 25% 星系出现金色隑门；跳至相邻格。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">造访星系档案</span><span class="spec-tags">galaxy-visits.js</span><p class="spec-detail"><strong>做了什么：</strong>去重列表、设置页展示、随档案导出。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">星标带 galaxyId</span><span class="spec-tags">bookmarks.js</span><p class="spec-detail"><strong>做了什么：</strong>档案与设置列表显示所属星系。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">星座按星系归档</span><span class="spec-tags">constellation.js</span><p class="spec-detail"><strong>做了什么：</strong>重访星系内解锁连线略亮。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">星系成就</span><span class="spec-tags">achievements.js</span><p class="spec-detail"><strong>做了什么：</strong>「阅尽四象」、「隑门旅人」。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">设置页抽象星图</span><span class="spec-tags">galaxy-map-canvas.js</span><p class="spec-detail"><strong>做了什么：</strong>9×9 点阵显示当前与已造访 <code>gx,gz</code>。</p></li>
   </ul>
 
-  <h2 class="text-lg text-teal-300 mb-3">G1 气候层（优先）</h2>
-  <ul class="spec-checklist mb-6">
-    <li class="check-todo spec-item"><span class="spec-item-title">四原型 palette</span><span class="spec-tags">world.js</span><p class="spec-detail"><strong>还差什么：</strong>星云/雾/星密/湖光由星系盘驱动；2–3s 插值过渡。</p></li>
-    <li class="check-todo spec-item"><span class="spec-item-title">POI 权重</span><span class="spec-tags">pois.js</span><p class="spec-detail"><strong>还差什么：</strong><code>pickType</code> 参考 <code>galaxyMeta.poiWeights</code>。</p></li>
-    <li class="check-todo spec-item"><span class="spec-item-title">渲染合成</span><span class="spec-tags">world.js</span><p class="spec-detail"><strong>还差什么：</strong>galaxy × sector × 日暮 三层相乘。</p></li>
-  </ul>
-
-  <h2 class="text-lg text-amber-300 mb-3">G2 交通层（后续）</h2>
-  <ul class="spec-checklist mb-6">
-    <li class="check-todo spec-item"><span class="spec-item-title">区内星门语义</span><span class="spec-tags">wormhole.js</span><p class="spec-detail"><strong>还差什么：</strong>明确同星系内大距离折跃；文案区分。</p></li>
-    <li class="check-todo spec-item"><span class="spec-item-title">隑间星门</span><span class="spec-tags">wormhole.js</span><p class="spec-detail"><strong>还差什么：</strong>稀有生成；跳至相邻 <code>(gx±1,gz±1)</code> 种子位置。</p></li>
-    <li class="check-todo spec-item"><span class="spec-item-title">造访星系档案</span><span class="spec-tags">journal.js</span><p class="spec-detail"><strong>还差什么：</strong>去重列表、随档案导出。</p></li>
-  </ul>
-
-  <h2 class="text-lg text-amber-300 mb-3">G3 记忆层（后续）</h2>
-  <ul class="spec-checklist mb-6">
-    <li class="check-todo spec-item"><span class="spec-item-title">星标带 galaxyId</span><span class="spec-tags">bookmarks.js</span><p class="spec-detail"><strong>还差什么：</strong>档案与设置列表显示所属星系。</p></li>
-    <li class="check-todo spec-item"><span class="spec-item-title">星座按星系归档</span><span class="spec-tags">constellation</span><p class="spec-detail"><strong>还差什么：</strong>同星系解锁连线可略亮。</p></li>
-    <li class="check-todo spec-item"><span class="spec-item-title">星系成就</span><span class="spec-tags">achievements.js</span><p class="spec-detail"><strong>还差什么：</strong>如「阅尽四象」、「隑门旅人」。</p></li>
-  </ul>
-
-  <h2 class="text-lg text-amber-300 mb-3">G4 星图 UI（可选）</h2>
-  <ul class="spec-checklist mb-6">
-    <li class="check-todo spec-item"><span class="spec-item-title">设置页抽象星图</span><span class="spec-tags">settings</span><p class="spec-detail"><strong>还差什么：</strong>2D 点阵显示已造访 <code>gx,gz</code>；非必须。</p></li>
+  <h2 class="text-lg text-amber-300 mb-3">G4 星图 UI（已完成）</h2>
+  <ul class="spec-checklist mb-6 hidden-spec">
+    <li class="check-done spec-item"><span class="spec-item-title">设置页抽象星图</span><span class="spec-tags">settings</span><p class="spec-detail"></p></li>
   </ul>
 
   <h2 class="text-lg text-amber-300 mb-3 mt-8">明确不做</h2>

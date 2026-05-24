@@ -5,9 +5,15 @@ const FOV_BASE = 68
 const FOV_BOOST = 4
 const FOV_HYPER = 14
 const SHIFT_RAMP_SEC = 3
-const SHIFT_MULT = 2.2
-const SHIFT_HYPER_MULT = 9
-const HYPER_BLEND_SEC = 0.45
+const SHIFT_MULT = 5.5
+const SHIFT_HYPER_MULT = 22.5
+/** 进入超驰后，用此时长从 ×5.5 爬升至 ×22.5 */
+const HYPER_RAMP_SEC = 12
+
+function hyperRampT(shiftHoldSec) {
+  if (shiftHoldSec < SHIFT_RAMP_SEC) return 0
+  return Math.min(1, (shiftHoldSec - SHIFT_RAMP_SEC) / HYPER_RAMP_SEC)
+}
 
 export function createWebInput(canvas, camera, getSettings, hud, { onEscape, onEngage, canStart, touch, gamepad }) {
   const keys = {}
@@ -134,7 +140,7 @@ export function createWebInput(canvas, camera, getSettings, hud, { onEscape, onE
   function shiftMultiplier(shiftActive) {
     if (!shiftActive) return 1
     if (shiftHoldSec < SHIFT_RAMP_SEC) return SHIFT_MULT
-    const t = Math.min(1, (shiftHoldSec - SHIFT_RAMP_SEC) / HYPER_BLEND_SEC)
+    const t = hyperRampT(shiftHoldSec)
     return SHIFT_MULT + (SHIFT_HYPER_MULT - SHIFT_MULT) * t
   }
 
@@ -193,7 +199,13 @@ export function createWebInput(canvas, camera, getSettings, hud, { onEscape, onE
     hud.setSpeed(displaySpeed.toFixed(1))
     hud.setAlt(camera.position.y.toFixed(0))
 
-    const wantFov = FOV_BASE + (hyper ? FOV_HYPER : shift ? FOV_BOOST : 0)
+    const wantFov =
+      FOV_BASE +
+      (hyper
+        ? FOV_BOOST + (FOV_HYPER - FOV_BOOST) * hyperRampT(shiftHoldSec)
+        : shift
+          ? FOV_BOOST
+          : 0)
     currentFov += (wantFov - currentFov) * smooth
     if (Math.abs(camera.fov - currentFov) > 0.01) {
       camera.fov = currentFov

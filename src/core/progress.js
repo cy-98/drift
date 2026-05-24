@@ -5,6 +5,7 @@ export const defaultProgress = {
   version: VERSION,
   playTimeSec: 0,
   warps: 0,
+  interWarps: 0,
   loreEvents: 0,
   collectTotal: 0,
   poiVisited: 0,
@@ -38,6 +39,10 @@ export function createProgressTracker(storage) {
     noteWarp() {
       state.warps += 1
     },
+    noteInterWarp() {
+      state.warps += 1
+      state.interWarps += 1
+    },
     noteLore() {
       state.loreEvents += 1
     },
@@ -51,6 +56,7 @@ export function createProgressTracker(storage) {
         ...defaultProgress,
         playTimeSec: Number(data.playTimeSec) || 0,
         warps: Number(data.warps) || 0,
+        interWarps: Number(data.interWarps) || 0,
         loreEvents: Number(data.loreEvents) || 0,
         collectTotal: Number(data.collectTotal) || 0,
         poiVisited: Number(data.poiVisited) || 0,

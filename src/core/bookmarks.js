@@ -23,7 +23,7 @@ export function createBookmarks(storage) {
     list() {
       return items.map((b) => ({ ...b }))
     },
-    add(position, label) {
+    add(position, label, galaxy = {}) {
       if (items.length >= MAX) items.shift()
       const entry = {
         id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
@@ -31,6 +31,8 @@ export function createBookmarks(storage) {
         x: position.x,
         y: position.y,
         z: position.z,
+        galaxyId: galaxy.id ?? '',
+        galaxyName: galaxy.name ?? '',
         at: Date.now(),
       }
       items.push(entry)
@@ -56,6 +58,8 @@ export function createBookmarks(storage) {
           x: b.x,
           y: b.y,
           z: b.z,
+          galaxyId: String(b.galaxyId ?? ''),
+          galaxyName: String(b.galaxyName ?? ''),
           at: b.at ?? Date.now(),
         }))
       persist()

@@ -1,0 +1,22 @@
+{
+  "still-lake": {
+    "palette": { "nebula": "#4a8ec8", "fog": 0.42, "starDensity": 1.0, "lakeIntensity": 1.25 },
+    "poiWeights": { "frozen": 1.4, "ring": 0.9, "rare": 0.85 },
+    "lore": { "title": "静湖星系", "text": "光像沉在水底，很慢，很稳。" }
+  },
+  "ember": {
+    "palette": { "nebula": "#c87850", "fog": 0.38, "starDensity": 1.12, "lakeIntensity": 0.85 },
+    "poiWeights": { "rare": 1.2, "ember": 1.15, "amber": 1.1 },
+    "lore": { "title": "余烬星系", "text": "余温不散，像被遗忘的篝火群。" }
+  },
+  "mist": {
+    "palette": { "nebula": "#6a98c0", "fog": 0.52, "starDensity": 0.92, "lakeIntensity": 1.0 },
+    "poiWeights": { "ring": 1.1, "aurora": 1.05 },
+    "lore": { "title": "薄雾星系", "text": "什么都隔着一层纱，包括时间。" }
+  },
+  "void-hall": {
+    "palette": { "nebula": "#283848", "fog": 0.48, "starDensity": 0.72, "lakeIntensity": 0.7 },
+    "poiWeights": { "frozen": 0.85, "rare": 0.9, "aurora": 0.95 },
+    "lore": { "title": "空廊星系", "text": "这里空得刚好能听见自己。" }
+  }
+}
