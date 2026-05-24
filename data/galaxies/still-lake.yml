@@ -1,0 +1,13 @@
+id: still-lake
+archetype: still-lake
+palette:
+  nebula: "#4a8ec8"
+  fog: 0.42
+  starDensity: 1.0
+  lakeIntensity: 1.25
+poiWeights:
+  frozen: 1.4
+  ring: 0.9
+lore:
+  title: 静湖星系
+  text: 光像沉在水底，很慢，很稳。

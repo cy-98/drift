@@ -1,0 +1,13 @@
+id: void-hall
+archetype: void-hall
+palette:
+  nebula: "#283848"
+  fog: 0.48
+  starDensity: 0.72
+  lakeIntensity: 0.7
+poiWeights:
+  frozen: 0.85
+  rare: 0.9
+lore:
+  title: 空廊星系
+  text: 这里空得刚好能听见自己。

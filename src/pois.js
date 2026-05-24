@@ -93,32 +93,51 @@ function viewBasis(camera) {
   return { ahead, right }
 }
 
+function glowMaterial(color, opacity, bloom, { backSide = false } = {}) {
+  return new THREE.MeshBasicMaterial({
+    color,
+    transparent: true,
+    opacity: bloom ? opacity : opacity * 0.72,
+    blending: THREE.AdditiveBlending,
+    side: backSide ? THREE.BackSide : THREE.FrontSide,
+    depthWrite: false,
+    depthTest: false,
+    toneMapped: false,
+  })
+}
+
 function makePoiMesh(type, bloom) {
   const group = new THREE.Group()
   const core = new THREE.Mesh(
-    new THREE.SphereGeometry(1, 24, 24),
-    new THREE.MeshBasicMaterial({ color: type.color }),
+    new THREE.SphereGeometry(1, 28, 28),
+    new THREE.MeshBasicMaterial({ color: type.color, toneMapped: false }),
   )
+  core.renderOrder = 0
+
+  const bodyGlow = new THREE.Mesh(
+    new THREE.SphereGeometry(1.02, 28, 28),
+    glowMaterial(type.color, 0.38, bloom),
+  )
+  bodyGlow.renderOrder = 2
+
+  const rimGlow = new THREE.Mesh(
+    new THREE.SphereGeometry(1.1, 28, 28),
+    glowMaterial(type.color, 0.32, bloom, { backSide: true }),
+  )
+  rimGlow.renderOrder = 2
+
   const innerGlow = new THREE.Mesh(
-    new THREE.SphereGeometry(1.18, 20, 20),
-    new THREE.MeshBasicMaterial({
-      color: type.color,
-      transparent: true,
-      opacity: bloom ? 0.32 : 0.22,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
-    }),
+    new THREE.SphereGeometry(1.2, 24, 24),
+    glowMaterial(type.color, 0.24, bloom),
   )
+  innerGlow.renderOrder = 3
+
   const halo = new THREE.Mesh(
-    new THREE.SphereGeometry(1.5, 18, 18),
-    new THREE.MeshBasicMaterial({
-      color: type.emissive,
-      transparent: true,
-      opacity: bloom ? 0.26 : 0.16,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
-    }),
+    new THREE.SphereGeometry(1.55, 20, 20),
+    glowMaterial(type.emissive, 0.22, bloom),
   )
+  halo.renderOrder = 3
+
   const ring = new THREE.Mesh(
     new THREE.RingGeometry(1.68, 2.95, 56),
     new THREE.MeshBasicMaterial({
@@ -128,8 +147,12 @@ function makePoiMesh(type, bloom) {
       side: THREE.DoubleSide,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
+      depthTest: false,
+      toneMapped: false,
     }),
   )
+  ring.renderOrder = 4
+
   const ringHaze = new THREE.Mesh(
     new THREE.RingGeometry(2.55, 3.15, 40),
     new THREE.MeshBasicMaterial({
@@ -139,14 +162,18 @@ function makePoiMesh(type, bloom) {
       side: THREE.DoubleSide,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
+      depthTest: false,
+      toneMapped: false,
     }),
   )
+  ringHaze.renderOrder = 4
+
   ring.rotation.x = Math.PI * 0.42
   ringHaze.rotation.x = Math.PI * 0.38
   ringHaze.rotation.y = 0.15
-  group.add(core, innerGlow, halo, ring, ringHaze)
+  group.add(core, bodyGlow, rimGlow, innerGlow, halo, ring, ringHaze)
   group.scale.setScalar(type.scale)
-  return { group, core, innerGlow, halo, ring, ringHaze }
+  return { group, core, bodyGlow, rimGlow, innerGlow, halo, ring, ringHaze }
 }
 
 export function createPois(scene, { reducedMotion, bloom }) {
@@ -196,8 +223,10 @@ export function createPois(scene, { reducedMotion, bloom }) {
 
       const pulse = 1 + Math.sin(elapsed * 1.1 + entry.slot) * 0.05 * motion
       const glowPulse = 1 + Math.sin(elapsed * 0.85 + entry.slot * 1.3) * 0.06 * motion
-      entry.innerGlow.scale.setScalar(pulse * 1.18)
-      entry.halo.scale.setScalar(glowPulse * 1.52)
+      entry.bodyGlow?.scale.setScalar(pulse)
+      entry.rimGlow?.scale.setScalar(pulse * 1.04)
+      entry.innerGlow.scale.setScalar(pulse * 1.08)
+      entry.halo.scale.setScalar(glowPulse * 1.12)
       entry.ring.rotation.z += dt * 0.12 * motion
       entry.ringHaze.rotation.z -= dt * 0.06 * motion
 

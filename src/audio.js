@@ -4,6 +4,7 @@ export function createAudio(getSettings) {
   let master = null
   let ambientGain = null
   let musicGain = null
+  let sfxGain = null
   let oscLow = null
   let oscMid = null
   let noise = null
@@ -68,6 +69,10 @@ export function createAudio(getSettings) {
       musicGain.gain.value = 0
       musicGain.connect(master)
 
+      sfxGain = ctx.createGain()
+      sfxGain.gain.value = 0
+      sfxGain.connect(master)
+
       oscLow = ctx.createOscillator()
       oscLow.type = 'sine'
       oscLow.frequency.value = 52
@@ -125,6 +130,7 @@ export function createAudio(getSettings) {
     master.gain.setTargetAtTime(on ? 0.55 : 0, ctx.currentTime, 0.5)
     ambientGain.gain.setTargetAtTime(started && ambient ? 1 : 0, ctx.currentTime, 0.4)
     musicGain.gain.setTargetAtTime(started && music ? 1 : 0, ctx.currentTime, 0.4)
+    sfxGain.gain.setTargetAtTime(started ? 1 : 0, ctx.currentTime, 0.4)
     syncTheme()
   }
 
@@ -166,18 +172,55 @@ export function createAudio(getSettings) {
     if (!ensure()) return
     const { sfx } = getSettings()
     if (!started || !sfx) return
+    toneSweep(784, 0.035, 0.85, musicGain)
+  }
+
+  function toneSweep(freq, peak, dur, dest = sfxGain) {
     const o = ctx.createOscillator()
     const g = ctx.createGain()
     o.type = 'sine'
-    o.frequency.value = 784
+    o.frequency.value = freq
     g.gain.value = 0
     o.connect(g)
-    g.connect(musicGain)
+    g.connect(dest)
     const t = ctx.currentTime
-    g.gain.linearRampToValueAtTime(0.035, t + 0.015)
-    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.85)
+    g.gain.linearRampToValueAtTime(peak, t + 0.02)
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur)
     o.start(t)
-    o.stop(t + 0.9)
+    o.stop(t + dur + 0.05)
+  }
+
+  function playBoost() {
+    if (!ensure()) return
+    const { sfx } = getSettings()
+    if (!started || !sfx) return
+    const src = ctx.createBufferSource()
+    const buf = ctx.createBuffer(1, ctx.sampleRate * 0.5, ctx.sampleRate)
+    const d = buf.getChannelData(0)
+    for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length)
+    src.buffer = buf
+    const filt = ctx.createBiquadFilter()
+    filt.type = 'bandpass'
+    filt.frequency.setValueAtTime(180, ctx.currentTime)
+    filt.frequency.exponentialRampToValueAtTime(920, ctx.currentTime + 0.35)
+    const g = ctx.createGain()
+    g.gain.value = 0
+    src.connect(filt)
+    filt.connect(g)
+    g.connect(sfxGain)
+    const t = ctx.currentTime
+    g.gain.linearRampToValueAtTime(0.08, t + 0.04)
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.45)
+    src.start(t)
+    src.stop(t + 0.5)
+  }
+
+  function playWarp() {
+    if (!ensure()) return
+    const { sfx } = getSettings()
+    if (!started || !sfx) return
+    toneSweep(220, 0.05, 1.1, sfxGain)
+    toneSweep(440, 0.028, 0.9, sfxGain)
   }
 
   function dispose() {
@@ -194,5 +237,5 @@ export function createAudio(getSettings) {
     ctx = null
   }
 
-  return { resume, syncVolume, updateMood, playChime, dispose }
+  return { resume, syncVolume, updateMood, playChime, playBoost, playWarp, dispose }
 }

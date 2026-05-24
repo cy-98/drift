@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <base href="./" />
+  <title>Phase 2.5 星系 · Drift Spec</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{lake:{DEFAULT:'#6eb8e8',dark:'#061428'}}}}}</script>
+  <link rel="stylesheet" href="css/specs.css" />
+</head>
+<body class="spec-body antialiased">
+<div class="flex min-h-screen flex-col lg:flex-row">
+<nav class="spec-nav shrink-0 border-b border-lake/20 bg-lake-dark/80 p-4 lg:w-56 lg:min-h-screen lg:border-b-0 lg:border-r">
+  <p class="mb-1 text-xs font-semibold uppercase tracking-widest text-lake">Drift Spec</p>
+  <p class="mb-4 text-xs text-slate-500">工作指导 · 长远路线图</p>
+  <ul class="flex flex-col gap-1 text-sm">
+    <li><a href="index.html" class="block rounded-lg px-3 py-2 text-slate-300">总览</a></li>
+    <li><a href="design.html" class="block rounded-lg px-3 py-2 text-slate-300">概念设计</a></li>
+    <li><a href="phase-0-foundation.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 0 基础</a></li>
+    <li><a href="phase-1-core.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 1 核心体验</a></li>
+    <li><a href="phase-2-world.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 2 世界内容</a></li>
+    <li><a href="phase-2-galaxy.html" class="block rounded-lg px-3 py-2 is-active text-slate-200">Phase 2.5 星系</a></li>
+    <li><a href="phase-3-atmosphere.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 3 氛围叙事</a></li>
+    <li><a href="phase-4-platform.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 4 平台大作</a></li>
+    <li><a href="phase-5-launch.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 5 发行增长</a></li>
+  </ul>
+  <p class="mt-8 text-xs text-slate-500"><a class="spec-link-back" href="/">← 运行游戏</a></p>
+</nav>
+<main class="spec-content flex-1 px-5 py-8 lg:px-10 max-w-3xl">
+
+  <h1 class="text-3xl font-bold text-white mb-2">Phase 2.5 星系</h1>
+  <p class="spec-intro">目标：在星区之上增加<strong>宏观气候带</strong>——星系不是关卡，而是同一套「宇宙天气」覆盖的星区群；可落在 <code>data/galaxies/*.yml</code>，后续可调物理法则与丰富内容。</p>
+  <p class="text-slate-400 mb-4">0/14 · 0%</p><div class="progress-bar mb-6"><div class="progress-bar__fill" style="width:0%"></div></div>
+
+  <h2 class="text-lg text-teal-300 mb-3 mt-6">已确认的设计决策</h2>
+  <ul class="spec-checklist mb-6">
+    <li class="check-done spec-item"><span class="spec-item-title">尺度</span><span class="spec-tags">design</span><p class="spec-detail">1 星系 = 4×4 星区 ≈ 2880×2880 世界单位。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">原型数量</span><span class="spec-tags">design</span><p class="spec-detail">4 种：静湖 / 余炌 / 薄雾 / 空廊。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">星门语义</span><span class="spec-tags">wormhole</span><p class="spec-detail">区内折跃保留；稀有隑间门跨相邻星系。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">实现优先级</span><span class="spec-tags">roadmap</span><p class="spec-detail">G0 → G1 先行；G2–G4 后续。</p></li>
+    <li class="check-done spec-item"><span class="spec-item-title">定义文件</span><span class="spec-tags">data/galaxies/</span><p class="spec-detail">YAML/JSON 描述气候与内容权重；<code>physics</code> 字段预留。</p></li>
+  </ul>
+
+  <h2 class="text-lg text-teal-300 mb-3">四种原型（Archetype）</h2>
+  <div class="spec-design-grid mb-6">
+    <article class="spec-concept"><h4>静湖</h4><span class="spec-tags">still-lake</span><p>偏冷蓝、湖面光强；POI 偏冻结/湖类。</p></article>
+    <article class="spec-concept"><h4>余炌</h4><span class="spec-tags">ember</span><p>暖色星云、星尘略密；稀有 POI 权重略高。</p></article>
+    <article class="spec-concept"><h4>薄雾</h4><span class="spec-tags">mist</span><p>雾浓、星点柔；遗迹略多、POI 略稀。</p></article>
+    <article class="spec-concept"><h4>空廊</h4><span class="spec-tags">void-hall</span><p>极稀疏、背景更深；适合久漂、几乎无压力。</p></article>
+  </div>
+
+  <h2 class="text-lg text-teal-300 mb-3">界面位置显示（HUD）</h2>
+  <p class="spec-detail mb-4">HUD = Head-Up Display，即演玩时屏幕上的轻量信息层（速度、高度、当前星区名等）。计划在现有星区行上方增加星系行：<code>星系 · 薄雾弧群</code> / <code>星区 · 静潮星域</code>。</p>
+
+  <h2 class="text-lg text-teal-300 mb-3">G0 命名层（优先）</h2>
+  <ul class="spec-checklist mb-6">
+    <li class="check-todo spec-item"><span class="spec-item-title">星系坐标与命名</span><span class="spec-tags">galaxies.js</span><p class="spec-detail"><strong>还差什么：</strong><code>galaxyCoords</code> / <code>galaxyLabel</code> / <code>galaxyMeta</code>；与 <code>sectors.js</code> 同样纯函数。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">HUD 双行位置</span><span class="spec-tags">dom-hud.js</span><p class="spec-detail"><strong>还差什么：</strong>星系名 + 星区名；进入新星系时更新。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">进入星系 lore</span><span class="spec-tags">journal.js</span><p class="spec-detail"><strong>还差什么：</strong>跨星系边界字幕 + 日志自动记录；可关闭。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">星系定义文件</span><span class="spec-tags">data/galaxies/</span><p class="spec-detail"><strong>还差什么：</strong>加载 <code>*.yml</code> / JSON；无文件时程序化 fallback；示例见 <code>_schema.example.yml</code>。</p></li>
+  </ul>
+
+  <h2 class="text-lg text-teal-300 mb-3">G1 气候层（优先）</h2>
+  <ul class="spec-checklist mb-6">
+    <li class="check-todo spec-item"><span class="spec-item-title">四原型 palette</span><span class="spec-tags">world.js</span><p class="spec-detail"><strong>还差什么：</strong>星云/雾/星密/湖光由星系盘驱动；2–3s 插值过渡。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">POI 权重</span><span class="spec-tags">pois.js</span><p class="spec-detail"><strong>还差什么：</strong><code>pickType</code> 参考 <code>galaxyMeta.poiWeights</code>。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">渲染合成</span><span class="spec-tags">world.js</span><p class="spec-detail"><strong>还差什么：</strong>galaxy × sector × 日暮 三层相乘。</p></li>
+  </ul>
+
+  <h2 class="text-lg text-amber-300 mb-3">G2 交通层（后续）</h2>
+  <ul class="spec-checklist mb-6">
+    <li class="check-todo spec-item"><span class="spec-item-title">区内星门语义</span><span class="spec-tags">wormhole.js</span><p class="spec-detail"><strong>还差什么：</strong>明确同星系内大距离折跃；文案区分。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">隑间星门</span><span class="spec-tags">wormhole.js</span><p class="spec-detail"><strong>还差什么：</strong>稀有生成；跳至相邻 <code>(gx±1,gz±1)</code> 种子位置。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">造访星系档案</span><span class="spec-tags">journal.js</span><p class="spec-detail"><strong>还差什么：</strong>去重列表、随档案导出。</p></li>
+  </ul>
+
+  <h2 class="text-lg text-amber-300 mb-3">G3 记忆层（后续）</h2>
+  <ul class="spec-checklist mb-6">
+    <li class="check-todo spec-item"><span class="spec-item-title">星标带 galaxyId</span><span class="spec-tags">bookmarks.js</span><p class="spec-detail"><strong>还差什么：</strong>档案与设置列表显示所属星系。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">星座按星系归档</span><span class="spec-tags">constellation</span><p class="spec-detail"><strong>还差什么：</strong>同星系解锁连线可略亮。</p></li>
+    <li class="check-todo spec-item"><span class="spec-item-title">星系成就</span><span class="spec-tags">achievements.js</span><p class="spec-detail"><strong>还差什么：</strong>如「阅尽四象」、「隑门旅人」。</p></li>
+  </ul>
+
+  <h2 class="text-lg text-amber-300 mb-3">G4 星图 UI（可选）</h2>
+  <ul class="spec-checklist mb-6">
+    <li class="check-todo spec-item"><span class="spec-item-title">设置页抽象星图</span><span class="spec-tags">settings</span><p class="spec-detail"><strong>还差什么：</strong>2D 点阵显示已造访 <code>gx,gz</code>；非必须。</p></li>
+  </ul>
+
+  <h2 class="text-lg text-amber-300 mb-3 mt-8">明确不做</h2>
+  <div class="spec-loop">
+    <p>无边界加载、无必须清图；全部 procedural + 可选单格 yml 覆盖。</p>
+    <p>Spec 预留 <code>physics</code> 字段；首批 G0/G1 不改飞行手感。</p>
+  </div>
+
+  <p class="spec-detail mt-6">概念设计见 <a class="text-lake hover:underline" href="design.html">概念设计</a>；星区已完成项见 <a class="text-lake hover:underline" href="phase-2-world.html">Phase 2</a>。</p>
+</main>
+</div>
+</body>
+</html>

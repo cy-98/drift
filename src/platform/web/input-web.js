@@ -3,14 +3,11 @@ import * as THREE from 'three'
 const SENS_BASE = 0.0022
 const FOV_BASE = 68
 const FOV_BOOST = 4
-const FOV_OVERDRIVE = 9
 const FOV_HYPER = 14
 const SHIFT_RAMP_SEC = 3
-const SHIFT_HYPER_SEC = 8
 const SHIFT_MULT = 2.2
-const SHIFT_OVERDRIVE_MULT = 3
 const SHIFT_HYPER_MULT = 9
-const OVERDRIVE_BLEND_SEC = 0.45
+const HYPER_BLEND_SEC = 0.45
 
 export function createWebInput(canvas, camera, getSettings, hud, { onEscape, onEngage, canStart, touch, gamepad }) {
   const keys = {}
@@ -24,7 +21,6 @@ export function createWebInput(canvas, camera, getSettings, hud, { onEscape, onE
   let displaySpeed = getSettings().baseSpeed
   let currentFov = FOV_BASE
   let shiftHoldSec = 0
-  let overdrive = false
   let hyper = false
   let lastPad = { w: false, s: false, a: false, d: false, q: false, e: false, shift: false }
 
@@ -62,11 +58,12 @@ export function createWebInput(canvas, camera, getSettings, hud, { onEscape, onE
     e.stopPropagation()
     requestLock()
   })
-  prompt?.addEventListener('click', (e) => {
-    if (e.target === startBtn) return
-    e.stopPropagation()
-    requestLock()
-  })
+      prompt?.addEventListener('click', (e) => {
+        if (e.target === startBtn) return
+        if (e.target.closest('button, a, input, select, label')) return
+        e.stopPropagation()
+        requestLock()
+      })
 
   document.addEventListener('pointerlockchange', () => {
     locked = document.pointerLockElement === canvas
@@ -137,19 +134,8 @@ export function createWebInput(canvas, camera, getSettings, hud, { onEscape, onE
   function shiftMultiplier(shiftActive) {
     if (!shiftActive) return 1
     if (shiftHoldSec < SHIFT_RAMP_SEC) return SHIFT_MULT
-
-    let mult = SHIFT_OVERDRIVE_MULT
-    if (shiftHoldSec < SHIFT_RAMP_SEC + OVERDRIVE_BLEND_SEC) {
-      const t = (shiftHoldSec - SHIFT_RAMP_SEC) / OVERDRIVE_BLEND_SEC
-      mult = SHIFT_MULT + (SHIFT_OVERDRIVE_MULT - SHIFT_MULT) * Math.min(1, t)
-    }
-
-    if (shiftHoldSec >= SHIFT_HYPER_SEC) {
-      const t = Math.min(1, (shiftHoldSec - SHIFT_HYPER_SEC) / OVERDRIVE_BLEND_SEC)
-      mult = SHIFT_OVERDRIVE_MULT + (SHIFT_HYPER_MULT - SHIFT_OVERDRIVE_MULT) * t
-    }
-
-    return mult
+    const t = Math.min(1, (shiftHoldSec - SHIFT_RAMP_SEC) / HYPER_BLEND_SEC)
+    return SHIFT_MULT + (SHIFT_HYPER_MULT - SHIFT_MULT) * t
   }
 
   function applyLookDelta(dy, dp) {
@@ -177,8 +163,7 @@ export function createWebInput(canvas, camera, getSettings, hud, { onEscape, onE
     const shift = keys.shift || pad.shift
     if (shift) shiftHoldSec += dt
     else shiftHoldSec = 0
-    overdrive = shift && shiftHoldSec >= SHIFT_RAMP_SEC
-    hyper = shift && shiftHoldSec >= SHIFT_HYPER_SEC
+    hyper = shift && shiftHoldSec >= SHIFT_RAMP_SEC
 
     let target = baseSpeed * shiftMultiplier(shift)
     if (keys.control) target *= 0.45
@@ -208,8 +193,7 @@ export function createWebInput(canvas, camera, getSettings, hud, { onEscape, onE
     hud.setSpeed(displaySpeed.toFixed(1))
     hud.setAlt(camera.position.y.toFixed(0))
 
-    const wantFov =
-      FOV_BASE + (hyper ? FOV_HYPER : overdrive ? FOV_OVERDRIVE : shift ? FOV_BOOST : 0)
+    const wantFov = FOV_BASE + (hyper ? FOV_HYPER : shift ? FOV_BOOST : 0)
     currentFov += (wantFov - currentFov) * smooth
     if (Math.abs(camera.fov - currentFov) > 0.01) {
       camera.fov = currentFov
@@ -247,7 +231,7 @@ export function createWebInput(canvas, camera, getSettings, hud, { onEscape, onE
   return {
     updateMovement,
     getSpeedNorm: () => displaySpeed / Math.max(getSettings().baseSpeed, 0.1),
-    getMotionState: () => ({ overdrive, hyper, shiftHoldSec }),
+    getMotionState: () => ({ hyper, shiftHoldSec }),
     isMoving,
     isLocked: () => locked,
     isEngaged: () => engaged || locked,

@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { sectorLabel } from './core/sectors.js'
+import { sectorLabel, sectorEvent } from './core/sectors.js'
 
 const QUALITY = {
   low: { starMul: 0.55, spreadMul: 0.9 },
@@ -28,10 +28,40 @@ function makeStarLayer(count, spread, yRange, size, opacity) {
     depthWrite: false,
     blending: THREE.AdditiveBlending,
     sizeAttenuation: true,
+    fog: false,
   })
   const points = new THREE.Points(geo, mat)
+  points.frustumCulled = false
   points.userData = { spread, baseOpacity: opacity, baseSize: size }
   return points
+}
+
+function spawnStarInView(arr, i, camera, spread, _ahead, _right, _up) {
+  const cx = camera.position.x
+  const cy = camera.position.y
+  const cz = camera.position.z
+  const maxDepth = spread * 1.15 + 40
+  const depth = 20 + Math.random() * (maxDepth - 20)
+  const side = (Math.random() - 0.5) * spread
+  const lift = (Math.random() - 0.5) * spread * 0.45
+  arr[i] = cx + _ahead.x * depth + _right.x * side + _up.x * lift
+  arr[i + 1] = cy + _ahead.y * depth + _right.y * side + _up.y * lift
+  arr[i + 2] = cz + _ahead.z * depth + _right.z * side + _up.z * lift
+}
+
+function warmStarsAroundCamera(layers, camera, _ahead, _right, _up) {
+  _ahead.set(0, 0, -1).applyQuaternion(camera.quaternion)
+  _right.set(1, 0, 0).applyQuaternion(camera.quaternion)
+  _up.set(0, 1, 0).applyQuaternion(camera.quaternion)
+  for (const layer of layers) {
+    const spread = layer.userData.spread
+    const arr = layer.geometry.attributes.position.array
+    for (let i = 0; i < arr.length; i += 3) {
+      spawnStarInView(arr, i, camera, spread, _ahead, _right, _up)
+    }
+    layer.geometry.attributes.position.needsUpdate = true
+    layer.geometry.computeBoundingSphere()
+  }
 }
 
 function makeDustBelt(count) {
@@ -52,8 +82,11 @@ function makeDustBelt(count) {
     opacity: 0.35,
     depthWrite: false,
     blending: THREE.AdditiveBlending,
+    fog: false,
   })
-  return new THREE.Points(geo, mat)
+  const belt = new THREE.Points(geo, mat)
+  belt.frustumCulled = false
+  return belt
 }
 
 function makeLakeLayer(bloom, { rimScale, alphaScale, waveScale }) {
@@ -112,6 +145,7 @@ export function createWorld(scene, { reducedMotion, bloom, quality = 'medium', l
     makeStarLayer(Math.floor((reducedMotion ? 600 : 1200) * mul), 380 * q.spreadMul, 200, bloom ? 0.88 : 0.78, 0.4),
   ]
   scene.add(...starLayers)
+  let starsWarmed = false
 
   const dust = reducedMotion ? null : makeDustBelt(Math.floor(420 * mul))
   if (dust) scene.add(dust)
@@ -159,6 +193,9 @@ export function createWorld(scene, { reducedMotion, bloom, quality = 'medium', l
 
   const _down = new THREE.Vector3()
   const _ahead = new THREE.Vector3()
+  const _right = new THREE.Vector3()
+  const _up = new THREE.Vector3()
+  const _starOffset = new THREE.Vector3()
   const _clear = new THREE.Color()
 
   function recycleStars(layer, camera) {
@@ -167,19 +204,28 @@ export function createWorld(scene, { reducedMotion, bloom, quality = 'medium', l
     const cx = camera.position.x
     const cy = camera.position.y
     const cz = camera.position.z
-    const limit = spread * spread * 0.72
+
+    _ahead.set(0, 0, -1).applyQuaternion(camera.quaternion)
+    _right.set(1, 0, 0).applyQuaternion(camera.quaternion)
+    _up.set(0, 1, 0).applyQuaternion(camera.quaternion)
+
+    const behindPad = 20
+    const maxDepth = spread * 1.15 + 40
+    const lateral = spread * 0.52
+    const vertical = spread * 0.28
 
     for (let i = 0; i < arr.length; i += 3) {
-      const dx = arr[i] - cx
-      const dy = arr[i + 1] - cy
-      const dz = arr[i + 2] - cz
-      const behind = dz > spread * 0.12
-      const tooFar = dx * dx + dy * dy + dz * dz > limit
-      if (!behind && !tooFar) continue
+      _starOffset.set(arr[i] - cx, arr[i + 1] - cy, arr[i + 2] - cz)
+      const along = _starOffset.dot(_ahead)
+      const side = _starOffset.dot(_right)
+      const lift = _starOffset.dot(_up)
 
-      arr[i] = cx + (Math.random() - 0.5) * spread
-      arr[i + 1] = cy + (Math.random() - 0.5) * spread * 0.45
-      arr[i + 2] = cz - Math.random() * spread - 25
+      const behind = along < -behindPad
+      const tooFarAhead = along > maxDepth
+      const outside = Math.abs(side) > lateral || Math.abs(lift) > vertical
+      if (!behind && !tooFarAhead && !outside) continue
+
+      spawnStarInView(arr, i, camera, spread, _ahead, _right, _up)
     }
     layer.geometry.attributes.position.needsUpdate = true
   }
@@ -187,13 +233,15 @@ export function createWorld(scene, { reducedMotion, bloom, quality = 'medium', l
   function applyLod(layer, camera) {
     const spread = layer.userData.spread
     const arr = layer.geometry.attributes.position.array
-    let sumZ = 0
+    _ahead.set(0, 0, -1).applyQuaternion(camera.quaternion)
+    let sumAhead = 0
     let n = 0
-    for (let i = 2; i < arr.length; i += 33) {
-      sumZ += arr[i] - camera.position.z
+    for (let i = 0; i < arr.length; i += 33) {
+      _starOffset.set(arr[i] - camera.position.x, arr[i + 1] - camera.position.y, arr[i + 2] - camera.position.z)
+      sumAhead += Math.max(0, _starOffset.dot(_ahead))
       n++
     }
-    const avg = n ? sumZ / n : 0
+    const avg = n ? sumAhead / n : spread * 0.5
     const lod = THREE.MathUtils.clamp(1 - avg / (spread * 1.2), 0.55, 1)
     layer.material.size = layer.userData.baseSize * lod * (bloom ? 1.05 : 1)
   }
@@ -231,6 +279,12 @@ export function createWorld(scene, { reducedMotion, bloom, quality = 'medium', l
     nebula2.material.color.copy(_sectorColor).multiplyScalar(0.82)
 
     state.sectorLabel = sectorLabel(ax, az)
+    const evt = sectorEvent(ax, az)
+    state.sectorEvent = evt
+    const eventPulse = 0.5 + 0.5 * Math.sin(elapsed * 0.0031 + seed * 0.001)
+    nebulaMat.opacity = 0.1 + eventPulse * 0.06
+    nebula2.material.opacity = 0.06 + eventPulse * 0.05
+    if (state._fogBase != null) scene.fog.density = state._fogBase * (0.94 + (seed % 100) * 0.0012)
 
     if (dust) {
       dust.position.copy(camera.position)
@@ -246,12 +300,17 @@ export function createWorld(scene, { reducedMotion, bloom, quality = 'medium', l
     const season = 0.5 + 0.5 * Math.sin(elapsed * 0.0047 + 1.2)
     const fogBase = reducedMotion ? 0.01 : 0.0055
     scene.fog.density = fogBase * (0.82 + 0.28 * Math.sin(elapsed * 0.11))
+    state._fogBase = scene.fog.density
     scene.fog.color.setHex(day > 0.55 ? dayFog : nightFog)
     _clear.copy(nightBg).lerp(dayBg, day * 0.22)
     state.clearColor = _clear
     state.dayFactor = day
 
     followCamera(camera, elapsed, motion, state)
+    if (!starsWarmed) {
+      warmStarsAroundCamera(starLayers, camera, _ahead, _right, _up)
+      starsWarmed = true
+    }
     for (const layer of lakeLayers) {
       layer.mat.uniforms.uTime.value = elapsed
       layer.mat.uniforms.uDay.value = day * 0.65 + season * 0.35

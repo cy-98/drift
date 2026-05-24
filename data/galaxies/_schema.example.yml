@@ -1,0 +1,37 @@
+# 星系定义示例 — 每个星系（或原型）可落在一个 YAML/JSON 文件中。
+# 运行时：坐标 (gx,gz) → 查表或 fallback 到程序化默认；后续可覆盖物理法则与专属内容。
+
+id: still-lake          # 稳定键；程序化星系为 "g:{gx},{gz}"
+name: 静湖群              # 可选固定名；省略则按词库生成
+archetype: still-lake    # still-lake | ember | mist | void-hall
+
+# 宏观气候（G1 渲染合成：galaxy × sector × 日暮）
+palette:
+  nebula: "#4a8ec8"
+  fog: 0.42
+  starDensity: 1.0
+  lakeIntensity: 1.25
+
+# POI 类型权重（相对 1.0；省略的类型用全局默认）
+poiWeights:
+  frozen: 1.4
+  ring: 0.9
+  rare: 0.85
+
+# 进入星系时展示（G0）
+lore:
+  title: 静湖星系
+  text: 光像沉在水底，很慢，很稳。
+
+# 物理法则（后续迭代；当前 Spec 仅预留，不实现）
+# physics:
+#   driftSpeedMult: 1.0
+#   boostRampSec: 3
+#   hyperMult: 9
+#   gravityBias: 0
+
+#  richer content hooks（后续：专属事件、遗迹池、OST 变奏等）
+# content:
+#   sectorEvents: []
+#   stationVariants: []
+#   wormholeInterGalaxyChance: 0.08

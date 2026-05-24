@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { sectorLabel, sectorCoords } from '../src/core/sectors.js'
+import { sectorLabel, sectorCoords, sectorEvent } from '../src/core/sectors.js'
 
 describe('sectors', () => {
   it('labels sectors deterministically', () => {
@@ -9,5 +9,9 @@ describe('sectors', () => {
 
   it('returns grid coords', () => {
     expect(sectorCoords(800, -720)).toEqual({ sx: 1, sz: -1 })
+  })
+
+  it('picks sector events', () => {
+    expect(sectorEvent(0, 0).title).toBeTruthy()
   })
 })

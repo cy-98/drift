@@ -1,0 +1,13 @@
+id: ember
+archetype: ember
+palette:
+  nebula: "#c87850"
+  fog: 0.38
+  starDensity: 1.12
+  lakeIntensity: 0.85
+poiWeights:
+  rare: 1.2
+  desert: 1.15
+lore:
+  title: 余烬星系
+  text: 余温不散，像被遗忘的篝火群。

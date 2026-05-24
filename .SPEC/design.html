@@ -20,6 +20,7 @@
     <li><a href="phase-0-foundation.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 0 基础</a></li>
     <li><a href="phase-1-core.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 1 核心体验</a></li>
     <li><a href="phase-2-world.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 2 世界内容</a></li>
+    <li><a href="phase-2-galaxy.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 2.5 星系</a></li>
     <li><a href="phase-3-atmosphere.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 3 氛围叙事</a></li>
     <li><a href="phase-4-platform.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 4 平台大作</a></li>
     <li><a href="phase-5-launch.html" class="block rounded-lg px-3 py-2 text-slate-300">Phase 5 发行增长</a></li>
@@ -65,7 +66,7 @@
       <tr><td>W / S</td><td>前后</td><td>相机朝向平移</td></tr>
       <tr><td>A / D</td><td>左右平移</td><td>空中「漂移」而非步行</td></tr>
       <tr><td>Q / E</td><td>升降</td><td>三维自由度，方便对准星层与湖面</td></tr>
-      <tr><td>Shift</td><td>加速 ×2.2 → 3s ×3 → 8s ×9</td><td>短时突进与超驰档，边缘虚化反馈</td></tr>
+      <tr><td>Shift</td><td>加速 ×2.2 → 3s ×9</td><td>按住 3 秒后直接超驰冲刺，边缘虚化反馈</td></tr>
       <tr><td>Ctrl</td><td>减速×0.45</td><td>细看景色、拍照前往</td></tr>
       <tr><td>（无操作）</td><td>慢速前漂</td><td>即使松手也在「前进」，不会停在原地</td></tr>
     </tbody>
@@ -96,13 +97,23 @@
     <article class="spec-concept"><h4>交互音</h4><span class="spec-tags">sfx</span><p>极少；可选：进入 POI 时的柔和铃音、加速时的空气摩擦。</p></article>
   </div>
 
+  <h2 class="text-lg text-teal-300 mb-3 mt-8">空间层级</h2>
+  <div class="spec-loop mb-6">
+    <p><strong>宇宙</strong> → 隐含无限，不画边界</p>
+    <p><strong>星系</strong> → 4×4 星区 ≈ 2880×2880；宏观气候带（非关卡）</p>
+    <p><strong>星区</strong> → 720×720；短名 + 节气事件 + 微调雾/星云</p>
+    <p><strong>航点</strong> → POI、遗迹、星门、星标</p>
+  </div>
+  <p class="spec-detail mb-4">合成顺序：<code>galaxy.palette × sector × 日暮</code>。详见 <a class="text-lake hover:underline" href="phase-2-galaxy.html">Phase 2.5 星系</a>。</p>
+
   <h2 class="text-lg text-teal-300 mb-3 mt-8">世界与叙事</h2>
   <p class="spec-intro">不做庞大剧情；用环境和极短文本片段挖掘「曾经有过的文明」。</p>
   <div class="spec-design-grid">
-    <article class="spec-concept"><h4>星系</h4><span class="spec-tags">sectors</span><p>无限演生星区，每个区域有微差密度与色温，不需手工塑造整张地图。</p></article>
+    <article class="spec-concept"><h4>星系</h4><span class="spec-tags">galaxies</span><p>宏观气候带：每格 4×4 星区共享色相、POI 倾向与进入仪式。可落在 <code>data/galaxies/*.yml</code>，后续可扩展物理法则与丰富内容。</p></article>
+    <article class="spec-concept"><h4>星区</h4><span class="spec-tags">sectors</span><p>无限演生星区，每格 720×720 有微差密度与色温，不需手工塑造整张地图。</p></article>
     <article class="spec-concept"><h4>行星 POI</h4><span class="spec-tags">planets</span><p>远处可见光点；接近后显示简短名称与轻量描述（如「蓝色冻结海」「环状沙岘」）。</p></article>
     <article class="spec-concept"><h4>遗迹</h4><span class="spec-tags">relics</span><p>宇航站、浮动广碑、无人信标；触发一句译文。</p></article>
-    <article class="spec-concept"><h4>星门</h4><span class="spec-tags">wormhole</span><p>视觉奇观，用于区域跳跃，不解释物理原理。</p></article>
+    <article class="spec-concept"><h4>星门</h4><span class="spec-tags">wormhole</span><p>区内星门：同星系内折跃；隑间门（稀有）：跳至相邻星系。不解释物理。</p></article>
     <article class="spec-concept"><h4>星座</h4><span class="spec-tags">constellation</span><p>纯装饰或连线解锁，可与玩家自定义标记结合。</p></article>
   </div>
   <div class="spec-vision mt-4">叙事原则：不回答「谁建的」，只留下「曾经有过人」的痛意。</div>

@@ -15,6 +15,7 @@ import { createAchievementTracker } from './achievements.js'
 import { createAnalytics } from './analytics.js'
 import { createJournal } from './journal.js'
 import { createConstellationUnlock } from './constellation-unlock.js'
+import { createBookmarks } from './bookmarks.js'
 
 /**
  * @typedef {ReturnType<import('./settings.js').createSettingsStore>} SettingsStore
@@ -43,7 +44,6 @@ import { createConstellationUnlock } from './constellation-unlock.js'
  *   onReady(): void,
  *   setVignette(on: boolean): void,
  *   setPhotoMode(on: boolean): void,
- *   setBoostOverdrive(on: boolean): void,
  *   setBoostHyper(on: boolean): void,
  *   exitPointerLock(): void,
  * }} PlatformShell
@@ -79,8 +79,9 @@ export function createDriftApp(deps) {
   const analytics = createAnalytics(storage)
   const journal = createJournal(storage)
   const constellationUnlock = createConstellationUnlock(storage)
+  const bookmarks = createBookmarks(storage)
   const narration = createNarration?.(() => settings)
-  const achievementCtx = { engaged: false, photoUsed: false }
+  const achievementCtx = { engaged: false, photoUsed: false, bookmarks: 0 }
 
   let loadingDone = false
   let loadingScheduled = false
@@ -99,8 +100,21 @@ export function createDriftApp(deps) {
 
   let loreTimer = 0
   let progressSaveTimer = 0
+  let lastSector = ''
+  let wasHyper = false
+
+  function getNavTargets() {
+    const list = pois ? pois.list() : []
+    const marks = bookmarks.list().map((b) => ({
+      name: `★ ${b.label}`,
+      position: new THREE.Vector3(b.x, b.y, b.z),
+      discovered: true,
+    }))
+    return [...list, ...marks]
+  }
 
   function checkAchievements() {
+    achievementCtx.bookmarks = bookmarks.list().length
     progress.syncRuntime({
       collectTotal: collectibles?.getCount() ?? 0,
       poiVisited: pois?.visitedCount?.() ?? 0,
@@ -190,7 +204,7 @@ export function createDriftApp(deps) {
     collectibles.setCount(progress.getState().collectTotal)
     if (loadingDone) collectibles.warm(camera)
     syncPostprocess()
-    if (!nav) nav = createNav(camera, () => (pois ? pois.list() : []), hud)
+    if (!nav) nav = createNav(camera, getNavTargets, hud)
   }
 
   function applySettings(next) {
@@ -323,8 +337,9 @@ export function createDriftApp(deps) {
       if (!photoMode) input.updateMovement(dt)
       const motion = input.getMotionState?.()
       const allowFx = !settings.reducedMotion
-      platform.setBoostOverdrive?.(!!motion?.overdrive && allowFx)
       platform.setBoostHyper?.(!!motion?.hyper && allowFx)
+      if (motion?.hyper && !wasHyper) audio.playBoost?.()
+      wasHyper = !!motion?.hyper
       audio.updateMood(dt, {
         speedNorm: input.getSpeedNorm?.() ?? 0,
         moving: input.isMoving?.() ?? false,
@@ -338,9 +353,18 @@ export function createDriftApp(deps) {
         })
       }
       if (worldState.sectorLabel) hud.setSector?.(worldState.sectorLabel)
+      if (worldState.sectorLabel && worldState.sectorLabel !== lastSector) {
+        if (lastSector && worldState.sectorEvent) {
+          const evt = worldState.sectorEvent
+          showLore(`星区 · ${worldState.sectorLabel}`, evt.text, { chime: false, duration: 5 })
+          journal.note(evt.title, evt.text)
+        }
+        lastSector = worldState.sectorLabel
+      }
       stations?.update(elapsed, camera)
       wormholes?.update(elapsed, camera, dt, (title, text) => {
         progress.noteWarp()
+        audio.playWarp?.()
         onWorldLore(title, text)
         checkAchievements()
       })
@@ -416,6 +440,7 @@ export function createDriftApp(deps) {
       if (data.analytics) analytics.applyImport(data.analytics)
       if (Array.isArray(data.journal)) journal.applyImport(data.journal)
       if (Array.isArray(data.constellations)) constellationUnlock.applyImport(data.constellations)
+      if (Array.isArray(data.bookmarks)) bookmarks.applyImport(data.bookmarks)
       collectibles?.setCount(progress.getState().collectTotal)
       hud.setCollectCount(progress.getState().collectTotal)
       return true
@@ -434,7 +459,18 @@ export function createDriftApp(deps) {
     cycleNavTarget: () => nav?.cycleTarget(),
     forceFinishLoading,
     getProgressSummary: () =>
-      `${progress.formatSummary()} · ${achievements.formatSummary()} · ${journal.formatSummary()} · ${analytics.formatSummary()}`,
+      `${progress.formatSummary()} · ${achievements.formatSummary()} · ${bookmarks.formatSummary()} · ${journal.formatSummary()} · ${analytics.formatSummary()}`,
+    listBookmarks: () => bookmarks.list(),
+    addBookmark: () => {
+      if (!loadingDone) return null
+      const label = worldState.sectorLabel || '星标'
+      const entry = bookmarks.add(camera.position, label)
+      journal.note('星标', `记下「${label}」`)
+      showLore('星标', `${label} 已加入导航（Tab 切换目标）`, { journal: false, chime: true })
+      checkAchievements()
+      return entry
+    },
+    removeBookmark: (id) => bookmarks.remove(id),
     listAchievements: () => achievements.list(),
     listJournal: () => journal.list(),
     endSession: () => analytics.endSession(),
@@ -452,6 +488,7 @@ export function createDriftApp(deps) {
           analytics: analytics.exportPayload(),
           journal: journal.exportPayload(),
           constellations: constellationUnlock.exportPayload(),
+          bookmarks: bookmarks.exportPayload(),
         },
         null,
         2,

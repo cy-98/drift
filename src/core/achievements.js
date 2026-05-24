@@ -41,6 +41,12 @@ export const ACHIEVEMENT_DEFS = [
     check: (s) => s.playTimeSec >= 1800,
   },
   {
+    id: 'bookmark',
+    title: '路标',
+    desc: '留下第一处星图标记。',
+    check: (_s, ctx) => (ctx.bookmarks ?? 0) >= 1,
+  },
+  {
     id: 'photo',
     title: '取景',
     desc: '使用截图模式。',

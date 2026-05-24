@@ -33,6 +33,8 @@ const achievementsList = document.getElementById('achievements-list')
 const achievementsCount = document.getElementById('achievements-count')
 const journalList = document.getElementById('journal-list')
 const journalCount = document.getElementById('journal-count')
+const bookmarksList = document.getElementById('bookmarks-list')
+const bookmarksCount = document.getElementById('bookmarks-count')
 const progressShareBtn = document.getElementById('progress-share')
 const qualityInput = document.getElementById('quality')
 const loreDurationInput = document.getElementById('lore-duration')
@@ -101,12 +103,8 @@ const platform = {
   setPhotoMode(on) {
     document.body.classList.toggle('photo-mode', on)
     if (on) {
-      document.body.classList.remove('boost-overdrive')
       document.body.classList.remove('boost-hyper')
     }
-  },
-  setBoostOverdrive(on) {
-    document.body.classList.toggle('boost-overdrive', !!on)
   },
   setBoostHyper(on) {
     document.body.classList.toggle('boost-hyper', !!on)
@@ -161,6 +159,24 @@ function syncSettingsForm() {
             .join('')
         : '<li><p>靠近行星或星门时会自动记下邂逅。</p></li>'
       if (journalCount) journalCount.textContent = String(entries.length)
+    }
+    if (bookmarksList && app?.listBookmarks) {
+      const marks = app.listBookmarks()
+      bookmarksList.innerHTML = marks.length
+        ? marks
+            .map(
+              (b) =>
+                `<li><span>${b.label}</span><small>${Math.round(b.x)}, ${Math.round(b.y)}, ${Math.round(b.z)}</small><button type="button" data-id="${b.id}" class="bookmark-del">删除</button></li>`,
+            )
+            .join('')
+        : '<li><p>漫游中按 <kbd>B</kbd> 记下当前位置（最多 8 个）。</p></li>'
+      if (bookmarksCount) bookmarksCount.textContent = String(marks.length)
+      bookmarksList.querySelectorAll('.bookmark-del').forEach((btn) => {
+        btn.onclick = () => {
+          app.removeBookmark?.(btn.getAttribute('data-id'))
+          syncSettingsForm()
+        }
+      })
     }
     qualityInput.value = settings.quality
     if (loreDurationInput) {
@@ -269,6 +285,13 @@ if (!app?.ok) {
 }
 
 window.addEventListener('keydown', (e) => {
+  if (e.key.toLowerCase() === 'b' && app?.ok && !settingsPanel.classList.contains('open')) {
+    if (e.target.closest('#settings')) return
+    e.preventDefault()
+    app.addBookmark?.()
+    syncSettingsForm()
+    return
+  }
   if (e.key.toLowerCase() === 'tab' && app?.ok) {
     e.preventDefault()
     app.cycleNavTarget()

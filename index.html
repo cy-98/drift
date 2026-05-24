@@ -87,7 +87,6 @@
         position: absolute; inset: 0;
         background: radial-gradient(ellipse 88% 80% at 50% 45%, transparent 44%, rgba(3, 8, 16, 0.42) 100%);
       }
-      body.boost-overdrive #boost-edge { opacity: 1; }
       body.boost-hyper #boost-edge {
         opacity: 1;
         backdrop-filter: blur(18px) saturate(1.25);
@@ -167,12 +166,12 @@
       }
       #settings {
         position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
-        background: transparent; pointer-events: none; opacity: 0;
-        transition: opacity 0.25s; z-index: 45;
+        background: transparent; pointer-events: none; opacity: 0; visibility: hidden;
+        transition: opacity 0.25s, visibility 0.25s; z-index: 45;
         padding: 1rem 0;
       }
       #settings.open {
-        pointer-events: auto; opacity: 1;
+        pointer-events: auto; opacity: 1; visibility: visible;
         background: rgba(3, 8, 16, 0.42);
         backdrop-filter: blur(4px);
         -webkit-backdrop-filter: blur(4px);
@@ -182,10 +181,11 @@
         overflow-x: hidden; overflow-y: auto;
         padding: 1.25rem 1.35rem;
         background: #061428; border: 1px solid rgba(110, 184, 232, 0.28);
-        border-radius: 12px; color: #c8d8ec; pointer-events: auto;
+        border-radius: 12px; color: #c8d8ec; pointer-events: none;
         box-shadow: 0 12px 48px rgba(0, 0, 0, 0.45);
         scrollbar-color: rgba(110, 184, 232, 0.45) #061428;
       }
+      #settings.open .panel { pointer-events: auto; }
       #settings .panel::-webkit-scrollbar { width: 8px; }
       #settings .panel::-webkit-scrollbar-track { background: #061428; }
       #settings .panel::-webkit-scrollbar-thumb {
@@ -268,6 +268,21 @@
       #journal-list li time { color: #6a8098; font-size: 0.7rem; display: block; margin-bottom: 0.15rem; }
       #journal-list li span { color: #6eb8e8; }
       #journal-list li p { color: #8aa4bc; margin-top: 0.1rem; line-height: 1.35; }
+      #bookmarks-list {
+        list-style: none; margin: 0; padding: 0; overflow: auto;
+      }
+      #bookmarks-list li {
+        display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem 0.5rem;
+        padding: 0.35rem 0; border-bottom: 1px solid rgba(110, 184, 232, 0.08);
+        font-size: 0.76rem;
+      }
+      #bookmarks-list li span { color: #6eb8e8; flex: 1 1 100%; }
+      #bookmarks-list li small { color: #6a8098; }
+      #bookmarks-list .bookmark-del {
+        margin-left: auto; padding: 0.15rem 0.45rem; font-size: 0.7rem;
+        border: 1px solid rgba(110, 184, 232, 0.35); border-radius: 4px;
+        background: transparent; color: #9ab0c8; cursor: pointer;
+      }
       #settings .progress-actions button.progress-share { flex: 1 1 100%; min-width: 100%; }
       .hud-row { margin-top: 0.35rem; font-size: 12px; color: #9ab0c8; }
       .hud-row span { color: #6eb8e8; }
@@ -387,7 +402,7 @@
         <label class="row"><input id="vignette" type="checkbox" /> 电影暗角</label>
         <label class="row"><input id="lake-glow" type="checkbox" /> 远方湖面光带</label>
         <label class="row"><input id="music" type="checkbox" /> 氛围音乐（程序化；可选 /audio/drift-theme.mp3）</label>
-        <label class="row"><input id="sfx" type="checkbox" /> 邂逅提示音（极轻铃音）</label>
+        <label class="row"><input id="sfx" type="checkbox" /> 音效（邂逅铃音 · 冲刺 · 星门）</label>
         <label class="row"><input id="narration" type="checkbox" /> 旁白朗读（浏览器语音）</label>
         <label for="lore-duration">字幕停留 <span id="lore-duration-val">6</span> 秒</label>
         <input id="lore-duration" type="range" min="4" max="14" step="1" />
@@ -409,6 +424,10 @@
           <details class="achievements-fold">
             <summary>成就列表（<span id="achievements-count">0</span>）</summary>
             <ul id="achievements-list" aria-label="成就列表"></ul>
+          </details>
+          <details class="achievements-fold">
+            <summary>星图标记（<span id="bookmarks-count">0</span>）</summary>
+            <ul id="bookmarks-list" aria-label="星图标记"></ul>
           </details>
           <details class="achievements-fold">
             <summary>漫游日志（<span id="journal-count">0</span>）</summary>
@@ -437,7 +456,7 @@
       <div id="prompt" class="center">
         <button type="button" id="start-btn" class="start-btn">进入漫游</button>
         <p class="prompt-hints">
-          <kbd>WASD</kbd> 平移 · <kbd>QE</kbd> 升降 · <kbd>Tab</kbd> 切换目标 · <kbd>Esc</kbd> 设置<br />
+          <kbd>WASD</kbd> 平移 · <kbd>QE</kbd> 升降 · <kbd>Tab</kbd> 切换目标 · <kbd>B</kbd> 星标 · <kbd>Esc</kbd> 设置<br />
           <kbd>Enter</kbd> 进入 · 无法锁定鼠标时按住左键拖动环顾
         </p>
       </div>

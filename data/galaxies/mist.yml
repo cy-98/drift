@@ -1,0 +1,12 @@
+id: mist
+archetype: mist
+palette:
+  nebula: "#6a98c0"
+  fog: 0.52
+  starDensity: 0.92
+  lakeIntensity: 1.0
+poiWeights:
+  ring: 1.1
+lore:
+  title: 薄雾星系
+  text: 什么都隔着一层纱，包括时间。
