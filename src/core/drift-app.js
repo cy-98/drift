@@ -154,8 +154,9 @@ export function createDriftApp(deps) {
       name: `★ ${b.label}`,
       position: new THREE.Vector3(b.x, b.y, b.z),
       discovered: true,
+      bookmarkId: b.id,
     }))
-    return [...list, ...marks]
+    return [...marks, ...list]
   }
 
   function checkAchievements() {
@@ -220,18 +221,24 @@ export function createDriftApp(deps) {
     if (!loadingDone) return
     photoMode = !photoMode
     platform.setPhotoMode(photoMode)
+    input.preparePhotoMode?.(photoMode)
     applyVignette()
+    syncPostprocess()
     if (photoMode) {
       achievementCtx.photoUsed = true
       checkAchievements()
-      platform.exitPointerLock()
-      showLore('截图模式', 'UI 已隐藏 · S 保存 PNG · P 退出', { journal: false, chime: false })
+      const dofHint = settings.photoDof ? ' · 景深已开' : ''
+      showLore('截图模式', `拖拽环视 · WASD 慢速取景 · S 保存 PNG · P 退出${dofHint}`, {
+        journal: false,
+        chime: false,
+      })
       loreTimer = 4
     }
   }
 
   function syncPostprocess() {
-    post?.setEnabled(settings.bloom, settings.quality)
+    post?.setEnabled(settings.bloom || (photoMode && settings.photoDof), settings.quality)
+    post?.setPhotoDof?.(photoMode && settings.photoDof)
   }
 
   function rebuildWorld() {
@@ -386,6 +393,7 @@ export function createDriftApp(deps) {
       }
 
       if (!photoMode) input.updateMovement(dt)
+      else input.updatePhotoView?.(dt)
       const motion = input.getMotionState?.()
       const allowFx = !settings.reducedMotion
       platform.setBoostHyper?.(!!motion?.hyper && allowFx)
@@ -507,6 +515,7 @@ export function createDriftApp(deps) {
     resize,
     togglePhotoMode,
     cycleNavTarget: () => nav?.cycleTarget(),
+    focusNavBookmark: (id) => nav?.focusBookmark?.(id),
     forceFinishLoading,
     getProgressSummary: () =>
       `${progress.formatSummary()} · ${galaxyVisits.formatSummary()} · ${achievements.formatSummary()} · ${bookmarks.formatSummary()} · ${journal.formatSummary()} · ${analytics.formatSummary()}`,
@@ -517,13 +526,15 @@ export function createDriftApp(deps) {
       visited: galaxyVisits.list(),
     }),
     listBookmarks: () => bookmarks.list(),
+    listConstellations: () => constellationUnlock.list(),
     addBookmark: () => {
       if (!loadingDone) return null
       const label = worldState.sectorLabel || '星标'
       const g = worldState.galaxyMeta ?? galaxyMeta(camera.position.x, camera.position.z)
       const entry = bookmarks.add(camera.position, label, { id: g.id, name: g.name })
       journal.note('星标', `记下「${label}」· ${g.name}`)
-      showLore('星标', `${label} 已加入导航（Tab 切换目标）`, { journal: false, chime: true })
+      nav?.focusBookmark?.(entry.id)
+      showLore('星标', `${label} 已设为导航目标（Tab 切换其他）`, { journal: false, chime: true })
       checkAchievements()
       return entry
     },

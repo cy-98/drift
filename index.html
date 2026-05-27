@@ -109,7 +109,7 @@
       body.settings-open #lore,
       body.settings-open #touch-ui { opacity: 0; visibility: hidden; pointer-events: none; }
       body.photo-mode::after {
-        content: '截图模式 · S 保存 · P 退出';
+        content: '截图模式 · 拖拽环视 · WASD 慢移 · S 保存 · P 退出';
         position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
         font-size: 12px; color: #9ab0c8; letter-spacing: 0.15em; z-index: 12;
         pointer-events: none;
@@ -279,11 +279,21 @@
       #bookmarks-list li span { color: #6eb8e8; flex: 1 1 100%; }
       #bookmarks-list li small { color: #6a8098; }
       #bookmarks-list .bookmark-del {
-        margin-left: auto; padding: 0.15rem 0.45rem; font-size: 0.7rem;
+        padding: 0.15rem 0.45rem; font-size: 0.7rem;
         border: 1px solid rgba(110, 184, 232, 0.35); border-radius: 4px;
         background: transparent; color: #9ab0c8; cursor: pointer;
       }
+      #bookmarks-list .bookmark-nav {
+        margin-left: auto; padding: 0.15rem 0.45rem; font-size: 0.7rem;
+        border: 1px solid rgba(110, 184, 232, 0.45); border-radius: 4px;
+        background: rgba(110, 184, 232, 0.08); color: #6eb8e8; cursor: pointer;
+      }
       #galaxy-map {
+        display: block; width: 100%; max-width: 280px; height: auto;
+        margin: 0.35rem 0 0.25rem; border-radius: 8px;
+        border: 1px solid rgba(110, 184, 232, 0.2); background: #061428;
+      }
+      #constellation-map {
         display: block; width: 100%; max-width: 280px; height: auto;
         margin: 0.35rem 0 0.25rem; border-radius: 8px;
         border: 1px solid rgba(110, 184, 232, 0.2); background: #061428;
@@ -406,6 +416,7 @@
         <label class="row"><input id="collectibles" type="checkbox" /> 微光收集（可选，无任务压力）</label>
         <label class="row"><input id="ambient" type="checkbox" /> 环境音（宇宙底噪）</label>
         <label class="row"><input id="vignette" type="checkbox" /> 电影暗角</label>
+        <label class="row"><input id="photo-dof" type="checkbox" checked /> 截图模式径向景深</label>
         <label class="row"><input id="lake-glow" type="checkbox" /> 远方湖面光带</label>
         <label class="row"><input id="music" type="checkbox" /> 氛围音乐（程序化；可选 /audio/drift-theme.mp3）</label>
         <label class="row"><input id="sfx" type="checkbox" /> 音效（邂逅铃音 · 冲刺 · 星门）</label>
@@ -434,6 +445,11 @@
           <details class="achievements-fold">
             <summary>星图标记（<span id="bookmarks-count">0</span>）</summary>
             <ul id="bookmarks-list" aria-label="星图标记"></ul>
+          </details>
+          <details class="achievements-fold">
+            <summary>解锁星座（<span id="constellations-count">0</span>）</summary>
+            <p class="map-hint">六边形为 POI 槽位；亮线为已解锁的相邻邂逅连线。</p>
+            <canvas id="constellation-map" width="280" height="160" aria-label="解锁星座图"></canvas>
           </details>
           <details class="achievements-fold">
             <summary>抽象星图</summary>

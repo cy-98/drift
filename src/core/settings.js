@@ -17,6 +17,7 @@ export const defaults = {
   collectibles: true,
   loreDuration: 6,
   loreScale: 'medium',
+  photoDof: true,
 }
 
 export function createSettingsStore(storage) {

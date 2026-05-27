@@ -7,6 +7,7 @@ import { createTouch } from './touch.js'
 import { createGamepad } from './gamepad.js'
 import { createWebNarration } from './narration-web.js'
 import { renderGalaxyMap } from './galaxy-map-canvas.js'
+import { renderConstellationMap } from './constellation-map-canvas.js'
 import { loadGalaxyCatalog } from '../../core/galaxy-loader.js'
 
 const LOAD_START = performance.now()
@@ -22,6 +23,7 @@ const reducedInput = document.getElementById('reduced')
 const bloomInput = document.getElementById('bloom')
 const ambientInput = document.getElementById('ambient')
 const vignetteInput = document.getElementById('vignette')
+const photoDofInput = document.getElementById('photo-dof')
 const lakeInput = document.getElementById('lake-glow')
 const musicInput = document.getElementById('music')
 const sfxInput = document.getElementById('sfx')
@@ -40,6 +42,8 @@ const bookmarksCount = document.getElementById('bookmarks-count')
 const galaxiesList = document.getElementById('galaxies-list')
 const galaxiesCount = document.getElementById('galaxies-count')
 const galaxyMapCanvas = document.getElementById('galaxy-map')
+const constellationMapCanvas = document.getElementById('constellation-map')
+const constellationsCount = document.getElementById('constellations-count')
 const progressShareBtn = document.getElementById('progress-share')
 const qualityInput = document.getElementById('quality')
 const loreDurationInput = document.getElementById('lore-duration')
@@ -133,6 +137,7 @@ function syncSettingsForm() {
     bloomInput.checked = settings.bloom
     ambientInput.checked = settings.ambient
     vignetteInput.checked = settings.vignette
+    if (photoDofInput) photoDofInput.checked = settings.photoDof !== false
     if (lakeInput) lakeInput.checked = settings.lakeGlow !== false
     if (musicInput) musicInput.checked = settings.music !== false
     if (sfxInput) sfxInput.checked = settings.sfx !== false
@@ -172,11 +177,18 @@ function syncSettingsForm() {
         ? marks
             .map(
               (b) =>
-                `<li><span>${b.label}</span><small>${b.galaxyName ? `${b.galaxyName} · ` : ''}${Math.round(b.x)}, ${Math.round(b.y)}, ${Math.round(b.z)}</small><button type="button" data-id="${b.id}" class="bookmark-del">删除</button></li>`,
+                `<li><span>${b.label}</span><small>${b.galaxyName ? `${b.galaxyName} · ` : ''}${Math.round(b.x)}, ${Math.round(b.y)}, ${Math.round(b.z)}</small><button type="button" data-id="${b.id}" class="bookmark-nav">导航</button><button type="button" data-id="${b.id}" class="bookmark-del">删除</button></li>`,
             )
             .join('')
         : '<li><p>漫游中按 <kbd>B</kbd> 记下当前位置（最多 8 个）。</p></li>'
       if (bookmarksCount) bookmarksCount.textContent = String(marks.length)
+      bookmarksList.querySelectorAll('.bookmark-nav').forEach((btn) => {
+        btn.onclick = () => {
+          app.focusNavBookmark?.(btn.getAttribute('data-id'))
+          settingsPanel.classList.remove('open')
+          document.body.classList.remove('settings-open')
+        }
+      })
       bookmarksList.querySelectorAll('.bookmark-del').forEach((btn) => {
         btn.onclick = () => {
           app.removeBookmark?.(btn.getAttribute('data-id'))
@@ -198,6 +210,11 @@ function syncSettingsForm() {
     }
     if (galaxyMapCanvas && app?.getGalaxyMap) {
       renderGalaxyMap(galaxyMapCanvas, app.getGalaxyMap())
+    }
+    if (constellationMapCanvas && app?.listConstellations) {
+      const unlocked = app.listConstellations()
+      renderConstellationMap(constellationMapCanvas, unlocked)
+      if (constellationsCount) constellationsCount.textContent = String(unlocked.length)
     }
     qualityInput.value = settings.quality
     if (loreDurationInput) {
@@ -222,6 +239,7 @@ function applySettingsFromForm() {
     bloom: bloomInput.checked,
     ambient: ambientInput.checked,
     vignette: vignetteInput.checked,
+    photoDof: photoDofInput?.checked !== false,
     lakeGlow: lakeInput.checked,
     music: musicInput.checked,
     sfx: sfxInput.checked,

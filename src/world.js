@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import { sectorLabel, sectorEvent } from './core/sectors.js'
 import { galaxyMeta } from './core/galaxies.js'
+import { getStarCircleTexture } from './star-sprite.js'
 
 function hexToColor(hex, target) {
   const n = parseInt(String(hex).replace('#', ''), 16)
@@ -15,26 +16,7 @@ const QUALITY = {
   high: { starMul: 1.25, spreadMul: 1.05 },
 }
 
-function makeStarCircleTexture() {
-  if (typeof document === 'undefined') return null
-  const size = 32
-  const canvas = document.createElement('canvas')
-  canvas.width = size
-  canvas.height = size
-  const ctx = canvas.getContext('2d')
-  const g = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2)
-  g.addColorStop(0, 'rgba(255,255,255,1)')
-  g.addColorStop(0.35, 'rgba(255,255,255,0.55)')
-  g.addColorStop(1, 'rgba(255,255,255,0)')
-  ctx.fillStyle = g
-  ctx.fillRect(0, 0, size, size)
-  const tex = new THREE.CanvasTexture(canvas)
-  tex.magFilter = THREE.LinearFilter
-  tex.minFilter = THREE.LinearFilter
-  return tex
-}
-
-const STAR_SPRITE = makeStarCircleTexture()
+const STAR_SPRITE = getStarCircleTexture()
 
 function makeStarLayer(count, spread, yRange, size, opacity) {
   const pos = new Float32Array(count * 3)

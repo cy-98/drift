@@ -1,9 +1,10 @@
 import * as THREE from 'three'
+import { getStarCircleTexture } from './star-sprite.js'
 
 const COUNT = 72
 const PICKUP = 10
 const RECYCLE = 380
-
+const STAR_SPRITE = getStarCircleTexture()
 export function createCollectibles(scene, getSettings) {
   const group = new THREE.Group()
   scene.add(group)
@@ -17,8 +18,11 @@ export function createCollectibles(scene, getSettings) {
   const mat = new THREE.PointsMaterial({
     color: 0xffe066,
     size: 0.55,
+    map: STAR_SPRITE ?? undefined,
+    alphaMap: STAR_SPRITE ?? undefined,
     transparent: true,
     opacity: 0.85,
+    alphaTest: 0.02,
     depthWrite: false,
     blending: THREE.AdditiveBlending,
     sizeAttenuation: true,

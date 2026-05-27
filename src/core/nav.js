@@ -15,6 +15,19 @@ export function createNav(camera, getPoiList, hud) {
     hud.flashTarget(list[activeIndex].name)
   }
 
+  function focusTarget(matchFn) {
+    const list = getPoiList()
+    const idx = list.findIndex(matchFn)
+    if (idx < 0) return false
+    activeIndex = idx
+    hud.flashTarget(list[activeIndex].name)
+    return true
+  }
+
+  function focusBookmark(id) {
+    return focusTarget((t) => t.bookmarkId === id)
+  }
+
   function update() {
     camera.updateMatrixWorld()
     const list = getPoiList()
@@ -74,5 +87,5 @@ export function createNav(camera, getPoiList, hud) {
     }
   }
 
-  return { update, cycleTarget }
+  return { update, cycleTarget, focusBookmark }
 }

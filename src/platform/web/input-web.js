@@ -157,6 +157,12 @@ export function createWebInput(canvas, camera, getSettings, hud, { onEscape, onE
     return pad
   }
 
+  function syncCameraRotation() {
+    camera.rotation.order = 'YXZ'
+    camera.rotation.y = yaw
+    camera.rotation.x = pitch
+  }
+
   function updateMovement(dt) {
     if (!engaged && !locked) return
     const pad = applyExternalInput()
@@ -190,9 +196,7 @@ export function createWebInput(canvas, camera, getSettings, hud, { onEscape, onE
       camera.position.add(forward.clone().multiplyScalar(target * drift * dt))
     }
 
-    camera.rotation.order = 'YXZ'
-    camera.rotation.y = yaw
-    camera.rotation.x = pitch
+    syncCameraRotation()
 
     const smooth = reducedMotion ? 1 : Math.min(1, dt * 8)
     displaySpeed += (target - displaySpeed) * smooth
@@ -210,6 +214,47 @@ export function createWebInput(canvas, camera, getSettings, hud, { onEscape, onE
     if (Math.abs(camera.fov - currentFov) > 0.01) {
       camera.fov = currentFov
       camera.updateProjectionMatrix()
+    }
+  }
+
+  /** Screenshot mode: free look + slow reposition (no auto-drift). */
+  function updatePhotoView(dt) {
+    applyExternalInput()
+    syncCameraRotation()
+
+    const { baseSpeed, reducedMotion } = getSettings()
+    forward.set(0, 0, -1).applyEuler(camera.rotation)
+    right.set(1, 0, 0).applyEuler(new THREE.Euler(0, camera.rotation.y, 0))
+
+    const pan = baseSpeed * (reducedMotion ? 0.18 : 0.28)
+    velocity.set(0, 0, 0)
+    if (keys.w) velocity.add(forward)
+    if (keys.s) velocity.sub(forward)
+    if (keys.a) velocity.sub(right)
+    if (keys.d) velocity.add(right)
+    if (keys.q) velocity.sub(up)
+    if (keys.e) velocity.add(up)
+    if (velocity.lengthSq() > 0) {
+      velocity.normalize().multiplyScalar(pan * dt)
+      camera.position.add(velocity)
+    }
+
+    const smooth = reducedMotion ? 1 : Math.min(1, dt * 6)
+    const wantFov = FOV_BASE
+    currentFov += (wantFov - currentFov) * smooth
+    if (Math.abs(camera.fov - currentFov) > 0.01) {
+      camera.fov = currentFov
+      camera.updateProjectionMatrix()
+    }
+  }
+
+  function preparePhotoMode(on) {
+    if (on) {
+      engaged = true
+      dragging = false
+      if (document.pointerLockElement === canvas) document.exitPointerLock()
+      shiftHoldSec = 0
+      hyper = false
     }
   }
 
@@ -242,6 +287,8 @@ export function createWebInput(canvas, camera, getSettings, hud, { onEscape, onE
 
   return {
     updateMovement,
+    updatePhotoView,
+    preparePhotoMode,
     getSpeedNorm: () => displaySpeed / Math.max(getSettings().baseSpeed, 0.1),
     getMotionState: () => ({ hyper, shiftHoldSec }),
     isMoving,
