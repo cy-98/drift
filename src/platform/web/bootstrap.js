@@ -423,7 +423,8 @@ progressImportInput?.addEventListener('change', async (e) => {
 })
 
 if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
-  navigator.serviceWorker.register(assetUrl('sw.js')).catch((err) => console.warn('[Drift] sw', err))
+  const swUrl = `${window.__DRIFT_BASE__ || '/'}sw.js`
+  navigator.serviceWorker.register(swUrl).catch((err) => console.warn('[Drift] sw', err))
 }
 
 let installPrompt = null

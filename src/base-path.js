@@ -1,5 +1,6 @@
 /** @returns {string} Trailing-slash base path for static assets (e.g. `/` or `/drift/`). */
 export function pageBasePath() {
+  if (typeof window !== 'undefined' && window.__DRIFT_BASE__) return window.__DRIFT_BASE__
   if (typeof location === 'undefined') return '/'
   const path = location.pathname
   if (path === '/drift' || path.startsWith('/drift/')) return '/drift/'
