@@ -1,8 +1,10 @@
+import { assetUrl } from './base-path.js'
+
 export function createAudio(getSettings) {
   const THEME_PLAYLIST = [
-    ['/audio/drift-theme.mp3', '/audio/drift-theme.ogg'],
-    ['/audio/drift-theme-b.mp3', '/audio/drift-theme-b.ogg'],
-    ['/audio/drift-theme-c.mp3', '/audio/drift-theme-c.ogg'],
+    [assetUrl('public/audio/drift-theme.mp3'), assetUrl('public/audio/drift-theme.ogg')],
+    [assetUrl('public/audio/drift-theme-b.mp3'), assetUrl('public/audio/drift-theme-b.ogg')],
+    [assetUrl('public/audio/drift-theme-c.mp3'), assetUrl('public/audio/drift-theme-c.ogg')],
   ]
   let ctx = null
   let master = null

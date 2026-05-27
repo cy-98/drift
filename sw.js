@@ -1,25 +1,32 @@
-const CACHE = 'drift-shell-v1'
+const CACHE = 'drift-shell-v2'
 
-const PRECACHE = [
-  '/',
-  '/index.html',
-  '/manifest.webmanifest',
-  '/src/game.js',
-  '/vendor/three/build/three.module.js',
-  '/vendor/three/build/three.core.js',
+const ASSETS = [
+  'index.html',
+  'manifest.webmanifest',
+  'src/game.js',
+  'vendor/three/build/three.module.js',
+  'vendor/three/build/three.core.js',
 ]
+
+function assetUrl(path) {
+  return new URL(path, self.location).href
+}
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE).then((cache) => cache.addAll(PRECACHE)).then(() => self.skipWaiting()),
+    caches
+      .open(CACHE)
+      .then((cache) => cache.addAll(ASSETS.map(assetUrl)))
+      .then(() => self.skipWaiting()),
   )
 })
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))),
-    ).then(() => self.clients.claim()),
+    caches
+      .keys()
+      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
+      .then(() => self.clients.claim()),
   )
 })
 
@@ -31,12 +38,14 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     fetch(event.request)
       .then((res) => {
-        if (res.ok && (url.pathname.startsWith('/vendor/') || url.pathname.startsWith('/src/'))) {
+        if (res.ok && (/\/vendor\/|\/src\//.test(url.pathname))) {
           const copy = res.clone()
           caches.open(CACHE).then((cache) => cache.put(event.request, copy))
         }
         return res
       })
-      .catch(() => caches.match(event.request).then((hit) => hit || caches.match('/index.html'))),
+      .catch(() =>
+        caches.match(event.request).then((hit) => hit || caches.match(assetUrl('index.html'))),
+      ),
   )
 })

@@ -20,7 +20,7 @@ const nav = (a) => {
     <li><a href="phase-4-platform.html" class="block rounded-lg px-3 py-2 ${c('p4')}">Phase 4 \u5e73\u53f0\u5927\u4f5c</a></li>
     <li><a href="phase-5-launch.html" class="block rounded-lg px-3 py-2 ${c('p5')}">Phase 5 \u53d1\u884c\u589e\u957f</a></li>
   </ul>
-  <p class="mt-8 text-xs text-slate-500"><a class="spec-link-back" href="/">\u2190 \u8fd0\u884c\u6e38\u620f</a></p>
+  <p class="mt-8 text-xs text-slate-500"><a class="spec-link-back" href="../">\u2190 \u8fd0\u884c\u6e38\u620f</a></p>
 </nav>`
 }
 

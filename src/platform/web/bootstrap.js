@@ -9,6 +9,7 @@ import { createWebNarration } from './narration-web.js'
 import { renderGalaxyMap } from './galaxy-map-canvas.js'
 import { renderConstellationMap } from './constellation-map-canvas.js'
 import { loadGalaxyCatalog } from '../../core/galaxy-loader.js'
+import { assetUrl } from '../../base-path.js'
 
 const LOAD_START = performance.now()
 const storage = createWebStorage()
@@ -422,7 +423,7 @@ progressImportInput?.addEventListener('change', async (e) => {
 })
 
 if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
-  navigator.serviceWorker.register('/sw.js').catch((err) => console.warn('[Drift] sw', err))
+  navigator.serviceWorker.register(assetUrl('sw.js')).catch((err) => console.warn('[Drift] sw', err))
 }
 
 let installPrompt = null

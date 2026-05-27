@@ -2,7 +2,7 @@
   "name": "Drift — 星际漫游",
   "short_name": "Drift",
   "description": "第一人称程序化星野漫游",
-  "start_url": "/",
+  "start_url": "./",
   "display": "fullscreen",
   "orientation": "any",
   "background_color": "#030810",
