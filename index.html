@@ -16,10 +16,19 @@
           var i = p.lastIndexOf('/')
           if (i >= 0) base = p.slice(0, i + 1)
         }
+        window.__DRIFT_BASE__ = base
         var el = document.createElement('base')
         el.href = base
         document.head.appendChild(el)
-        window.__DRIFT_BASE__ = base
+        var im = document.createElement('script')
+        im.type = 'importmap'
+        im.textContent = JSON.stringify({
+          imports: {
+            three: base + 'vendor/three/build/three.module.js',
+            'three/addons/': base + 'vendor/three/examples/jsm/',
+          },
+        })
+        document.head.appendChild(im)
       })()
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -516,14 +525,6 @@
       <p class="bottom">程序化星野 · WebGL · <a href="spec/" style="color:#6eb8e8;pointer-events:auto">项目 Spec</a></p>
     </div>
     <script>document.body.classList.add('is-loading')</script>
-    <script type="importmap">
-    {
-      "imports": {
-        "three": "vendor/three/build/three.module.js",
-        "three/addons/": "vendor/three/examples/jsm/"
-      }
-    }
-    </script>
     <script type="module" src="src/game.js"></script>
     <script>
       setTimeout(() => {
