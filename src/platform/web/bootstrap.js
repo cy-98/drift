@@ -423,7 +423,7 @@ progressImportInput?.addEventListener('change', async (e) => {
 })
 
 if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
-  const swUrl = `${window.__DRIFT_BASE__ || '/'}sw.js`
+  const swUrl = new URL('sw.js', document.baseURI).href
   navigator.serviceWorker.register(swUrl).catch((err) => console.warn('[Drift] sw', err))
 }
 
